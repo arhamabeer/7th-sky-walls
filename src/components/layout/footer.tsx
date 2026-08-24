@@ -30,10 +30,13 @@ export function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
             {copy.nav.portfolio}
           </h2>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-2">
             {NAV_LINKS.filter((l) => l.href !== "/").map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-ink hover:text-accent">
+                <Link
+                  href={link.href}
+                  className="inline-flex min-h-11 items-center text-sm text-ink hover:text-accent"
+                >
                   {link.label}
                 </Link>
               </li>
@@ -45,12 +48,12 @@ export function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
             {copy.nav.services}
           </h2>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-2">
             {services.slice(0, 4).map((service) => (
               <li key={service.slug}>
                 <Link
                   href={`/services#${service.slug}`}
-                  className="text-sm text-ink hover:text-accent"
+                  className="inline-flex min-h-11 items-center text-sm text-ink hover:text-accent"
                 >
                   {service.name}
                 </Link>
@@ -63,35 +66,41 @@ export function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
             {copy.nav.contact}
           </h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-2 text-sm">
             <li>
-              <a href={whatsappLink(copy.contact.inquiryDefaultMessage)} className="hover:text-accent">
+              <a
+                href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+                className="inline-flex min-h-11 items-center hover:text-accent"
+              >
                 {copy.cta.whatsapp}
               </a>
             </li>
             <li>
-              <a href={mailtoLink()} className="hover:text-accent">
+              <a
+                href={mailtoLink()}
+                className="inline-flex min-h-11 items-center break-all hover:text-accent"
+              >
                 {site.contact.email}
               </a>
             </li>
             <li>
-              <a href={telLink()} className="hover:text-accent">
+              <a href={telLink()} className="inline-flex min-h-11 items-center hover:text-accent">
                 {site.contact.phone}
               </a>
             </li>
-            <li className="text-muted">
+            <li className="pt-2 text-muted">
               {site.contact.address.city}, {site.contact.address.country}
             </li>
           </ul>
           {socials.length > 0 && (
-            <ul className="mt-4 flex gap-4">
+            <ul className="mt-3 flex flex-wrap gap-x-4">
               {socials.map(([key, url]) => (
                 <li key={key}>
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-muted hover:text-accent"
+                    className="inline-flex min-h-11 items-center text-sm font-medium text-muted hover:text-accent"
                   >
                     {SOCIAL_LABELS[key] ?? key}
                   </a>

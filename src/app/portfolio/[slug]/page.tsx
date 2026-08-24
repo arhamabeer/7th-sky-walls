@@ -77,7 +77,10 @@ export default async function ArtworkPage({
               <li key={crumb.path} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden>/</span>}
                 {i < breadcrumbs.length - 1 ? (
-                  <Link href={crumb.path} className="hover:text-ink">
+                  <Link
+                    href={crumb.path}
+                    className="inline-flex min-h-11 items-center hover:text-ink"
+                  >
                     {crumb.name}
                   </Link>
                 ) : (
@@ -118,7 +121,7 @@ export default async function ArtworkPage({
             {collection && (
               <Link
                 href={`/portfolio?collection=${collection.id}`}
-                className="text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
+                className="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
               >
                 {collection.name}
               </Link>

@@ -1,0 +1,50 @@
+﻿→ Killed stale process(es) on :4010: 3248
+→ Building production bundle...
+▲ Next.js 16.3.2 (Turbopack)
+✓ Running next.config.ts took 52ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1731ms
+  Running TypeScript ...
+  Finished TypeScript in 3.7s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/36) ...
+  Generating static pages using 3 workers (9/36) 
+  Generating static pages using 3 workers (18/36) 
+  Generating static pages using 3 workers (27/36) 
+✓ Generating static pages using 3 workers (36/36) in 3.8s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /contact
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /opengraph-image
+├ ƒ /portfolio
+├   /portfolio/[slug]
+│ ├ ● /portfolio/meridian-seven
+│ ├ ● /portfolio/glass-horizon
+│ ├ ● /portfolio/night-grid
+│ └ ● [+21 more paths]
+├ ○ /robots.txt
+├ ○ /services
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+→ Starting production server on :4010 (build _jII_m5Wd0xWRYjf_YNJ3)...
+→ Verified server is serving build _jII_m5Wd0xWRYjf_YNJ3
+
+
+Responsive audit: 31 viewports x 9 pages = 279 checks
+Base URL: http://localhost:4010
+Errors: 0   Warnings: 0   Console errors: 0
+
+RESULT: PASS — clean across all viewports.
+

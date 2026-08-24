@@ -130,7 +130,7 @@ export default function HomePage() {
             />
             <Link
               href="/portfolio"
-              className="text-sm font-semibold text-accent underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-4 hover:underline"
             >
               {copy.cta.viewAll}
             </Link>
