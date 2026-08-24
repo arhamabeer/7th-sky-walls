@@ -2,31 +2,49 @@
   {
     "id": "skyline-geometry",
     "name": "Skyline Geometry",
-    "description": "Bold geometric abstractions of city light and horizon lines — confident pieces for modern workplaces and lobbies."
+    "description": "Bold geometric abstractions of city light and horizon lines — confident pieces for modern workplaces and lobbies.",
+    "tagline": "Structure, light and the shape of a city",
+    "story": "Every city has a geometry: the way towers stack against dusk, how glass catches the last hour of light, the rhythm of windows switching on. This series reduces that to its structural bones — overlapping planes, hard diagonals and a restrained palette of dusk blue, brass and ink. The pieces are deliberately confident. They are made for the walls people walk toward: reception areas, lift lobbies, the end of a long corridor.",
+    "bestFor": "Reception walls, boardrooms and hotel lobbies where a single piece has to hold the room."
   },
   {
     "id": "sacred-lines",
     "name": "Sacred Lines",
-    "description": "Contemporary calligraphy that carries meaning — verses, names and words rendered as flowing, sculptural strokes."
+    "description": "Contemporary calligraphy that carries meaning — verses, names and words rendered as flowing, sculptural strokes.",
+    "tagline": "Words with weight, drawn as form",
+    "story": "Calligraphy asks something unusual of an artwork: it has to be beautiful before it is read, and truthful once it is. This series treats the stroke as sculpture — unbroken lines, generous negative space, ink weighted like brushwork rather than type. Most pieces in the series can carry your own word, verse or name, set in the same hand.",
+    "bestFor": "Entrances, prayer and quiet rooms, and offices that want meaning on the wall rather than decoration."
   },
   {
     "id": "botanical-fields",
     "name": "Botanical Fields",
-    "description": "Soft, organic forms drawn from leaves, gardens and wild growth — calm for cafés, clinics and quiet corners."
+    "description": "Soft, organic forms drawn from leaves, gardens and wild growth — calm for cafés, clinics and quiet corners.",
+    "tagline": "Bringing the courtyard indoors",
+    "story": "Plants change how a room feels before anyone notices why. This series abstracts that effect: oversized leaf silhouettes, layered canopies and rain-washed greens that read as calm from across a room and as detail up close. Nothing here is botanical illustration — it is the feeling of shade and growth, at wall scale.",
+    "bestFor": "Cafés, dining rooms, waiting areas and any space that needs to feel softer than its floor plan."
   },
   {
     "id": "heritage-arches",
     "name": "Heritage Arches",
-    "description": "Architectural studies of arches, jaalis and old-city façades — rooted, dignified art for hospitality spaces."
+    "description": "Architectural studies of arches, jaalis and old-city façades — rooted, dignified art for hospitality spaces.",
+    "tagline": "Old-city geometry, studied in raking light",
+    "story": "Carved screens, receding arcades, doors weathered into jewel tones — this series studies the architecture that already surrounds us, at the hour when the light is low enough to show its depth. The work gives a space a sense of place without resorting to nostalgia, which is why it sits so well in hospitality interiors.",
+    "bestFor": "Hotels, restaurants and any interior that wants to feel rooted in where it actually is."
   },
   {
     "id": "chromatic-drift",
     "name": "Chromatic Drift",
-    "description": "Large color-field gradients that shift with the light of the room — atmosphere in its purest form."
+    "description": "Large color-field gradients that shift with the light of the room — atmosphere in its purest form.",
+    "tagline": "Colour as atmosphere, nothing else",
+    "story": "No subject, no figure — only the transition between two colours and the single seam where they meet. Colour-field work changes character through the day as the room's light moves across it, which makes it unusually generous for spaces people occupy for hours. These are the pieces clients most often describe as calming without being able to say why.",
+    "bestFor": "Open-plan offices, guest floors and long walls that need presence without noise."
   },
   {
     "id": "words-at-work",
     "name": "Words at Work",
-    "description": "Motivational typography built for the spaces where people learn and build — customizable to your own words."
+    "description": "Motivational typography built for the spaces where people learn and build — customizable to your own words.",
+    "tagline": "The sentence people read every morning",
+    "story": "Most motivational wall art fails because it shouts. This series sets language at monumental scale but with typographic restraint — spacing, weight and composition doing the work instead of exclamation. Every piece can be reset with your team's own words, which is how most of these leave the studio.",
+    "bestFor": "Studios, classrooms, maker labs, campus departments and startup floors."
   }
 ]

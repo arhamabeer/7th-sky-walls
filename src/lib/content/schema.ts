@@ -64,7 +64,14 @@ export type Artwork = z.infer<typeof artworkSchema>;
 export const collectionSchema = z.object({
   id: z.string(),
   name: z.string(),
+  /** One or two sentences, used on cards and as the meta description. */
   description: z.string(),
+  /** Short editorial line for the collection page hero. */
+  tagline: z.string(),
+  /** Long-form editorial copy for the collection page. */
+  story: z.string().min(80),
+  /** Which spaces the series suits, in the studio's own words. */
+  bestFor: z.string(),
 });
 export type Collection = z.infer<typeof collectionSchema>;
 

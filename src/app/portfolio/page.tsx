@@ -77,6 +77,9 @@ export default async function PortfolioPage({
 
           <nav aria-label="Filter by collection" className="mt-3">
             <ul className="flex flex-wrap gap-2">
+              <li>
+                <Chip href="/collections">All collections &rarr;</Chip>
+              </li>
               {collections.map((c) => (
                 <li key={c.id}>
                   <Chip

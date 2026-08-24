@@ -15,9 +15,12 @@ import { cn } from "@/lib/utils";
 export function ArtworkGrid({
   artworks,
   className,
+  showCollection = true,
 }: {
   artworks: Artwork[];
   className?: string;
+  /** Suppressed where the surrounding page is already one collection. */
+  showCollection?: boolean;
 }) {
   return (
     <ul
@@ -38,6 +41,7 @@ export function ArtworkGrid({
           >
             <ArtworkCard
               artwork={artwork}
+              showCollection={showCollection}
               sizes={
                 wide
                   ? "(min-width: 1024px) 66vw, (min-width: 640px) 100vw, 100vw"

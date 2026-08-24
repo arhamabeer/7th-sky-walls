@@ -16,11 +16,14 @@ import { getBlurDataURL, getCollectionById } from "@/lib/content";
 export function ArtworkCard({
   artwork,
   sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
+  showCollection = true,
 }: {
   artwork: Artwork;
   sizes?: string;
+  /** Suppressed where the surrounding page is already one collection. */
+  showCollection?: boolean;
 }) {
-  const collection = getCollectionById(artwork.collection);
+  const collection = showCollection ? getCollectionById(artwork.collection) : undefined;
   const blur = getBlurDataURL(artwork.slug);
 
   return (

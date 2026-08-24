@@ -31,7 +31,11 @@ export function Footer() {
             {copy.nav.portfolio}
           </h2>
           <ul className="mt-2">
-            {NAV_LINKS.filter((l) => l.href !== "/").map((link) => (
+            {[
+              { href: "/portfolio", label: copy.nav.portfolio },
+              { href: "/collections", label: copy.collections.title },
+              ...NAV_LINKS.filter((l) => l.href !== "/" && l.href !== "/portfolio"),
+            ].map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}

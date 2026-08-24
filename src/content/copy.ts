@@ -39,6 +39,16 @@ export const copy = {
     ctaTitle: "Have a wall in mind?",
     ctaSubtitle: "Tell us about your space — we'll respond with ideas within one working day.",
   },
+  collections: {
+    title: "Collections",
+    subtitle:
+      "Six curated series, each built for a different mood and a different kind of space.",
+    viewCollection: "View the series",
+    bestForTitle: "Best suited to",
+    ctaTitle: "Want this series in your space?",
+    ctaSubtitle:
+      "Tell us the room and the wall — we'll suggest a selection and sizes, and mock it up before anything is produced.",
+  },
   portfolio: {
     title: "Portfolio",
     subtitle: "Every piece is produced to order in your choice of size and finish.",

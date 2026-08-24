@@ -133,7 +133,7 @@ export default async function ArtworkPage({
           >
             {collection && (
               <Link
-                href={`/portfolio?collection=${collection.id}`}
+                href={`/collections/${collection.id}`}
                 className="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
               >
                 {collection.name}
@@ -239,7 +239,7 @@ export default async function ArtworkPage({
             <h2 className="font-display text-2xl font-medium tracking-tight">
               {copy.artwork.moreFromCollection}
             </h2>
-            <ArtworkGrid artworks={related} className="mt-6" />
+            <ArtworkGrid artworks={related} className="mt-6" showCollection={false} />
           </section>
         )}
 

@@ -32,6 +32,8 @@ const PAGES = {
   home: "/",
   portfolio: "/portfolio",
   "portfolio-office": "/portfolio?venue=office",
+  collections: "/collections",
+  "collection-detail": "/collections/sacred-lines",
   "artwork-portrait": "/portfolio/meridian-seven",
   "artwork-panorama": "/portfolio/glass-horizon",
   "artwork-square": "/portfolio/night-grid",
