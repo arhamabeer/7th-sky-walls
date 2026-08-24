@@ -5,14 +5,33 @@
     "collection": "skyline-geometry",
     "description": "Seven ascending planes of dusk blue and brass intersect like a city skyline at last light — a confident anchor piece for reception walls.",
     "alt": "Abstract geometric artwork of seven overlapping angular planes in dusk blue and brass tones",
-    "venues": ["office", "hotel"],
-    "styles": ["abstract", "geometric"],
+    "venues": [
+      "office",
+      "hotel"
+    ],
+    "styles": [
+      "abstract",
+      "geometric"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/meridian-seven.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/meridian-seven.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": true
   },
@@ -22,14 +41,34 @@
     "collection": "skyline-geometry",
     "description": "A wide, quiet composition of layered horizon bands — glass, sea and sky reduced to clean geometry for long walls.",
     "alt": "Wide abstract artwork of layered horizontal bands in blue, ivory and warm grey",
-    "venues": ["office", "hotel", "restaurant"],
-    "styles": ["abstract", "minimal"],
-    "orientation": "landscape",
-    "image": { "src": "/artworks/glass-horizon.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["s", "m", "l", "xl", "panorama"],
-    "defaultSize": "panorama",
+    "venues": [
+      "office",
+      "hotel",
+      "restaurant"
+    ],
+    "styles": [
+      "abstract",
+      "minimal"
+    ],
+    "orientation": "panorama",
+    "image": {
+      "src": "/artworks/glass-horizon.jpg",
+      "width": 2000,
+      "height": 800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
     "customText": false,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2025,
     "featured": false
   },
@@ -39,14 +78,33 @@
     "collection": "skyline-geometry",
     "description": "A dense lattice of illuminated windows against warm black — the city at midnight, abstracted into rhythm.",
     "alt": "Square abstract artwork of a glowing window grid pattern on a dark warm background",
-    "venues": ["office", "cafe"],
-    "styles": ["abstract", "geometric"],
+    "venues": [
+      "office",
+      "cafe"
+    ],
+    "styles": [
+      "abstract",
+      "geometric"
+    ],
     "orientation": "square",
-    "image": { "src": "/artworks/night-grid.jpg", "width": 1800, "height": 1800 },
-    "sizes": ["square"],
-    "defaultSize": "square",
+    "image": {
+      "src": "/artworks/night-grid.jpg",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -56,14 +114,33 @@
     "collection": "skyline-geometry",
     "description": "Diagonal brass lines climb through deep ivory space — a piece about momentum, made for stairwells and ambition.",
     "alt": "Portrait abstract artwork of ascending diagonal brass lines on an ivory background",
-    "venues": ["office", "university"],
-    "styles": ["abstract", "minimal"],
+    "venues": [
+      "office",
+      "university"
+    ],
+    "styles": [
+      "abstract",
+      "minimal"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/ascent.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/ascent.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "m",
     "customText": false,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -73,14 +150,34 @@
     "collection": "sacred-lines",
     "description": "The word 'patience' rendered as a single unbroken stroke — contemporary calligraphy with sculptural weight, personalizable with your own word or verse.",
     "alt": "Contemporary calligraphy artwork of a single flowing dark stroke on a warm ivory field",
-    "venues": ["office", "hotel", "school"],
-    "styles": ["calligraphy", "minimal"],
+    "venues": [
+      "office",
+      "hotel",
+      "school"
+    ],
+    "styles": [
+      "calligraphy",
+      "minimal"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/sabr.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/sabr.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": true,
-    "materials": ["Archival matte canvas", "Hand-embellished ink detail", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "Hand-embellished ink detail",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": true
   },
@@ -90,14 +187,33 @@
     "collection": "sacred-lines",
     "description": "Gratitude composed in circular balance — a centered calligraphic form that settles any room it enters.",
     "alt": "Square calligraphy artwork with a circular flowing stroke composition in ink and brass",
-    "venues": ["hotel", "restaurant", "office"],
-    "styles": ["calligraphy"],
+    "venues": [
+      "hotel",
+      "restaurant",
+      "office"
+    ],
+    "styles": [
+      "calligraphy"
+    ],
     "orientation": "square",
-    "image": { "src": "/artworks/shukr.jpg", "width": 1800, "height": 1800 },
-    "sizes": ["square"],
-    "defaultSize": "square",
+    "image": {
+      "src": "/artworks/shukr.jpg",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
     "customText": true,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": false
   },
@@ -107,14 +223,34 @@
     "collection": "sacred-lines",
     "description": "A wide, flowing calligraphic composition designed to open a space — traditionally placed above entrances and reception walls.",
     "alt": "Wide calligraphy artwork with flowing horizontal strokes in deep ink on ivory",
-    "venues": ["office", "hotel", "school", "university"],
-    "styles": ["calligraphy"],
-    "orientation": "landscape",
-    "image": { "src": "/artworks/bismillah-flow.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["s", "m", "l", "xl", "panorama"],
-    "defaultSize": "panorama",
+    "venues": [
+      "office",
+      "hotel",
+      "school",
+      "university"
+    ],
+    "styles": [
+      "calligraphy"
+    ],
+    "orientation": "panorama",
+    "image": {
+      "src": "/artworks/bismillah-flow.jpg",
+      "width": 2000,
+      "height": 800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
     "customText": true,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -124,14 +260,33 @@
     "collection": "sacred-lines",
     "description": "'Light' written in radiating strokes over a soft gold field — quiet, warm and endlessly giftable to a space.",
     "alt": "Portrait calligraphy artwork of radiating strokes over a soft gold gradient",
-    "venues": ["hotel", "cafe", "office"],
-    "styles": ["calligraphy"],
+    "venues": [
+      "hotel",
+      "cafe",
+      "office"
+    ],
+    "styles": [
+      "calligraphy"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/noor.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/noor.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "m",
     "customText": true,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -141,14 +296,34 @@
     "collection": "botanical-fields",
     "description": "Oversized leaf silhouettes layered in rain-washed greens — brings the calm of a courtyard garden indoors.",
     "alt": "Portrait botanical artwork of layered oversized leaf silhouettes in deep greens",
-    "venues": ["cafe", "restaurant", "hotel"],
-    "styles": ["botanical", "organic"],
+    "venues": [
+      "cafe",
+      "restaurant",
+      "hotel"
+    ],
+    "styles": [
+      "botanical",
+      "organic"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/monsoon-leaves.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/monsoon-leaves.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": true
   },
@@ -158,14 +333,33 @@
     "collection": "botanical-fields",
     "description": "A single fern frond studied across a wide field of morning light — botanical minimalism for dining walls.",
     "alt": "Wide botanical artwork of a fern frond against a pale morning light gradient",
-    "venues": ["restaurant", "cafe"],
-    "styles": ["botanical", "minimal"],
+    "venues": [
+      "restaurant",
+      "cafe"
+    ],
+    "styles": [
+      "botanical",
+      "minimal"
+    ],
     "orientation": "landscape",
-    "image": { "src": "/artworks/courtyard-fern.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/courtyard-fern.jpg",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": false,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -175,14 +369,34 @@
     "collection": "botanical-fields",
     "description": "Dense, joyful overgrowth in full color — the piece that turns a plain corner into the favorite seat in the house.",
     "alt": "Square botanical artwork of dense colorful garden foliage",
-    "venues": ["cafe", "restaurant", "school"],
-    "styles": ["botanical", "organic"],
+    "venues": [
+      "cafe",
+      "restaurant",
+      "school"
+    ],
+    "styles": [
+      "botanical",
+      "organic"
+    ],
     "orientation": "square",
-    "image": { "src": "/artworks/wild-garden.jpg", "width": 1800, "height": 1800 },
-    "sizes": ["square"],
-    "defaultSize": "square",
+    "image": {
+      "src": "/artworks/wild-garden.jpg",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -192,14 +406,33 @@
     "collection": "botanical-fields",
     "description": "The sprawling canopy of an old banyan rendered in soft duotone — grounding, generous and made for long lobby walls.",
     "alt": "Panoramic botanical artwork of a banyan tree canopy in soft green duotone",
-    "venues": ["hotel", "university", "office"],
-    "styles": ["botanical"],
-    "orientation": "landscape",
-    "image": { "src": "/artworks/banyan-shade.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["m", "l", "xl", "panorama"],
-    "defaultSize": "panorama",
+    "venues": [
+      "hotel",
+      "university",
+      "office"
+    ],
+    "styles": [
+      "botanical"
+    ],
+    "orientation": "panorama",
+    "image": {
+      "src": "/artworks/banyan-shade.jpg",
+      "width": 2000,
+      "height": 800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": false
   },
@@ -209,14 +442,33 @@
     "collection": "heritage-arches",
     "description": "A carved stone screen studied in raking light — heritage geometry that gives hospitality spaces instant rootedness.",
     "alt": "Portrait artwork of an intricate carved jaali screen pattern in warm stone tones",
-    "venues": ["hotel", "restaurant"],
-    "styles": ["heritage", "architectural"],
+    "venues": [
+      "hotel",
+      "restaurant"
+    ],
+    "styles": [
+      "heritage",
+      "architectural"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/lahore-jaali.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/lahore-jaali.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": false,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2025,
     "featured": true
   },
@@ -226,14 +478,33 @@
     "collection": "heritage-arches",
     "description": "A row of weathered haveli doors in faded jewel tones — every one a story, together a streetscape.",
     "alt": "Wide artwork of a row of old wooden doors in faded blue, green and red paint",
-    "venues": ["restaurant", "cafe", "hotel"],
-    "styles": ["heritage"],
+    "venues": [
+      "restaurant",
+      "cafe",
+      "hotel"
+    ],
+    "styles": [
+      "heritage"
+    ],
     "orientation": "landscape",
-    "image": { "src": "/artworks/old-city-doors.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/old-city-doors.jpg",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -243,14 +514,33 @@
     "collection": "heritage-arches",
     "description": "A single minaret silhouette against first light — restraint, height and stillness for stairwells and tall walls.",
     "alt": "Portrait artwork of a minaret silhouette against a soft dawn gradient",
-    "venues": ["hotel", "university"],
-    "styles": ["heritage", "minimal"],
+    "venues": [
+      "hotel",
+      "university"
+    ],
+    "styles": [
+      "heritage",
+      "minimal"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/minaret-dawn.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/minaret-dawn.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "xl",
     "customText": false,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -260,14 +550,34 @@
     "collection": "heritage-arches",
     "description": "Repeating arches recede into warm shadow — a panoramic study of rhythm and rest for corridor walls.",
     "alt": "Panoramic artwork of repeating stone arches receding into warm shadow",
-    "venues": ["hotel", "restaurant", "university"],
-    "styles": ["heritage", "architectural"],
-    "orientation": "landscape",
-    "image": { "src": "/artworks/caravanserai.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["m", "l", "xl", "panorama"],
-    "defaultSize": "panorama",
+    "venues": [
+      "hotel",
+      "restaurant",
+      "university"
+    ],
+    "styles": [
+      "heritage",
+      "architectural"
+    ],
+    "orientation": "panorama",
+    "image": {
+      "src": "/artworks/caravanserai.jpg",
+      "width": 2000,
+      "height": 800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": false
   },
@@ -277,14 +587,34 @@
     "collection": "chromatic-drift",
     "description": "A sea-to-sky gradient caught at the exact minute the city wakes — pure atmosphere for walls that need calm, not noise.",
     "alt": "Wide color-field artwork of a soft gradient from deep sea blue to pale dawn gold",
-    "venues": ["office", "hotel", "cafe"],
-    "styles": ["color-field", "minimal"],
+    "venues": [
+      "office",
+      "hotel",
+      "cafe"
+    ],
+    "styles": [
+      "color-field",
+      "minimal"
+    ],
     "orientation": "landscape",
-    "image": { "src": "/artworks/dawn-over-clifton.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["m", "l", "xl", "panorama"],
+    "image": {
+      "src": "/artworks/dawn-over-clifton.jpg",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "xl",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": true
   },
@@ -294,14 +624,32 @@
     "collection": "chromatic-drift",
     "description": "Cool green-blue drift with a single warm seam — quiet color that changes character with the room's light.",
     "alt": "Portrait color-field artwork in sea green and blue with a thin warm gold seam",
-    "venues": ["office", "hotel"],
-    "styles": ["color-field"],
+    "venues": [
+      "office",
+      "hotel"
+    ],
+    "styles": [
+      "color-field"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/sea-glass.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/sea-glass.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "m",
     "customText": false,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -311,14 +659,32 @@
     "collection": "chromatic-drift",
     "description": "The last warm hour of the day held in a square frame — amber into rose into dusk.",
     "alt": "Square color-field artwork of an amber to rose to dusk gradient",
-    "venues": ["cafe", "restaurant"],
-    "styles": ["color-field"],
+    "venues": [
+      "cafe",
+      "restaurant"
+    ],
+    "styles": [
+      "color-field"
+    ],
     "orientation": "square",
-    "image": { "src": "/artworks/amber-hour.jpg", "width": 1800, "height": 1800 },
-    "sizes": ["square"],
-    "defaultSize": "square",
+    "image": {
+      "src": "/artworks/amber-hour.jpg",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -328,14 +694,33 @@
     "collection": "chromatic-drift",
     "description": "Deep rain-cloud blues breaking into light at the top edge — weight below, hope above.",
     "alt": "Portrait color-field artwork of deep blue tones breaking into pale light at the top",
-    "venues": ["office", "university"],
-    "styles": ["color-field", "minimal"],
+    "venues": [
+      "office",
+      "university"
+    ],
+    "styles": [
+      "color-field",
+      "minimal"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/monsoon-blue.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/monsoon-blue.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": false,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2025,
     "featured": false
   },
@@ -345,14 +730,33 @@
     "collection": "words-at-work",
     "description": "Two words in monumental type for the wall people see first thing in the morning — customizable to your team's own mantra.",
     "alt": "Portrait typography artwork with the words Begin Anyway in monumental serif type",
-    "venues": ["office", "university", "school"],
-    "styles": ["typography"],
+    "venues": [
+      "office",
+      "university",
+      "school"
+    ],
+    "styles": [
+      "typography"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/begin-anyway.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/begin-anyway.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": true,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2025,
     "featured": true
   },
@@ -362,14 +766,33 @@
     "collection": "words-at-work",
     "description": "A wide, quiet typographic field for focus zones and libraries — set your own words in the same measured type.",
     "alt": "Wide typography artwork with the words Deep Work in spaced capital letters",
-    "venues": ["office", "university"],
-    "styles": ["typography", "minimal"],
+    "venues": [
+      "office",
+      "university"
+    ],
+    "styles": [
+      "typography",
+      "minimal"
+    ],
     "orientation": "landscape",
-    "image": { "src": "/artworks/deep-work.jpg", "width": 2000, "height": 1500 },
-    "sizes": ["s", "m", "l", "xl", "panorama"],
+    "image": {
+      "src": "/artworks/deep-work.jpg",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "l",
     "customText": true,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -379,14 +802,33 @@
     "collection": "words-at-work",
     "description": "Three words stacked with engineering precision — made for maker labs, CS departments and startup floors.",
     "alt": "Square typography artwork with the stacked words Learn Build Repeat",
-    "venues": ["university", "school", "office"],
-    "styles": ["typography"],
+    "venues": [
+      "university",
+      "school",
+      "office"
+    ],
+    "styles": [
+      "typography"
+    ],
     "orientation": "square",
-    "image": { "src": "/artworks/learn-build-repeat.jpg", "width": 1800, "height": 1800 },
-    "sizes": ["square"],
-    "defaultSize": "square",
+    "image": {
+      "src": "/artworks/learn-build-repeat.jpg",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
     "customText": true,
-    "materials": ["Archival matte canvas", "UV-cured pigment print", "Floating hardwood frame"],
+    "materials": [
+      "Archival matte canvas",
+      "UV-cured pigment print",
+      "Floating hardwood frame"
+    ],
     "year": 2024,
     "featured": false
   },
@@ -396,14 +838,33 @@
     "collection": "words-at-work",
     "description": "A vertical typographic column about patience and compounding — for the corridor between where you are and where you're going.",
     "alt": "Portrait typography artwork with the words The Long Game in a tall vertical column",
-    "venues": ["office", "university"],
-    "styles": ["typography", "minimal"],
+    "venues": [
+      "office",
+      "university"
+    ],
+    "styles": [
+      "typography",
+      "minimal"
+    ],
     "orientation": "portrait",
-    "image": { "src": "/artworks/the-long-game.jpg", "width": 1600, "height": 2000 },
-    "sizes": ["s", "m", "l", "xl"],
+    "image": {
+      "src": "/artworks/the-long-game.jpg",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
     "defaultSize": "m",
     "customText": true,
-    "materials": ["Fine-art paper", "UV-cured pigment print", "Slim aluminum frame"],
+    "materials": [
+      "Fine-art paper",
+      "UV-cured pigment print",
+      "Slim aluminum frame"
+    ],
     "year": 2025,
     "featured": false
   }

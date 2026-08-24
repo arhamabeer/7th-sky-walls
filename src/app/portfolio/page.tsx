@@ -10,6 +10,8 @@ import { venueIdSchema } from "@/lib/content/schema";
 import { Container } from "@/components/ui/container";
 import { ArtworkCard } from "@/components/ui/artwork-card";
 import { Chip } from "@/components/ui/chip";
+import { Reveal } from "@/components/motion/reveal";
+import { staggerDelay } from "@/components/motion/stagger";
 
 export const metadata: Metadata = pageMetadata({
   title: copy.portfolio.title,
@@ -103,10 +105,10 @@ export default async function PortfolioPage({
             <p className="py-20 text-center text-muted">{copy.portfolio.emptyState}</p>
           ) : (
             <ul className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {artworks.map((artwork) => (
-                <li key={artwork.slug}>
+              {artworks.map((artwork, i) => (
+                <Reveal as="li" key={artwork.slug} delay={staggerDelay(i)}>
                   <ArtworkCard artwork={artwork} />
-                </li>
+                </Reveal>
               ))}
             </ul>
           )}

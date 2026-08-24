@@ -1,4 +1,8 @@
 @import "tailwindcss";
+/* Required by Lenis when smooth scrolling is active (desktop only — see
+   components/motion/smooth-scroll.tsx). Class-scoped, so it is inert
+   everywhere Lenis is not mounted. */
+@import "lenis/dist/lenis.css";
 
 /*
  * Design tokens. Color values are NOT defined here — they are injected as
@@ -45,10 +49,37 @@ body {
   outline-offset: 2px;
 }
 
+/*
+ * Entrance reveals (see components/motion/reveal.tsx).
+ *
+ * The hidden state lives ONLY inside the no-preference query, so reduced-motion
+ * users always get fully visible content — no JavaScript involved in deciding
+ * whether content can be seen.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal[data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .reveal[data-reveal="shown"] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.55s var(--ease-out-soft),
+      transform 0.55s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0s);
+  }
+}
+
 /* Motion is an enhancement, never a requirement. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  /* Decorative only — nothing is lost by removing it. */
+  .scroll-progress {
+    display: none;
   }
   *,
   *::before,

@@ -2,12 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Artwork } from "@/lib/content/schema";
 import { getBlurDataURL, getCollectionById } from "@/lib/content";
-
-const ASPECT: Record<Artwork["orientation"], string> = {
-  portrait: "aspect-[4/5]",
-  landscape: "aspect-[4/3]",
-  square: "aspect-square",
-};
+import { aspectClass } from "@/components/ui/aspect";
 
 export function ArtworkCard({
   artwork,
@@ -25,7 +20,7 @@ export function ArtworkCard({
       className="group block focus-visible:outline-2 focus-visible:outline-accent"
     >
       <div
-        className={`relative overflow-hidden rounded-xl bg-line ${ASPECT[artwork.orientation]}`}
+        className={`relative overflow-hidden rounded-xl bg-line ${aspectClass(artwork.orientation)}`}
       >
         <Image
           src={artwork.image.src}

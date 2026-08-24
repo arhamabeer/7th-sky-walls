@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { absoluteUrl, mailtoLink, whatsappLink } from "@/config/site.config";
@@ -20,6 +19,12 @@ import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { ArtworkCard } from "@/components/ui/artwork-card";
 import { Chip } from "@/components/ui/chip";
+import { Reveal } from "@/components/motion/reveal";
+import { staggerDelay } from "@/components/motion/stagger";
+import {
+  ArtworkExperience,
+  type SizeOption,
+} from "@/components/artwork/artwork-experience";
 
 export async function generateStaticParams() {
   return getArtworks().map((a) => ({ slug: a.slug }));
@@ -59,6 +64,20 @@ export default async function ArtworkPage({
     .filter((a) => a.slug !== artwork.slug)
     .slice(0, 3);
 
+  // Physical dimensions are resolved on the server so the size chart stays a
+  // server-only concern; the client only receives plain numbers.
+  const sizeOptions: SizeOption[] = artwork.sizes.map((sizeId) => {
+    const d = getSizeDimensions(sizeId, artwork.orientation);
+    return {
+      id: sizeId,
+      label: d.label,
+      widthCm: d.widthCm,
+      heightCm: d.heightCm,
+      widthIn: cmToInches(d.widthCm),
+      heightIn: cmToInches(d.heightCm),
+    };
+  });
+
   const breadcrumbs = [
     { name: copy.nav.home, path: "/" },
     { name: copy.portfolio.breadcrumbRoot, path: "/portfolio" },
@@ -70,9 +89,9 @@ export default async function ArtworkPage({
       <JsonLd data={visualArtworkJsonLd(artwork)} />
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
 
-      <Container className="py-10 sm:py-14">
+      <Container className="py-6 sm:py-10">
         <nav aria-label={copy.a11y.breadcrumb}>
-          <ol className="flex flex-wrap items-center gap-2 text-sm text-muted">
+          <ol className="flex flex-wrap items-center gap-x-2 text-sm text-muted">
             {breadcrumbs.map((crumb, i) => (
               <li key={crumb.path} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden>/</span>}
@@ -93,31 +112,19 @@ export default async function ArtworkPage({
           </ol>
         </nav>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
-          {/* Artwork image */}
-          <div
-            className={`relative overflow-hidden rounded-xl bg-line ${
-              artwork.orientation === "portrait"
-                ? "aspect-[4/5]"
-                : artwork.orientation === "landscape"
-                  ? "aspect-[4/3]"
-                  : "aspect-square"
-            }`}
+        <div className="mt-4">
+          <ArtworkExperience
+            title={artwork.title}
+            imageSrc={artwork.image.src}
+            imageAlt={artwork.alt}
+            imageWidth={artwork.image.width}
+            imageHeight={artwork.image.height}
+            orientation={artwork.orientation}
+            blurDataURL={blur}
+            sizes={sizeOptions}
+            defaultSizeId={artwork.defaultSize}
+            sizeNote={copy.artwork.sizesNote}
           >
-            <Image
-              src={artwork.image.src}
-              alt={artwork.alt}
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              fetchPriority="high"
-              loading="eager"
-              className="object-cover"
-              {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
-            />
-          </div>
-
-          {/* Details */}
-          <div>
             {collection && (
               <Link
                 href={`/portfolio?collection=${collection.id}`}
@@ -126,7 +133,7 @@ export default async function ArtworkPage({
                 {collection.name}
               </Link>
             )}
-            <h1 className="mt-2 font-display text-3xl font-medium tracking-tight sm:text-4xl">
+            <h1 className="mt-1 font-display text-3xl font-medium tracking-tight sm:text-4xl">
               {artwork.title}
             </h1>
             {artwork.customText && (
@@ -140,76 +147,73 @@ export default async function ArtworkPage({
                 {copy.artwork.customizableNote}
               </p>
             )}
+          </ArtworkExperience>
+        </div>
 
-            <div className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.artwork.sizesTitle}
-              </h2>
-              <table className="mt-3 w-full text-sm">
-                <thead>
-                  <tr className="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
-                    <th scope="col" className="py-2 pr-4 font-semibold">Size</th>
-                    <th scope="col" className="py-2 pr-4 font-semibold">Centimeters</th>
-                    <th scope="col" className="py-2 font-semibold">Inches</th>
+        <div className="mt-14 grid gap-10 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-3">
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
+              {copy.artwork.sizesTitle}
+            </h2>
+            <table className="mt-3 w-full text-sm">
+              <thead>
+                <tr className="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
+                  <th scope="col" className="py-2 pr-3 font-semibold">Size</th>
+                  <th scope="col" className="py-2 pr-3 font-semibold">cm</th>
+                  <th scope="col" className="py-2 font-semibold">in</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sizeOptions.map((s) => (
+                  <tr key={s.id} className="border-b border-line">
+                    <th scope="row" className="py-2.5 pr-3 text-left font-medium">
+                      {s.label}
+                    </th>
+                    <td className="py-2.5 pr-3 text-muted">
+                      {s.widthCm} × {s.heightCm}
+                    </td>
+                    <td className="py-2.5 text-muted">
+                      {s.widthIn}″ × {s.heightIn}″
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {artwork.sizes.map((sizeId) => {
-                    const d = getSizeDimensions(sizeId, artwork.orientation);
-                    const isDefault = sizeId === artwork.defaultSize;
-                    return (
-                      <tr key={sizeId} className="border-b border-line">
-                        <th scope="row" className="py-2.5 pr-4 text-left font-medium">
-                          {d.label}
-                          {isDefault && (
-                            <span className="ml-2 text-xs font-normal text-accent">
-                              (shown)
-                            </span>
-                          )}
-                        </th>
-                        <td className="py-2.5 pr-4 text-muted">
-                          {d.widthCm} × {d.heightCm} cm
-                        </td>
-                        <td className="py-2.5 text-muted">
-                          {cmToInches(d.widthCm)}″ × {cmToInches(d.heightCm)}″
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-              <p className="mt-3 text-xs leading-5 text-muted">{copy.artwork.sizesNote}</p>
-            </div>
-
-            <div className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.artwork.materialsTitle}
-              </h2>
-              <ul className="mt-3 space-y-1.5 text-sm text-muted">
-                {artwork.materials.map((m) => (
-                  <li key={m}>{m}</li>
                 ))}
-              </ul>
-            </div>
+              </tbody>
+            </table>
+          </section>
 
-            <div className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.artwork.venuesTitle}
-              </h2>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {artwork.venues.map((venueId) => {
-                  const venue = getVenueById(venueId);
-                  if (!venue) return null;
-                  return (
-                    <li key={venueId}>
-                      <Chip href={`/portfolio?venue=${venueId}`}>{venue.name}</Chip>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
+              {copy.artwork.materialsTitle}
+            </h2>
+            <ul className="mt-3 space-y-1.5 text-sm text-muted">
+              {artwork.materials.map((m) => (
+                <li key={m}>{m}</li>
+              ))}
+            </ul>
 
-            <div className="mt-10 flex flex-wrap gap-3">
+            <h2 className="mt-8 text-sm font-semibold uppercase tracking-widest text-muted">
+              {copy.artwork.venuesTitle}
+            </h2>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {artwork.venues.map((venueId) => {
+                const venue = getVenueById(venueId);
+                if (!venue) return null;
+                return (
+                  <li key={venueId}>
+                    <Chip href={`/portfolio?venue=${venueId}`}>{venue.name}</Chip>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+
+          <section className="rounded-xl border border-line bg-surface p-6">
+            <h2 className="font-display text-xl font-medium">Interested in this piece?</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Tell us your wall dimensions and we&apos;ll come back with a mockup in
+              your space.
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
               <LinkButton href={whatsappLink(artworkInquiryMessage(artwork.title))} external>
                 {copy.cta.inquireArtwork}
               </LinkButton>
@@ -221,19 +225,19 @@ export default async function ArtworkPage({
                 {copy.cta.email}
               </LinkButton>
             </div>
-          </div>
+          </section>
         </div>
 
         {related.length > 0 && (
-          <section className="mt-20">
+          <section className="mt-16 border-t border-line pt-10">
             <h2 className="font-display text-2xl font-medium tracking-tight">
               {copy.artwork.moreFromCollection}
             </h2>
             <ul className="mt-6 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((a) => (
-                <li key={a.slug}>
+              {related.map((a, i) => (
+                <Reveal as="li" key={a.slug} delay={staggerDelay(i)}>
                   <ArtworkCard artwork={a} />
-                </li>
+                </Reveal>
               ))}
             </ul>
           </section>

@@ -17,11 +17,11 @@ export const VENUE_IDS = [
 export const venueIdSchema = z.enum(VENUE_IDS);
 export type VenueId = z.infer<typeof venueIdSchema>;
 
-export const SIZE_IDS = ["s", "m", "l", "xl", "square", "panorama"] as const;
+export const SIZE_IDS = ["s", "m", "l", "xl"] as const;
 export const sizeIdSchema = z.enum(SIZE_IDS);
 export type SizeId = z.infer<typeof sizeIdSchema>;
 
-export const orientationSchema = z.enum(["portrait", "landscape", "square"]);
+export const orientationSchema = z.enum(["portrait", "landscape", "square", "panorama"]);
 export type Orientation = z.infer<typeof orientationSchema>;
 
 export const imageSchema = z.object({
@@ -97,10 +97,11 @@ export interface VenueInfo {
   pitch: string;
 }
 
-export interface SizeInfo {
+export interface SizeTier {
   id: SizeId;
   label: string;
-  widthCm: number;
-  heightCm: number;
-  orientations: Orientation[];
+  /** Long edge in centimetres for standard orientations. */
+  longEdgeCm: number;
+  /** Long edge for panoramic pieces, which need a larger scale to read. */
+  panoramaLongEdgeCm: number;
 }

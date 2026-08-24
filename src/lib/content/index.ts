@@ -5,7 +5,12 @@ import collectionsJson from "@/content/collections.json";
 import servicesJson from "@/content/services.json";
 import caseStudiesJson from "@/content/case-studies.json";
 import blurJson from "@/content/blur.json";
-import { SIZE_CHART, VENUES } from "@/content/catalog";
+import {
+  ORIENTATION_ASPECT,
+  SIZE_TIERS,
+  VENUES,
+  resolveSize,
+} from "@/content/catalog";
 import {
   artworkSchema,
   caseStudySchema,
@@ -17,7 +22,7 @@ import {
   type Orientation,
   type Service,
   type SizeId,
-  type SizeInfo,
+  type SizeTier,
   type VenueId,
   type VenueInfo,
 } from "@/lib/content/schema";
@@ -108,26 +113,25 @@ export function getVenueById(id: string): VenueInfo | undefined {
   return VENUES.find((v) => v.id === id);
 }
 
-export function getSizeChart(): SizeInfo[] {
-  return SIZE_CHART;
+export function getSizeTiers(): SizeTier[] {
+  return SIZE_TIERS;
 }
 
 /**
- * Physical dimensions of an artwork at a given size, respecting orientation
- * (the chart lists portrait width x height; landscape swaps them).
+ * Physical dimensions of an artwork at a given size tier. Derived from the
+ * orientation's aspect ratio so every size of one artwork shares the same
+ * proportions — see the note in content/catalog.ts.
  */
 export function getSizeDimensions(
   sizeId: SizeId,
   orientation: Orientation,
 ): { widthCm: number; heightCm: number; label: string } {
-  const size = SIZE_CHART.find((s) => s.id === sizeId);
-  if (!size) throw new Error(`Unknown size "${sizeId}"`);
-  const swap = orientation === "landscape" && size.heightCm > size.widthCm;
-  return {
-    label: size.label,
-    widthCm: swap ? size.heightCm : size.widthCm,
-    heightCm: swap ? size.widthCm : size.heightCm,
-  };
+  return resolveSize(sizeId, orientation);
+}
+
+/** width / height for an orientation, for laying out image containers. */
+export function getOrientationAspect(orientation: Orientation): number {
+  return ORIENTATION_ASPECT[orientation];
 }
 
 export function cmToInches(cm: number): number {

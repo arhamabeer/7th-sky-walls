@@ -14,6 +14,8 @@ import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ArtworkCard } from "@/components/ui/artwork-card";
+import { Reveal } from "@/components/motion/reveal";
+import { staggerDelay } from "@/components/motion/stagger";
 
 export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/") },
@@ -84,11 +86,11 @@ export default function HomePage() {
             subtitle={copy.home.collectionsSubtitle}
           />
           <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {collections.map((collection) => {
+            {collections.map((collection, i) => {
               const cover = artworks.find((a) => a.collection === collection.id);
               const blur = cover ? getBlurDataURL(cover.slug) : undefined;
               return (
-                <li key={collection.id}>
+                <Reveal as="li" key={collection.id} delay={staggerDelay(i)}>
                   <Link
                     href={`/portfolio?collection=${collection.id}`}
                     className="group block overflow-hidden rounded-xl border border-line bg-surface"
@@ -112,7 +114,7 @@ export default function HomePage() {
                       </p>
                     </div>
                   </Link>
-                </li>
+                </Reveal>
               );
             })}
           </ul>
@@ -136,10 +138,10 @@ export default function HomePage() {
             </Link>
           </div>
           <ul className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((artwork) => (
-              <li key={artwork.slug}>
+            {featured.map((artwork, i) => (
+              <Reveal as="li" key={artwork.slug} delay={staggerDelay(i)}>
                 <ArtworkCard artwork={artwork} />
-              </li>
+              </Reveal>
             ))}
           </ul>
         </Container>
@@ -155,8 +157,8 @@ export default function HomePage() {
             align="center"
           />
           <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {venues.map((venue) => (
-              <li key={venue.id}>
+            {venues.map((venue, i) => (
+              <Reveal as="li" key={venue.id} delay={staggerDelay(i)} className="h-full">
                 <Link
                   href={`/portfolio?venue=${venue.id}`}
                   className="block h-full rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
@@ -164,7 +166,7 @@ export default function HomePage() {
                   <h3 className="font-display text-lg font-medium">{venue.name}</h3>
                   <p className="mt-1.5 text-sm leading-6 text-muted">{venue.pitch}</p>
                 </Link>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </Container>

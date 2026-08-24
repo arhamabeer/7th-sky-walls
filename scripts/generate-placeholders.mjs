@@ -10,7 +10,7 @@
  * swap is: drop real files at the same /public/artworks/<slug>.jpg paths
  * and re-run this script with --blur-only to refresh blur placeholders.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -118,6 +118,24 @@ function heritageArches(r, w, h, p) {
   return s;
 }
 
+function panoramicDrift(r, w, h, p) {
+  // Panoramic canvases need horizontal emphasis; vertical gradients read as
+  // flat bands at 5:2.
+  const c1 = pick(r, p.shapes);
+  let c2 = pick(r, p.shapes);
+  if (c2 === c1) c2 = p.shapes[(p.shapes.indexOf(c1) + 1) % p.shapes.length];
+  let s =
+    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">` +
+    `<stop offset="0" stop-color="${p.bg}"/><stop offset="0.45" stop-color="${c1}" stop-opacity="0.8"/><stop offset="1" stop-color="${c2}"/>` +
+    `</linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/>`;
+  const bands = 3 + Math.floor(r() * 3);
+  for (let i = 0; i < bands; i++) {
+    const y = between(r, h * 0.15, h * 0.85);
+    s += `<rect y="${y}" width="${w}" height="${h * between(r, 0.02, 0.07)}" fill="${pick(r, p.shapes)}" opacity="${between(r, 0.3, 0.7).toFixed(2)}"/>`;
+  }
+  return s;
+}
+
 function chromaticDrift(r, w, h, p) {
   const c1 = pick(r, p.shapes);
   let c2 = pick(r, p.shapes);
@@ -175,7 +193,12 @@ async function main() {
     const file = path.join(ROOT, "public", art.image.src.replace(/^\//, ""));
     if (!BLUR_ONLY) {
       const p = PALETTES[art.collection] ?? PALETTES["chromatic-drift"];
-      const gen = GENERATORS[art.collection] ?? chromaticDrift;
+      // Panoramic canvases get a horizontal treatment regardless of
+      // collection — the standard generators assume a taller canvas.
+      const gen =
+        art.orientation === "panorama"
+          ? panoramicDrift
+          : (GENERATORS[art.collection] ?? chromaticDrift);
       const svg = svgHeader(w, h, p.bg) + gen(rng(art.slug), w, h, p, art.title) + "</svg>";
       await sharp(Buffer.from(svg)).jpeg({ quality: 80, mozjpeg: true }).toFile(file);
     }
@@ -198,7 +221,26 @@ async function main() {
       .png()
       .toFile(path.join(BRAND_DIR, `icon-${size}.png`));
   }
-  console.log(`done: ${artworks.length} artworks + blur map + icons`);
+
+  /**
+   * Invalidate Next's optimized-image cache.
+   *
+   * next/image keys its cache on the request URL, and replacing an artwork
+   * file in place leaves that URL unchanged — so the optimizer keeps serving
+   * the previous pixels, at the previous aspect ratio. That produced a
+   * letterboxed viewer after the sizes migration and would do the same the
+   * first time real photography replaces a placeholder.
+   */
+  for (const dir of [
+    path.join(ROOT, ".next", "cache", "images"),
+    path.join(ROOT, ".next", "dev", "cache", "images"),
+  ]) {
+    await rm(dir, { recursive: true, force: true });
+  }
+
+  console.log(
+    `done: ${artworks.length} artworks + blur map + icons (next/image cache cleared)`,
+  );
 }
 
 main().catch((err) => {

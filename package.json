@@ -9,7 +9,9 @@
     "lint": "eslint",
     "generate:placeholders": "node scripts/generate-placeholders.mjs",
     "audit:responsive": "node scripts/responsive-audit.mjs",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "test:interaction": "node scripts/interaction-tests.mjs",
+    "check:images": "node scripts/check-image-dims.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

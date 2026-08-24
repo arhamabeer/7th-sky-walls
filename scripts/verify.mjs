@@ -96,7 +96,17 @@ if (stale.length) {
   await new Promise((r) => setTimeout(r, 1200));
 }
 
-// --- 2. Build. ------------------------------------------------------------
+// --- 2. Guard: declared image dimensions must match the files on disk. ----
+console.log("→ Checking artwork image dimensions...");
+if (run("node", ["scripts/check-image-dims.mjs"]) !== 0) {
+  console.error(
+    "Image dimensions do not match artworks.json. Run `npm run generate:placeholders`\n" +
+      "(or correct the declared width/height) before auditing.",
+  );
+  process.exit(1);
+}
+
+// --- 3. Build. ------------------------------------------------------------
 if (!args.includes("--skip-build")) {
   console.log("→ Building production bundle...");
   const code = run("npx", ["next", "build"]);
