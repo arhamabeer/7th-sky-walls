@@ -5,6 +5,7 @@ import collectionsJson from "@/content/collections.json";
 import servicesJson from "@/content/services.json";
 import caseStudiesJson from "@/content/case-studies.json";
 import blurJson from "@/content/blur.json";
+import arManifestJson from "@/content/ar-manifest.json";
 import {
   ORIENTATION_ASPECT,
   SIZE_TIERS,
@@ -103,6 +104,39 @@ export function getAdjacentArtworks(slug: string): {
 /** Base64 blur placeholder for an artwork image, if generated. */
 export function getBlurDataURL(slug: string): string | undefined {
   return blurMap[slug];
+}
+
+/**
+ * AR assets for one artwork at one size, produced by
+ * `npm run generate:ar`. Returns undefined when assets have not been
+ * generated, so the UI can hide the AR affordance rather than offer a button
+ * that leads nowhere.
+ */
+export interface ArAsset {
+  glb: string;
+  usdz: string;
+  widthCm: number;
+  heightCm: number;
+  depthCm: number;
+  glbBytes: number;
+  usdzBytes: number;
+}
+
+interface ArManifestEntry {
+  frame: string;
+  sizes: Record<string, ArAsset>;
+}
+
+const arManifest = arManifestJson as Record<string, ArManifestEntry>;
+
+export function getArAssets(slug: string): Record<string, ArAsset> | undefined {
+  const entry = arManifest[slug];
+  if (!entry || Object.keys(entry.sizes).length === 0) return undefined;
+  return entry.sizes;
+}
+
+export function getArFrameName(slug: string): string | undefined {
+  return arManifest[slug]?.frame;
 }
 
 export function getCollections(): Collection[] {

@@ -11,7 +11,10 @@
     "audit:responsive": "node scripts/responsive-audit.mjs",
     "verify": "node scripts/verify.mjs",
     "test:interaction": "node scripts/interaction-tests.mjs",
-    "check:images": "node scripts/check-image-dims.mjs"
+    "check:images": "node scripts/check-image-dims.mjs",
+    "generate:ar": "node scripts/generate-ar-assets.mjs",
+    "check:ar": "node scripts/ar/check-all.mjs",
+    "shots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",

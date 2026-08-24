@@ -7,6 +7,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import {
   cmToInches,
   getAdjacentArtworks,
+  getArAssets,
   getArtworkBySlug,
   getArtworks,
   getBlurDataURL,
@@ -71,8 +72,10 @@ export default async function ArtworkPage({
 
   // Physical dimensions are resolved on the server so the size chart stays a
   // server-only concern; the client only receives plain numbers.
+  const arAssets = getArAssets(artwork.slug);
   const sizeOptions: SizeOption[] = artwork.sizes.map((sizeId) => {
     const d = getSizeDimensions(sizeId, artwork.orientation);
+    const ar = arAssets?.[sizeId];
     return {
       id: sizeId,
       label: d.label,
@@ -80,6 +83,7 @@ export default async function ArtworkPage({
       heightCm: d.heightCm,
       widthIn: cmToInches(d.widthCm),
       heightIn: cmToInches(d.heightCm),
+      ...(ar ? { ar: { glb: ar.glb, usdz: ar.usdz } } : {}),
     };
   });
 

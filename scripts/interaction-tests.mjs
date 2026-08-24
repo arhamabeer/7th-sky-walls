@@ -189,6 +189,131 @@ async function testArtworkPage(page, vp) {
   record(vp.name, "focus returns to the trigger", closed.focusOnOpener);
 }
 
+async function testArPanel(page, vp) {
+  await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+
+  const arTab = page.locator("[role=tab]", { hasText: "On your wall" });
+  const hasTab = (await arTab.count()) > 0;
+  record(vp.name, "AR view is offered for a size with generated assets", hasTab);
+  if (!hasTab) return;
+
+  await arTab.click();
+  await page.waitForFunction(
+    () => Boolean(document.querySelector("model-viewer")),
+    undefined,
+    { timeout: 20000 },
+  );
+
+  /**
+   * Read the `src` PROPERTY, not the attribute. Once the custom element
+   * upgrades, React assigns to the property and model-viewer does not reflect
+   * it back — so the attribute goes stale while the element loads the right
+   * model. The property is what the element and the AR handoff actually use.
+   */
+  const attrs = await page.evaluate(() => {
+    const mv = document.querySelector("model-viewer");
+    return {
+      src: mv.src ?? mv.getAttribute("src"),
+      iosSrc: mv.getAttribute("ios-src"),
+      placement: mv.getAttribute("ar-placement"),
+      scale: mv.getAttribute("ar-scale"),
+      modes: mv.getAttribute("ar-modes"),
+      hasAr: mv.hasAttribute("ar"),
+    };
+  });
+
+  record(
+    vp.name,
+    "AR model points at the selected size's assets",
+    attrs.src === "/ar/sabr/l.glb" && attrs.iosSrc === "/ar/sabr/l.usdz",
+    `${attrs.src} / ${attrs.iosSrc}`,
+  );
+  record(
+    vp.name,
+    "wall placement and fixed scale are set",
+    attrs.hasAr && attrs.placement === "wall" && attrs.scale === "fixed",
+    `placement=${attrs.placement} scale=${attrs.scale}`,
+  );
+  record(
+    vp.name,
+    "AR modes prefer WebXR then hand off",
+    attrs.modes === "webxr scene-viewer quick-look",
+    attrs.modes ?? "",
+  );
+
+  // A separate USDZ is mandatory: model-viewer's own generator emits
+  // horizontal anchoring, so wall placement on iOS depends on ios-src.
+  record(vp.name, "a pre-built USDZ is supplied for iOS", Boolean(attrs.iosSrc));
+
+  // Assets must actually be served, and with types the platforms accept.
+  const assets = await page.evaluate(async () => {
+    const check = async (url) => {
+      const res = await fetch(url, { method: "GET" });
+      return { status: res.status, type: res.headers.get("content-type") };
+    };
+    return {
+      glb: await check("/ar/sabr/l.glb"),
+      usdz: await check("/ar/sabr/l.usdz"),
+    };
+  });
+  record(
+    vp.name,
+    "GLB is served as model/gltf-binary",
+    assets.glb.status === 200 && /model\/gltf-binary/.test(assets.glb.type ?? ""),
+    `${assets.glb.status} ${assets.glb.type}`,
+  );
+  record(
+    vp.name,
+    "USDZ is served as model/vnd.usdz+zip",
+    assets.usdz.status === 200 && /model\/vnd\.usdz\+zip/.test(assets.usdz.type ?? ""),
+    `${assets.usdz.status} ${assets.usdz.type}`,
+  );
+
+  // The promise is that an AR affordance never dead-ends. Where AR cannot run,
+  // the panel must explain that rather than offer a button that does nothing.
+  const fallback = await page.evaluate(() => {
+    const panel = document.querySelector("[role=tabpanel]");
+    const buttons = [...(panel?.querySelectorAll("button") ?? [])].map((b) =>
+      b.textContent.trim(),
+    );
+    return { text: panel?.textContent ?? "", buttons };
+  });
+  const offersLaunch = fallback.buttons.some((b) => /place on my wall/i.test(b));
+  const explains = /cannot place|needs a phone|not available/i.test(fallback.text);
+  record(
+    vp.name,
+    "AR panel either offers a working launch or explains why it cannot",
+    offersLaunch !== explains,
+    offersLaunch ? "launch offered" : explains ? "explained" : "neither — dead end",
+  );
+
+  // Switching size must repoint the model, never leave the previous one up.
+  await page.locator("main button", { hasText: /^Small/ }).first().click();
+  // Wait on the condition rather than a fixed delay: model-viewer reloads the
+  // asset when src changes, and a timeout tuned on one machine is a flake
+  // waiting to happen on another.
+  await page
+    .waitForFunction(
+      () => {
+        const mv = document.querySelector("model-viewer");
+        return (mv?.src ?? mv?.getAttribute("src")) === "/ar/sabr/s.glb";
+      },
+      undefined,
+      { timeout: 8000 },
+    )
+    .catch(() => {});
+  const afterResize = await page.evaluate(() => {
+    const mv = document.querySelector("model-viewer");
+    return mv ? { src: mv.src ?? mv.getAttribute("src"), ios: mv.getAttribute("ios-src") } : null;
+  });
+  record(
+    vp.name,
+    "changing size repoints the AR model",
+    afterResize?.src === "/ar/sabr/s.glb" && afterResize?.ios === "/ar/sabr/s.usdz",
+    afterResize ? `${afterResize.src}` : "model-viewer gone",
+  );
+}
+
 async function testPortfolioFiltering(page, vp) {
   await page.goto(`${BASE}/portfolio`, { waitUntil: "networkidle" });
   const total = await page.locator('main a[href^="/portfolio/"]').count();
@@ -372,6 +497,7 @@ async function main() {
     });
 
     await testArtworkPage(page, vp);
+    await testArPanel(page, vp);
     await testPortfolioFiltering(page, vp);
     await testGridReveals(page, vp);
     await testMobileNav(page, vp);

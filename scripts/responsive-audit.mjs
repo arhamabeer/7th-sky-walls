@@ -80,6 +80,7 @@ const PAGES = [
   { path: "/portfolio/meridian-seven", name: "artwork-portrait" },
   { path: "/portfolio/glass-horizon", name: "artwork-landscape" },
   { path: "/portfolio/night-grid", name: "artwork-square" },
+  { path: "/portfolio/sabr?size=xl", name: "artwork-deep-linked-size" },
   { path: "/services", name: "services" },
   { path: "/about", name: "about" },
   { path: "/contact", name: "contact" },

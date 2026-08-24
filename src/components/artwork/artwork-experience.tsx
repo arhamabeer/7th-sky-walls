@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { RoomScalePreview } from "@/components/artwork/room-scale-preview";
 import { ROOM_SCENES } from "@/components/artwork/room-scenes";
+import { ArPanel } from "@/components/ar/ar-panel";
 import { aspectClass } from "@/components/ui/aspect";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,8 @@ export interface SizeOption {
   heightCm: number;
   widthIn: number;
   heightIn: number;
+  /** Present only when AR assets have been generated for this size. */
+  ar?: { glb: string; usdz: string };
 }
 
 /**
@@ -58,7 +61,7 @@ export function ArtworkExperience({
 }) {
   const [sizeId, setSizeId] = useState(defaultSizeId);
   const [sceneId, setSceneId] = useState(defaultSceneId);
-  const [view, setView] = useState<"artwork" | "room">("artwork");
+  const [view, setView] = useState<"artwork" | "room" | "ar">("artwork");
   const [zoomed, setZoomed] = useState(false);
   const reduced = useReducedMotion();
   const tabsId = useId();
@@ -66,6 +69,26 @@ export function ArtworkExperience({
   const openerRef = useRef<HTMLButtonElement>(null);
 
   const size = sizes.find((s) => s.id === sizeId) ?? sizes[0];
+
+  /**
+   * AR events go to whatever analytics layer is present. Handoff AR is the
+   * step of the funnel most likely to fail silently — the platform viewers can
+   * break without any change on our side — so launches and failures are
+   * recorded rather than assumed.
+   */
+  const trackAr = useCallback((event: string, detail?: Record<string, unknown>) => {
+    const w = window as typeof window & {
+      gtag?: (command: string, name: string, params?: Record<string, unknown>) => void;
+    };
+    w.gtag?.("event", event, detail);
+  }, []);
+
+  /**
+   * Selecting a size with no generated AR assets must not leave the panel
+   * showing another size's model. Derived rather than corrected in an effect,
+   * so there is never a frame where the wrong model is on screen.
+   */
+  const activeView = view === "ar" && !size.ar ? "room" : view;
 
   /**
    * Size is mirrored in the URL so a configuration can be shared, and adopted
@@ -131,10 +154,10 @@ export function ArtworkExperience({
             type="button"
             role="tab"
             id={`${tabsId}-tab-artwork`}
-            aria-selected={view === "artwork"}
+            aria-selected={activeView === "artwork"}
             aria-controls={`${tabsId}-panel`}
             onClick={() => setView("artwork")}
-            className={tabClass(view === "artwork")}
+            className={tabClass(activeView === "artwork")}
           >
             Artwork
           </button>
@@ -142,21 +165,35 @@ export function ArtworkExperience({
             type="button"
             role="tab"
             id={`${tabsId}-tab-room`}
-            aria-selected={view === "room"}
+            aria-selected={activeView === "room"}
             aria-controls={`${tabsId}-panel`}
             onClick={() => setView("room")}
-            className={tabClass(view === "room")}
+            className={tabClass(activeView === "room")}
           >
-            See it to scale
+            To scale
           </button>
+          {/* Only offered when AR assets exist for the selected size. */}
+          {size.ar && (
+            <button
+              type="button"
+              role="tab"
+              id={`${tabsId}-tab-ar`}
+              aria-selected={activeView === "ar"}
+              aria-controls={`${tabsId}-panel`}
+              onClick={() => setView("ar")}
+              className={tabClass(activeView === "ar")}
+            >
+              On your wall
+            </button>
+          )}
         </div>
 
         <div
           id={`${tabsId}-panel`}
           role="tabpanel"
-          aria-labelledby={`${tabsId}-tab-${view}`}
+          aria-labelledby={`${tabsId}-tab-${activeView}`}
         >
-          {view === "artwork" ? (
+          {activeView === "artwork" ? (
             <button
               ref={openerRef}
               type="button"
@@ -184,6 +221,18 @@ export function ArtworkExperience({
                 Tap to enlarge
               </span>
             </button>
+          ) : activeView === "ar" && size.ar ? (
+            <ArPanel
+              glb={size.ar.glb}
+              usdz={size.ar.usdz}
+              poster={imageSrc}
+              alt={imageAlt}
+              title={title}
+              sizeLabel={size.label}
+              widthCm={size.widthCm}
+              heightCm={size.heightCm}
+              onAnalytics={trackAr}
+            />
           ) : (
             <>
               <RoomScalePreview
@@ -260,9 +309,9 @@ export function ArtworkExperience({
           <p aria-live="polite" className="mt-3 text-sm text-muted">
             {size.label}: {size.widthCm} × {size.heightCm} cm ({size.widthIn}″ ×{" "}
             {size.heightIn}″).
-            {view === "room" && " Preview updates as you change size."}
+            {activeView === "room" && " Preview updates as you change size."}
           </p>
-          {view === "artwork" && (
+          {activeView === "artwork" && (
             <button
               type="button"
               onClick={() => setView("room")}
