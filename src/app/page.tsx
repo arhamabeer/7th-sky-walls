@@ -1,69 +1,198 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { absoluteUrl, whatsappLink } from "@/config/site.config";
+import { copy } from "@/content/copy";
+import {
+  getArtworks,
+  getBlurDataURL,
+  getCollections,
+  getFeaturedArtworks,
+  getVenues,
+} from "@/lib/content";
+import { Container } from "@/components/ui/container";
+import { LinkButton } from "@/components/ui/link-button";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { ArtworkCard } from "@/components/ui/artwork-card";
 
-export default function Home() {
+export const metadata: Metadata = {
+  alternates: { canonical: absoluteUrl("/") },
+};
+
+const HERO_ARTWORK_SLUG = "dawn-over-clifton";
+
+export default function HomePage() {
+  const heroArtwork = getArtworks().find((a) => a.slug === HERO_ARTWORK_SLUG);
+  const heroBlur = heroArtwork ? getBlurDataURL(heroArtwork.slug) : undefined;
+  const collections = getCollections();
+  const featured = getFeaturedArtworks().slice(0, 6);
+  const venues = getVenues();
+  const artworks = getArtworks();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      {/* Hero — base version; the cinematic scroll treatment lands in a later phase. */}
+      <section className="relative flex min-h-[85svh] items-end overflow-hidden">
+        {heroArtwork && (
+          <Image
+            src={heroArtwork.image.src}
+            alt={heroArtwork.alt}
+            fill
+            sizes="100vw"
+            fetchPriority="high"
+            loading="eager"
+            className="object-cover"
+            {...(heroBlur ? { placeholder: "blur" as const, blurDataURL: heroBlur } : {})}
+          />
+        )}
+        {/* Scrim guarantees text contrast over any artwork, whatever its palette. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/70 to-ink/25"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+        <Container className="relative pb-16 pt-40 sm:pb-24">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-soft">
+            {copy.home.heroEyebrow}
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+          <h1 className="mt-4 max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-tight text-background sm:text-6xl">
+            {copy.home.heroTitle}
+          </h1>
+          <p className="mt-5 max-w-xl text-base leading-7 text-background/85 sm:text-lg">
+            {copy.home.heroSubtitle}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <LinkButton href="/portfolio" variant="inverted">
+              {copy.cta.explore}
+            </LinkButton>
+            <LinkButton
+              href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+              external
+              variant="outlineInverted"
+            >
+              {copy.cta.whatsapp}
+            </LinkButton>
+          </div>
+        </Container>
+      </section>
+
+      {/* Collections */}
+      <section className="py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            eyebrow={copy.home.collectionsEyebrow}
+            title={copy.home.collectionsTitle}
+            subtitle={copy.home.collectionsSubtitle}
+          />
+          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {collections.map((collection) => {
+              const cover = artworks.find((a) => a.collection === collection.id);
+              const blur = cover ? getBlurDataURL(cover.slug) : undefined;
+              return (
+                <li key={collection.id}>
+                  <Link
+                    href={`/portfolio?collection=${collection.id}`}
+                    className="group block overflow-hidden rounded-xl border border-line bg-surface"
+                  >
+                    {cover && (
+                      <div className="relative aspect-[16/10] overflow-hidden bg-line">
+                        <Image
+                          src={cover.image.src}
+                          alt={cover.alt}
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
+                        />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <h3 className="font-display text-xl font-medium">{collection.name}</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted">
+                        {collection.description}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </Container>
+      </section>
+
+      {/* Featured works */}
+      <section className="border-y border-line bg-surface py-20 sm:py-28">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeading
+              eyebrow={copy.nav.portfolio}
+              title={copy.home.featuredTitle}
+              subtitle={copy.home.featuredSubtitle}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <Link
+              href="/portfolio"
+              className="text-sm font-semibold text-accent underline-offset-4 hover:underline"
+            >
+              {copy.cta.viewAll}
+            </Link>
+          </div>
+          <ul className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((artwork) => (
+              <li key={artwork.slug}>
+                <ArtworkCard artwork={artwork} />
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
+      {/* Venues */}
+      <section className="py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            eyebrow={copy.home.venuesEyebrow}
+            title={copy.home.venuesTitle}
+            subtitle={copy.home.venuesSubtitle}
+            align="center"
+          />
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {venues.map((venue) => (
+              <li key={venue.id}>
+                <Link
+                  href={`/portfolio?venue=${venue.id}`}
+                  className="block h-full rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
+                >
+                  <h3 className="font-display text-lg font-medium">{venue.name}</h3>
+                  <p className="mt-1.5 text-sm leading-6 text-muted">{venue.pitch}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
+      {/* Inquiry CTA */}
+      <section className="bg-ink py-20 text-background sm:py-24">
+        <Container className="text-center">
+          <h2 className="mx-auto max-w-2xl font-display text-3xl font-medium tracking-tight sm:text-4xl">
+            {copy.home.ctaTitle}
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-background/75">
+            {copy.home.ctaSubtitle}
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <LinkButton href="/contact" variant="inverted">
+              {copy.cta.primary}
+            </LinkButton>
+            <LinkButton
+              href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+              external
+              variant="outlineInverted"
+            >
+              {copy.cta.whatsapp}
+            </LinkButton>
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

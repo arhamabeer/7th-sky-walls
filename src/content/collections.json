@@ -1,0 +1,32 @@
+[
+  {
+    "id": "skyline-geometry",
+    "name": "Skyline Geometry",
+    "description": "Bold geometric abstractions of city light and horizon lines — confident pieces for modern workplaces and lobbies."
+  },
+  {
+    "id": "sacred-lines",
+    "name": "Sacred Lines",
+    "description": "Contemporary calligraphy that carries meaning — verses, names and words rendered as flowing, sculptural strokes."
+  },
+  {
+    "id": "botanical-fields",
+    "name": "Botanical Fields",
+    "description": "Soft, organic forms drawn from leaves, gardens and wild growth — calm for cafés, clinics and quiet corners."
+  },
+  {
+    "id": "heritage-arches",
+    "name": "Heritage Arches",
+    "description": "Architectural studies of arches, jaalis and old-city façades — rooted, dignified art for hospitality spaces."
+  },
+  {
+    "id": "chromatic-drift",
+    "name": "Chromatic Drift",
+    "description": "Large color-field gradients that shift with the light of the room — atmosphere in its purest form."
+  },
+  {
+    "id": "words-at-work",
+    "name": "Words at Work",
+    "description": "Motivational typography built for the spaces where people learn and build — customizable to your own words."
+  }
+]

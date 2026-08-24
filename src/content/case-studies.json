@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "city-school-library",
+    "title": "A library wall that made reading loud",
+    "venue": "school",
+    "location": "Karachi",
+    "summary": "A 12-meter literary mural for a secondary school library, weaving Urdu and English literary quotes into a single flowing composition.",
+    "outcome": "The library became the school's most photographed space — and its busiest.",
+    "isPlaceholder": true
+  },
+  {
+    "slug": "roastery-feature-wall",
+    "title": "The wall people cross the city to sit under",
+    "venue": "cafe",
+    "location": "Lahore",
+    "summary": "A botanical multi-panel installation behind the bar of a specialty roastery, designed around the room's evening light.",
+    "outcome": "The owner reports it appears in a majority of customer photos tagged at the café.",
+    "isPlaceholder": true
+  },
+  {
+    "slug": "fintech-lobby-program",
+    "title": "A lobby that finally matched the pitch deck",
+    "venue": "office",
+    "location": "Islamabad",
+    "summary": "Reception branding wall plus a nine-piece art program across two floors for a growing fintech, from floor plan to final level check.",
+    "outcome": "Delivered over one weekend — zero disruption to the working week.",
+    "isPlaceholder": true
+  }
+]
