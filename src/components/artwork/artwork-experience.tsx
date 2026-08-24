@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { RoomScalePreview } from "@/components/artwork/room-scale-preview";
+import { ROOM_SCENES } from "@/components/artwork/room-scenes";
 import { aspectClass } from "@/components/ui/aspect";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ export function ArtworkExperience({
   blurDataURL,
   sizes,
   defaultSizeId,
+  defaultSceneId,
   sizeNote,
   children,
 }: {
@@ -49,10 +51,13 @@ export function ArtworkExperience({
   blurDataURL?: string;
   sizes: SizeOption[];
   defaultSizeId: string;
+  /** Room scene matching the artwork's primary recommended venue. */
+  defaultSceneId: string;
   sizeNote: string;
   children: ReactNode;
 }) {
   const [sizeId, setSizeId] = useState(defaultSizeId);
+  const [sceneId, setSceneId] = useState(defaultSceneId);
   const [view, setView] = useState<"artwork" | "room">("artwork");
   const [zoomed, setZoomed] = useState(false);
   const reduced = useReducedMotion();
@@ -180,13 +185,39 @@ export function ArtworkExperience({
               </span>
             </button>
           ) : (
-            <RoomScalePreview
-              imageSrc={imageSrc}
-              imageAlt={imageAlt}
-              widthCm={size.widthCm}
-              heightCm={size.heightCm}
-              blurDataURL={blurDataURL}
-            />
+            <>
+              <RoomScalePreview
+                imageSrc={imageSrc}
+                imageAlt={imageAlt}
+                widthCm={size.widthCm}
+                heightCm={size.heightCm}
+                sceneId={sceneId}
+                blurDataURL={blurDataURL}
+              />
+              <fieldset className="mt-4 border-0 p-0">
+                <legend className="text-xs font-semibold uppercase tracking-widest text-muted">
+                  Preview in
+                </legend>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {ROOM_SCENES.map((scene) => (
+                    <button
+                      key={scene.id}
+                      type="button"
+                      onClick={() => setSceneId(scene.id)}
+                      aria-pressed={scene.id === sceneId}
+                      className={cn(
+                        "inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-medium transition-colors",
+                        scene.id === sceneId
+                          ? "border-ink bg-ink text-background"
+                          : "border-line bg-surface text-muted hover:border-ink hover:text-ink",
+                      )}
+                    >
+                      {scene.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+            </>
           )}
         </div>
       </div>

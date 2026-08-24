@@ -2,23 +2,23 @@
 
 import Image from "next/image";
 import { useMemo } from "react";
+import { getScene, type ScenePiece } from "@/components/artwork/room-scenes";
 import { cn } from "@/lib/utils";
 
 /**
  * True-scale room preview.
  *
- * Renders the artwork on a reference wall alongside objects of known height —
- * a 170cm person, an 85cm sofa — so a buyer can judge size before ordering.
+ * Renders the artwork on a reference wall beside furniture of known height and
+ * a 170cm person, in a scene matching the kind of space the buyer is fitting
+ * out. Scale anxiety is the biggest blocker on large-format art, so this is
+ * deliberately literal: the numbers on screen are the numbers that get
+ * produced.
  *
  * Every position is expressed in real-world centimetres and converted through
- * a single `fromFloor` helper. That matters: the visible floor band occupies
+ * a single `fromFloor` helper. That matters — the visible floor band occupies
  * part of the container, so any position measured from the container edge
  * instead of the floor line silently drifts, which is how the artwork ended up
  * overlapping the sofa in an earlier revision.
- *
- * Scale anxiety is the biggest blocker on large-format art, so this is
- * deliberately literal rather than decorative: the numbers on screen are the
- * numbers that get produced.
  */
 
 /** Reference room, in centimetres. */
@@ -26,7 +26,6 @@ const WALL_HEIGHT_CM = 280;
 const ROOM_WIDTH_CM = 440;
 /** Visual depth of the floor in front of the wall, also in centimetres. */
 const FLOOR_DEPTH_CM = 26;
-/** Total vertical extent the container represents. */
 const CANVAS_HEIGHT_CM = WALL_HEIGHT_CM + FLOOR_DEPTH_CM;
 
 /** Gallery convention: hang so the artwork's centre sits at eye level. */
@@ -37,20 +36,59 @@ const FURNITURE_CLEARANCE_CM = 22;
 const CEILING_MARGIN_CM = 12;
 
 const PERSON = { heightCm: 170, widthCm: 46, xCenterCm: 62 };
-const SOFA = { widthCm: 210, heightCm: 85, xCenterCm: 280 };
 
-/** Horizontal position as a percentage of the room width. */
 const px = (cm: number) => (cm / ROOM_WIDTH_CM) * 100;
-/** Vertical size as a percentage of the canvas height. */
 const py = (cm: number) => (cm / CANVAS_HEIGHT_CM) * 100;
-/** Distance from the container bottom for something standing on the floor. */
 const fromFloor = (cm: number) => py(FLOOR_DEPTH_CM + cm);
+
+function Piece({ piece }: { piece: ScenePiece }) {
+  const base = {
+    bottom: `${py(FLOOR_DEPTH_CM)}%`,
+    width: `${px(piece.widthCm)}%`,
+    height: `${py(piece.heightCm)}%`,
+    left: `${px(piece.xCenterCm - piece.widthCm / 2)}%`,
+  };
+
+  if (piece.style === "table") {
+    // A top slab on thin legs, so the eye reads through it to the wall.
+    const topPct = (4 / piece.heightCm) * 100;
+    return (
+      <div aria-hidden className="absolute" style={base}>
+        <div
+          className="absolute inset-x-0 top-0 rounded-sm bg-muted/45"
+          style={{ height: `${topPct}%` }}
+        />
+        <div className="absolute bottom-0 left-[7%] w-[5%] bg-muted/35" style={{ top: `${topPct}%` }} />
+        <div className="absolute bottom-0 right-[7%] w-[5%] bg-muted/35" style={{ top: `${topPct}%` }} />
+      </div>
+    );
+  }
+
+  if (piece.style === "seating" && piece.seatHeightCm) {
+    const seatTopPct = 100 - (piece.seatHeightCm / piece.heightCm) * 100;
+    return (
+      <div aria-hidden className="absolute" style={base}>
+        <div
+          className="absolute inset-x-[6%] top-0 rounded-t-lg bg-muted/45"
+          style={{ bottom: `${(piece.seatHeightCm / piece.heightCm) * 100 - 6}%` }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 rounded-md bg-muted/32"
+          style={{ top: `${seatTopPct}%` }}
+        />
+      </div>
+    );
+  }
+
+  return <div aria-hidden className="absolute rounded-sm bg-muted/40" style={base} />;
+}
 
 export function RoomScalePreview({
   imageSrc,
   imageAlt,
   widthCm,
   heightCm,
+  sceneId,
   blurDataURL,
   className,
 }: {
@@ -58,19 +96,27 @@ export function RoomScalePreview({
   imageAlt: string;
   widthCm: number;
   heightCm: number;
+  sceneId: string;
   blurDataURL?: string;
   className?: string;
 }) {
+  const scene = getScene(sceneId);
+
   const art = useMemo(() => {
+    /** Tallest thing the artwork must hang clear of in this scene. */
+    const tallestFurnitureCm = scene.pieces.reduce(
+      (max, p) => Math.max(max, p.heightCm),
+      0,
+    );
+
     /**
-     * Hanging height. Eye-level centring is the gallery default, but above
-     * furniture the piece is raised to clear the sofa back — what an installer
-     * actually does. Very tall pieces are then pushed back down so the top
-     * edge stays clear of the ceiling.
+     * Eye-level centring is the gallery default, but above furniture the piece
+     * is raised to clear it — what an installer actually does. Very tall
+     * pieces are then pushed back down so the top stays clear of the ceiling.
      */
     let bottomCm = Math.max(
       EYE_LEVEL_CM - heightCm / 2,
-      SOFA.heightCm + FURNITURE_CLEARANCE_CM,
+      tallestFurnitureCm + FURNITURE_CLEARANCE_CM,
     );
     const maxTopCm = WALL_HEIGHT_CM - CEILING_MARGIN_CM;
     if (bottomCm + heightCm > maxTopCm) {
@@ -81,7 +127,7 @@ export function RoomScalePreview({
     const drawWidthCm = Math.min(widthCm, ROOM_WIDTH_CM * 0.9);
     const drawHeightCm = heightCm * (drawWidthCm / widthCm);
     const maxLeftCm = ROOM_WIDTH_CM - drawWidthCm - 6;
-    const leftCm = Math.min(Math.max(SOFA.xCenterCm - drawWidthCm / 2, 6), maxLeftCm);
+    const leftCm = Math.min(Math.max(scene.focusXCm - drawWidthCm / 2, 6), maxLeftCm);
 
     return {
       widthPct: px(drawWidthCm),
@@ -89,7 +135,7 @@ export function RoomScalePreview({
       leftPct: px(leftCm),
       bottomPct: fromFloor(bottomCm),
     };
-  }, [widthCm, heightCm]);
+  }, [widthCm, heightCm, scene]);
 
   return (
     <figure className={cn("m-0", className)}>
@@ -97,7 +143,7 @@ export function RoomScalePreview({
         className="relative w-full overflow-hidden rounded-xl border border-line bg-[color-mix(in_srgb,var(--brand-line)_40%,white)]"
         style={{ aspectRatio: `${ROOM_WIDTH_CM} / ${CANVAS_HEIGHT_CM}` }}
         role="img"
-        aria-label={`${imageAlt}, shown at ${widthCm} by ${heightCm} centimetres on a wall beside a 170 centimetre tall person and an 85 centimetre tall sofa for scale`}
+        aria-label={`${imageAlt}, shown at ${widthCm} by ${heightCm} centimetres in ${scene.label.toLowerCase()}, beside ${scene.reference} and a 170 centimetre tall person for scale`}
       >
         {/* Floor plane and skirting */}
         <div
@@ -122,27 +168,14 @@ export function RoomScalePreview({
             left: `${px(PERSON.xCenterCm - PERSON.widthCm / 2)}%`,
           }}
         >
-          {/* Head, shoulders-to-hip, then tapered legs, so the figure reads as
-              a person rather than a stack of blocks. */}
           <div className="h-[12%] w-[38%] rounded-full bg-current" />
           <div className="-mt-[1%] h-[42%] w-[80%] rounded-t-[45%] bg-current" />
           <div className="h-[47%] w-[54%] rounded-b-md bg-current" />
         </div>
 
-        {/* Sofa silhouette — 85cm reference */}
-        <div
-          aria-hidden
-          className="absolute"
-          style={{
-            bottom: `${py(FLOOR_DEPTH_CM)}%`,
-            width: `${px(SOFA.widthCm)}%`,
-            height: `${py(SOFA.heightCm)}%`,
-            left: `${px(SOFA.xCenterCm - SOFA.widthCm / 2)}%`,
-          }}
-        >
-          <div className="absolute inset-x-0 bottom-0 top-[30%] rounded-md bg-muted/32" />
-          <div className="absolute inset-x-[7%] bottom-[36%] top-0 rounded-t-lg bg-muted/45" />
-        </div>
+        {scene.pieces.map((piece, i) => (
+          <Piece key={`${scene.id}-${i}`} piece={piece} />
+        ))}
 
         {/* The artwork, at true relative scale */}
         <div
@@ -165,8 +198,8 @@ export function RoomScalePreview({
         </div>
       </div>
       <figcaption className="mt-2 text-xs leading-5 text-muted">
-        Shown to scale at {widthCm} × {heightCm} cm, hung at gallery eye level
-        beside a 170 cm person and an 85 cm sofa.
+        Shown to scale at {widthCm} × {heightCm} cm in {scene.label.toLowerCase()},
+        beside {scene.reference} and a 170 cm person.
       </figcaption>
     </figure>
   );

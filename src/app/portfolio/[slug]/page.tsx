@@ -25,6 +25,7 @@ import {
   ArtworkExperience,
   type SizeOption,
 } from "@/components/artwork/artwork-experience";
+import { sceneForVenue } from "@/components/artwork/room-scenes";
 
 export async function generateStaticParams() {
   return getArtworks().map((a) => ({ slug: a.slug }));
@@ -40,12 +41,15 @@ export async function generateMetadata({
     title: artwork.title,
     description: artwork.description,
     path: `/portfolio/${artwork.slug}`,
+    // Pre-composed share card (see scripts/generate-placeholders.mjs). It
+    // carries no brand name — og:site_name supplies that — so a rebrand never
+    // requires regenerating image assets.
     images: [
       {
-        url: absoluteUrl(artwork.image.src),
-        width: artwork.image.width,
-        height: artwork.image.height,
-        alt: artwork.alt,
+        url: absoluteUrl(`/og/${artwork.slug}.jpg`),
+        width: 1200,
+        height: 630,
+        alt: `${artwork.title} — ${artwork.alt}`,
       },
     ],
   });
@@ -123,6 +127,7 @@ export default async function ArtworkPage({
             blurDataURL={blur}
             sizes={sizeOptions}
             defaultSizeId={artwork.defaultSize}
+            defaultSceneId={sceneForVenue(artwork.venues[0]).id}
             sizeNote={copy.artwork.sizesNote}
           >
             {collection && (

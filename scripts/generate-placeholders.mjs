@@ -17,7 +17,14 @@ import sharp from "sharp";
 const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT_DIR = path.join(ROOT, "public", "artworks");
 const BRAND_DIR = path.join(ROOT, "public", "brand");
+const OG_DIR = path.join(ROOT, "public", "og");
 const BLUR_ONLY = process.argv.includes("--blur-only");
+
+/** Escape text for inclusion in SVG markup. */
+const xml = (s) =>
+  String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" })[c],
+  );
 
 /** Deterministic PRNG seeded from a string. */
 function rng(seedStr) {
@@ -180,12 +187,84 @@ const GENERATORS = {
   "words-at-work": wordsAtWork,
 };
 
+/**
+ * Social share card for one artwork, 1200x630.
+ *
+ * Generated at build time rather than rendered on request: the composition is
+ * deterministic, it costs nothing at runtime, and every crawler gets a plain
+ * static JPEG.
+ *
+ * Note: text is rasterised with the host's system fonts, so cards should be
+ * regenerated on one machine and committed rather than built per environment.
+ */
+async function buildOgCard(art, collectionName, sourceFile, outFile) {
+  const W = 1200;
+  const H = 630;
+  const IMG_W = Math.round(W * 0.56);
+  const PANEL_X = IMG_W + 56;
+  const PANEL_W = W - PANEL_X - 56;
+
+  const image = await sharp(sourceFile)
+    .resize(IMG_W, H, { fit: "cover", position: "attention" })
+    .toBuffer();
+
+  // Wrap the title to the panel width, roughly 15 characters per line at 54px.
+  const words = String(art.title).split(/\s+/);
+  const lines = [];
+  let line = "";
+  for (const word of words) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (candidate.length > 16 && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  const titleLines = lines.slice(0, 3);
+
+  const titleSize = titleLines.length > 2 ? 46 : 54;
+  const titleTop = 250 - ((titleLines.length - 1) * titleSize * 1.16) / 2;
+
+  const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <rect x="${IMG_W}" y="0" width="${W - IMG_W}" height="${H}" fill="#FAF7F1"/>
+    <rect x="${PANEL_X}" y="96" width="64" height="6" rx="3" fill="#8F6830"/>
+    <text x="${PANEL_X}" y="150" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="3" fill="#8F6830">${xml(collectionName.toUpperCase())}</text>
+    ${titleLines
+      .map(
+        (t, i) =>
+          `<text x="${PANEL_X}" y="${titleTop + i * titleSize * 1.16}" font-family="Georgia, Times New Roman, serif" font-size="${titleSize}" fill="#191510">${xml(t)}</text>`,
+      )
+      .join("")}
+    <text x="${PANEL_X}" y="${titleTop + titleLines.length * titleSize * 1.16 + 34}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" fill="#6F675A">${xml(art.materials[0] ?? "")}</text>
+    <rect x="${PANEL_X}" y="${H - 118}" width="${PANEL_W}" height="1" fill="#E7DFD1"/>
+    <text x="${PANEL_X}" y="${H - 76}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#191510">Wall art for commercial spaces</text>
+  </svg>`;
+
+  await sharp({
+    create: { width: W, height: H, channels: 3, background: "#FAF7F1" },
+  })
+    .composite([
+      { input: image, left: 0, top: 0 },
+      { input: Buffer.from(overlay), left: 0, top: 0 },
+    ])
+    .jpeg({ quality: 82, mozjpeg: true })
+    .toFile(outFile);
+}
+
 async function main() {
   const artworks = JSON.parse(
     await readFile(path.join(ROOT, "src", "content", "artworks.json"), "utf8"),
   );
+  const collections = JSON.parse(
+    await readFile(path.join(ROOT, "src", "content", "collections.json"), "utf8"),
+  );
+  const collectionName = Object.fromEntries(collections.map((c) => [c.id, c.name]));
+
   await mkdir(OUT_DIR, { recursive: true });
   await mkdir(BRAND_DIR, { recursive: true });
+  await mkdir(OG_DIR, { recursive: true });
 
   const blur = {};
   for (const art of artworks) {
@@ -204,6 +283,14 @@ async function main() {
     }
     const tiny = await sharp(file).resize(20).jpeg({ quality: 40 }).toBuffer();
     blur[art.slug] = `data:image/jpeg;base64,${tiny.toString("base64")}`;
+
+    await buildOgCard(
+      art,
+      collectionName[art.collection] ?? "",
+      file,
+      path.join(OG_DIR, `${art.slug}.jpg`),
+    );
+
     console.log(`ok ${art.slug}`);
   }
 

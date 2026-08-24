@@ -96,15 +96,43 @@ Deployed, browsable, SEO-complete five-page site on a premium base design.
   branded OG image
 - Placeholder artwork generation script with blur-placeholder output
 
-### Phase 2 — Immersive portfolio and artwork pages
+### Phase 2 — Immersive portfolio and artwork pages — IN PROGRESS
 
-- Venue and collection filtering with staggered viewport reveals
-- Card-to-lightbox morphing transitions, scroll progress, cinematic
-  artwork-to-artwork transitions
-- Artwork detail: adaptive gallery (desktop thumbnail rail, mobile swipe),
-  true-scale size comparison against a human/sofa silhouette
-- Per-artwork generated OG images
-- Motion infrastructure: GSAP ScrollTrigger with `matchMedia`, Lenis on desktop
+Done:
+
+- Venue and collection filtering with staggered viewport reveals, filters as
+  real crawlable links that combine rather than replace each other
+- Scroll progress indicator; desktop-only smooth scrolling
+- Fullscreen artwork viewer with scroll lock, Escape, and focus return
+- **True-scale room preview** with venue-specific scenes (lounge, office
+  reception, café, dining room, hotel lobby, classroom), each carrying real
+  furniture heights as scale anchors, defaulting to the artwork's primary
+  venue and updating live with the selected size
+- Aspect-consistent size model so an artwork never changes proportion between
+  sizes — a prerequisite for correct AR models in Phase 3
+- Per-artwork social share cards, composed at build time
+- Verification harnesses: 31-viewport responsive audit, 79-check interaction
+  test suite, image dimension guard
+
+Remaining:
+
+- Previous/next navigation between artworks within a collection
+- Editorial grid treatment for the portfolio index
+- Collection landing pages
+
+**Enhancements adopted during the phase** (approved standing instruction to
+improve the app as opportunities appear):
+
+1. Venue-specific room scenes rather than a single generic living room —
+   directly serves the B2B audience and has no equivalent at any competitor
+   studied.
+2. Automated responsive auditing across 31 device profiles, run against the
+   production build with a guard that refuses to audit a stale one.
+3. Automated interaction testing, including a reduced-motion context, because
+   a backgrounded browser throttles animation and makes manual checking
+   unreliable.
+4. Build-time social cards instead of runtime rendering — deterministic, free
+   at request time, and brand-neutral so a rebrand needs no asset changes.
 
 ### Phase 3 — AR try-on baseline (tier 1) and 3D asset pipeline
 
@@ -155,6 +183,11 @@ Deployed, browsable, SEO-complete five-page site on a premium base design.
 ### Phase 8 — Hardening, content swap, launch
 
 - Real artwork and brand content ingestion, AR model regeneration
+- **Content-hashed artwork filenames.** Replacing an image in place leaves its
+  URL unchanged, so browser and CDN caches keep serving the previous pixels —
+  observed during Phase 2, where a stale cached variant rendered at the old
+  aspect ratio. `next/image` rejects a query string on a local source (HTTP
+  400), so cache busting has to go in the filename.
 - Lighthouse: 90+ SEO and Best Practices; performance tuned on a throttled
   mid-range Android profile
 - Accessibility pass; keyboard navigation and focus states

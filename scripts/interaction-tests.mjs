@@ -102,17 +102,50 @@ async function testArtworkPage(page, vp) {
     const caption = fig.querySelector("figcaption")?.textContent ?? "";
     return { label, caption };
   });
+  // The label must name both scale anchors: the person and the scene's
+  // furniture reference, so the preview is described, not just decorative.
   record(
     vp.name,
     "scale view renders the room preview with reference objects",
-    Boolean(room && /170/.test(room.label) && /85/.test(room.label)),
-    room ? room.label.slice(0, 70) : "figure missing",
+    Boolean(room && /170 centimetre tall person/.test(room.label) && /beside a[n]? \d+ cm/.test(room.label)),
+    room ? room.label.slice(-90) : "figure missing",
   );
   record(
     vp.name,
     "room preview caption states real dimensions",
     Boolean(room && /250/.test(room.caption)),
     room ? room.caption.trim().slice(0, 60) : "",
+  );
+
+  // --- Room scene defaults to the artwork's venue and can be switched.
+  const sceneState = await page.evaluate(() => ({
+    options: [...document.querySelectorAll("fieldset button")].map((b) => b.textContent.trim()),
+    active: document.querySelector("fieldset button[aria-pressed=true]")?.textContent.trim(),
+  }));
+  record(
+    vp.name,
+    "room scene defaults to the artwork's primary venue",
+    sceneState.active === "Office reception",
+    `active: ${sceneState.active}`,
+  );
+  record(
+    vp.name,
+    "all venue scenes are offered",
+    sceneState.options.length === 6,
+    sceneState.options.join(", "),
+  );
+
+  await page.locator("fieldset button", { hasText: "Classroom" }).click();
+  await page.waitForTimeout(220);
+  const switched = await page.evaluate(() => ({
+    caption: document.querySelector("figcaption")?.textContent ?? "",
+    pressed: [...document.querySelectorAll("fieldset button[aria-pressed=true]")].length,
+  }));
+  record(
+    vp.name,
+    "switching scene updates the preview and its caption",
+    /classroom/i.test(switched.caption) && /75 cm desk/.test(switched.caption) && switched.pressed === 1,
+    switched.caption.trim().slice(0, 70),
   );
 
   // --- Fullscreen viewer: opens, traps scroll, closes on Escape, restores focus.
