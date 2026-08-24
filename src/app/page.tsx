@@ -13,7 +13,7 @@ import {
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { ArtworkCard } from "@/components/ui/artwork-card";
+import { ArtworkGrid } from "@/components/ui/artwork-grid";
 import { Reveal } from "@/components/motion/reveal";
 import { staggerDelay } from "@/components/motion/stagger";
 
@@ -137,13 +137,7 @@ export default function HomePage() {
               {copy.cta.viewAll}
             </Link>
           </div>
-          <ul className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((artwork, i) => (
-              <Reveal as="li" key={artwork.slug} delay={staggerDelay(i)}>
-                <ArtworkCard artwork={artwork} />
-              </Reveal>
-            ))}
-          </ul>
+          <ArtworkGrid artworks={featured} className="mt-10" />
         </Container>
       </section>
 

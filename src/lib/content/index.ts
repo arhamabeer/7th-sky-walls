@@ -84,6 +84,22 @@ export function getFeaturedArtworks(): Artwork[] {
   return artworks.filter((a) => a.featured);
 }
 
+/**
+ * Neighbours in catalog order, wrapping at the ends so browsing never
+ * dead-ends on the first or last piece.
+ */
+export function getAdjacentArtworks(slug: string): {
+  previous: Artwork;
+  next: Artwork;
+} | null {
+  const index = artworks.findIndex((a) => a.slug === slug);
+  if (index === -1 || artworks.length < 2) return null;
+  return {
+    previous: artworks[(index - 1 + artworks.length) % artworks.length],
+    next: artworks[(index + 1) % artworks.length],
+  };
+}
+
 /** Base64 blur placeholder for an artwork image, if generated. */
 export function getBlurDataURL(slug: string): string | undefined {
   return blurMap[slug];

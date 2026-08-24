@@ -6,6 +6,7 @@ import { artworkInquiryMessage, copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
 import {
   cmToInches,
+  getAdjacentArtworks,
   getArtworkBySlug,
   getArtworks,
   getBlurDataURL,
@@ -17,15 +18,14 @@ import { breadcrumbJsonLd, visualArtworkJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
-import { ArtworkCard } from "@/components/ui/artwork-card";
+import { ArtworkGrid } from "@/components/ui/artwork-grid";
 import { Chip } from "@/components/ui/chip";
-import { Reveal } from "@/components/motion/reveal";
-import { staggerDelay } from "@/components/motion/stagger";
 import {
   ArtworkExperience,
   type SizeOption,
 } from "@/components/artwork/artwork-experience";
 import { sceneForVenue } from "@/components/artwork/room-scenes";
+import { ArtworkPager } from "@/components/artwork/artwork-pager";
 
 export async function generateStaticParams() {
   return getArtworks().map((a) => ({ slug: a.slug }));
@@ -67,6 +67,7 @@ export default async function ArtworkPage({
   const related = getArtworks({ collection: artwork.collection })
     .filter((a) => a.slug !== artwork.slug)
     .slice(0, 3);
+  const adjacent = getAdjacentArtworks(artwork.slug);
 
   // Physical dimensions are resolved on the server so the size chart stays a
   // server-only concern; the client only receives plain numbers.
@@ -238,14 +239,12 @@ export default async function ArtworkPage({
             <h2 className="font-display text-2xl font-medium tracking-tight">
               {copy.artwork.moreFromCollection}
             </h2>
-            <ul className="mt-6 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((a, i) => (
-                <Reveal as="li" key={a.slug} delay={staggerDelay(i)}>
-                  <ArtworkCard artwork={a} />
-                </Reveal>
-              ))}
-            </ul>
+            <ArtworkGrid artworks={related} className="mt-6" />
           </section>
+        )}
+
+        {adjacent && (
+          <ArtworkPager previous={adjacent.previous} next={adjacent.next} />
         )}
       </Container>
     </>
