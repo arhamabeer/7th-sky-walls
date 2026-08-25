@@ -1,4 +1,4 @@
-import type { Orientation, SizeId, SizeTier, VenueInfo } from "@/lib/content/schema";
+import type { Orientation, SizeId, SizeTier } from "@/lib/content/schema";
 
 /**
  * Size model.
@@ -50,11 +50,3 @@ export function resolveSize(
   return { label: tier.label, widthCm, heightCm };
 }
 
-export const VENUES: VenueInfo[] = [
-  { id: "office", name: "Offices", pitch: "Brand walls and focus-friendly art for workplaces." },
-  { id: "cafe", name: "Cafés", pitch: "Instagrammable feature walls that anchor your interior." },
-  { id: "restaurant", name: "Restaurants", pitch: "Atmosphere-setting pieces for dining rooms." },
-  { id: "hotel", name: "Hotels", pitch: "Lobby statements and serene art for guest floors." },
-  { id: "school", name: "Schools", pitch: "Durable, inspiring murals for halls and libraries." },
-  { id: "university", name: "Universities", pitch: "Campus identity walls and department art programs." },
-];

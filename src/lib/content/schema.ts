@@ -112,12 +112,27 @@ export const caseStudySchema = z.object({
 });
 export type CaseStudy = z.infer<typeof caseStudySchema>;
 
-export interface VenueInfo {
-  id: VenueId;
-  name: string;
-  /** Short pitch shown on venue cards/filters. */
-  pitch: string;
-}
+export const venueSchema = z.object({
+  id: venueIdSchema,
+  name: z.string(),
+  /** Short pitch shown on venue cards and filters. */
+  pitch: z.string(),
+  /** Page headline for the venue's own landing page. */
+  headline: z.string(),
+  /** Opening paragraph — why art in this kind of space is its own problem. */
+  intro: z.string().min(80),
+  /**
+   * What actually differs about specifying art here. This is the content a
+   * commercial buyer cannot get anywhere else, and the reason these pages
+   * exist rather than being filter links.
+   */
+  considerations: z
+    .array(z.object({ title: z.string(), text: z.string().min(40) }))
+    .min(2),
+  /** Room scene used for the scale preview on this page. */
+  scene: z.string(),
+});
+export type VenueInfo = z.infer<typeof venueSchema>;
 
 export interface SizeTier {
   id: SizeId;

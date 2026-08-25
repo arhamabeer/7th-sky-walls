@@ -5,18 +5,19 @@ import collectionsJson from "@/content/collections.json";
 import servicesJson from "@/content/services.json";
 import caseStudiesJson from "@/content/case-studies.json";
 import materialsJson from "@/content/materials.json";
+import venuesJson from "@/content/venues.json";
 import blurJson from "@/content/blur.json";
 import arManifestJson from "@/content/ar-manifest.json";
 import {
   ORIENTATION_ASPECT,
   SIZE_TIERS,
-  VENUES,
   resolveSize,
 } from "@/content/catalog";
 import {
   artworkSchema,
   caseStudySchema,
   materialSchema,
+  venueSchema,
   collectionSchema,
   serviceSchema,
   type Artwork,
@@ -63,6 +64,7 @@ const collections: Collection[] = parseAll(collectionSchema, collectionsJson, "c
 const services: Service[] = parseAll(serviceSchema, servicesJson, "service");
 const caseStudies: CaseStudy[] = parseAll(caseStudySchema, caseStudiesJson, "case study");
 const materials: Material[] = parseAll(materialSchema, materialsJson, "material");
+const venues: VenueInfo[] = parseAll(venueSchema, venuesJson, "venue");
 
 // Referential integrity: every artwork must point at a real collection.
 for (const a of artworks) {
@@ -164,11 +166,11 @@ export function getMaterials(): Material[] {
 }
 
 export function getVenues(): VenueInfo[] {
-  return VENUES;
+  return venues;
 }
 
 export function getVenueById(id: string): VenueInfo | undefined {
-  return VENUES.find((v) => v.id === id);
+  return venues.find((v) => v.id === id);
 }
 
 export function getSizeTiers(): SizeTier[] {

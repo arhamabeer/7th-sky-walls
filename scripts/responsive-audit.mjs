@@ -77,6 +77,8 @@ const PAGES = [
   { path: "/portfolio?venue=hotel", name: "portfolio-filtered" },
   { path: "/collections", name: "collections" },
   { path: "/collections/sacred-lines", name: "collection-detail" },
+  { path: "/spaces", name: "spaces" },
+  { path: "/spaces/school", name: "space-detail" },
   { path: "/portfolio/meridian-seven", name: "artwork-portrait" },
   { path: "/portfolio/glass-horizon", name: "artwork-landscape" },
   { path: "/portfolio/night-grid", name: "artwork-square" },

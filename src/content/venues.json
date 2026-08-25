@@ -1,0 +1,134 @@
+[
+  {
+    "id": "office",
+    "name": "Offices",
+    "pitch": "Brand walls and focus-friendly art for workplaces.",
+    "headline": "Art for the walls your team sees every day",
+    "intro": "An office wall is looked at more often than any brochure the company will ever print — usually by the same people, for years. That changes what belongs on it. Work that shouts is exhausting by month three; work that rewards a second look is still earning its place in year three.",
+    "considerations": [
+      {
+        "title": "Downlights and glare",
+        "text": "Most offices are lit from directly above, which turns a glossy surface into a mirror. Matte canvas and satin-sealed aluminium stay readable."
+      },
+      {
+        "title": "Reception sets the tone",
+        "text": "The reception wall is the one visitors photograph and remember. It usually justifies the largest piece in the building."
+      },
+      {
+        "title": "Focus areas want quiet",
+        "text": "Colour-field and minimal work suits desks and quiet rooms. Save the statement pieces for circulation space."
+      }
+    ],
+    "scene": "office"
+  },
+  {
+    "id": "cafe",
+    "name": "Cafés",
+    "pitch": "Instagrammable feature walls that anchor your interior.",
+    "headline": "The wall people photograph before their coffee",
+    "intro": "A café's feature wall does marketing work that no ad budget matches — every photograph taken in front of it carries the room to someone who has not visited yet. It has to look good in a phone camera, in evening light, with people in front of it.",
+    "considerations": [
+      {
+        "title": "It will be photographed",
+        "text": "Strong composition and clear colour read well in a phone camera. Fine detail disappears at the distance people shoot from."
+      },
+      {
+        "title": "Seating changes the height",
+        "text": "Art above banquette seating hangs higher than gallery convention suggests, so it clears heads and stays visible across the room."
+      },
+      {
+        "title": "It has to be cleanable",
+        "text": "Near a counter or a service run, aluminium composite survives what canvas will not."
+      }
+    ],
+    "scene": "cafe"
+  },
+  {
+    "id": "restaurant",
+    "name": "Restaurants",
+    "pitch": "Atmosphere-setting pieces for dining rooms.",
+    "headline": "Art that sets the room before the first course",
+    "intro": "A dining room is judged in the first ten seconds, mostly on atmosphere. Art carries a disproportionate share of that — it tells guests what kind of evening this is going to be, long before the menu does.",
+    "considerations": [
+      {
+        "title": "Low light changes everything",
+        "text": "Pieces chosen under showroom lighting can vanish at dinner service. We proof against the actual light levels of the room."
+      },
+      {
+        "title": "Long walls want long work",
+        "text": "Banquette runs and corridors read better with panoramic pieces than with a row of small ones."
+      },
+      {
+        "title": "Kitchens and grease travel",
+        "text": "Anywhere within reach of a pass, sealed surfaces are the only sensible answer."
+      }
+    ],
+    "scene": "restaurant"
+  },
+  {
+    "id": "hotel",
+    "name": "Hotels",
+    "pitch": "Lobby statements and serene art for guest floors.",
+    "headline": "A lobby that means somewhere, and floors that let guests rest",
+    "intro": "Hotels ask two different things of art in the same building. The lobby has to say where you are and why this hotel rather than another. Guest floors have to do the opposite — recede, repeat without monotony, and never be the reason someone remembers the room.",
+    "considerations": [
+      {
+        "title": "Two briefs, one building",
+        "text": "Lobby work can be singular and architectural. Guest floors need a series that varies without competing."
+      },
+      {
+        "title": "Corridors are long and dim",
+        "text": "Repeating series at consistent intervals give a corridor rhythm; single large pieces get lost in it."
+      },
+      {
+        "title": "Fixings matter",
+        "text": "Guest-room art is installed to resist being knocked straight. We fix accordingly rather than hanging on a hook."
+      }
+    ],
+    "scene": "hotel"
+  },
+  {
+    "id": "school",
+    "name": "Schools",
+    "pitch": "Durable, inspiring murals for halls and libraries.",
+    "headline": "Walls that teach something on the way past",
+    "intro": "School corridors are walked thousands of times a term by people who will remember them for decades. That is a rare opportunity and a demanding brief: the work has to survive contact, mean something to a fifteen-year-old, and not embarrass the school in five years.",
+    "considerations": [
+      {
+        "title": "It will be touched",
+        "text": "At pupil height, aluminium composite or wall covering rather than stretched canvas. This is not a preference, it is the difference between five years and one term."
+      },
+      {
+        "title": "Fire rating is asked first",
+        "text": "Our wall coverings are Class B fire-rated and wipe-clean, and we send the spec sheet with the quote rather than after it."
+      },
+      {
+        "title": "Words earn their place",
+        "text": "Typography and calligraphy work well here — pupils actually read corridor walls, repeatedly."
+      }
+    ],
+    "scene": "classroom"
+  },
+  {
+    "id": "university",
+    "name": "Universities",
+    "pitch": "Campus identity walls and department art programs.",
+    "headline": "Art that gives a department its own character",
+    "intro": "A campus is many buildings pretending to be one institution. Art is one of the few things that can hold that together while still letting a department feel distinct — a shared visual language, applied differently in engineering than in the library.",
+    "considerations": [
+      {
+        "title": "Programme it, do not decorate it",
+        "text": "Planning art across a floor plan produces coherence that piece-by-piece buying never does."
+      },
+      {
+        "title": "Departments want their own voice",
+        "text": "A shared palette with different subjects per department gives identity without fragmentation."
+      },
+      {
+        "title": "Phased budgets are normal",
+        "text": "We plan the whole programme, then install in phases as budget releases."
+      }
+    ],
+    "scene": "classroom"
+  }
+]

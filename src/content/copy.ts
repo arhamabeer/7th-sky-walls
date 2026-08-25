@@ -58,6 +58,23 @@ export const copy = {
     ctaTitle: "Have a wall in mind?",
     ctaSubtitle: "Tell us about your space — we'll respond with ideas within one working day.",
   },
+  spaces: {
+    eyebrow: "By space",
+    title: "Spaces",
+    subtitle:
+      "What belongs on an office wall is not what belongs in a school corridor. These pages cover what actually differs — the light, the traffic, the fire rating — alongside the pieces we would put forward first.",
+    viewSpace: "See what we recommend",
+    considerationsTitle: "What changes in this kind of space",
+    worksTitle: "Work we would suggest for",
+    servicesTitle: "How we usually work here",
+    materialsTitle: "Materials that suit this space",
+    materialsSubtitle:
+      "The surface matters as much as the image. These are the four we work in, and where each belongs.",
+    materialsLink: "Read why we use each one",
+    ctaTitle: "Tell us about the space",
+    ctaSubtitle:
+      "Send the room, the wall and roughly what you're after. We reply within one working day.",
+  },
   collections: {
     title: "Collections",
     subtitle:

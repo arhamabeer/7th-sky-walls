@@ -163,7 +163,7 @@ export default function HomePage() {
             {venues.map((venue, i) => (
               <Reveal as="li" key={venue.id} delay={staggerDelay(i)} className="h-full">
                 <Link
-                  href={`/portfolio?venue=${venue.id}`}
+                  href={`/spaces/${venue.id}`}
                   className="block h-full rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
                 >
                   <h3 className="font-display text-lg font-medium">{venue.name}</h3>
