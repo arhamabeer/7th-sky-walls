@@ -1182,7 +1182,7 @@ async function testAndroidArTiers(browser) {
       const actions = (
         await page.locator("[role=tabpanel]:not([hidden]) button, [role=tabpanel]:not([hidden]) a").allInnerTexts()
       )
-        .map((t) => t.replace(/s+/g, " ").trim())
+        .map((t) => t.replace(/\s+/g, " ").trim())
         .filter(Boolean);
 
       record(
@@ -1204,6 +1204,127 @@ async function testAndroidArTiers(browser) {
     }
     await context.close();
   }
+}
+
+/**
+ * A device that claims AR and then cannot deliver it.
+ *
+ * `isSessionSupported("immersive-ar")` is a capability claim, not an
+ * availability guarantee: Chrome on Android answers true whenever the browser
+ * supports AR, without checking that Google Play Services for AR is installed
+ * or installable. A real handset reported immersive-ar AND immersive-vr as
+ * supported — both untrue in practice — took the WebXR path, and dropped the
+ * visitor on a "Google Play Services for AR required" screen.
+ *
+ * Nothing can predict that, so the requirement is recovery: after a failed
+ * launch the panel must stop leading with AR and lead with the camera preview,
+ * and it must say why.
+ */
+async function testArFailureRecovery(browser) {
+  const context = await browser.newContext({
+    viewport: { width: 393, height: 852 },
+    isMobile: true,
+    hasTouch: true,
+    userAgent:
+      "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Mobile Safari/537.36",
+  });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "xr", {
+      value: {
+        isSessionSupported: async () => true,
+        requestSession: async () => {
+          throw new DOMException("Play Services for AR unavailable", "NotSupportedError");
+        },
+      },
+      configurable: true,
+    });
+  });
+
+  const actions = async () =>
+    (
+      await page
+        .locator("[role=tabpanel]:not([hidden]) button, [role=tabpanel]:not([hidden]) a")
+        .allInnerTexts()
+    )
+      .map((t) => t.replace(/\s+/g, " ").trim())
+      .filter(Boolean);
+
+  try {
+    await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+    await page.locator("[role=tab]", { hasText: /^On your wall$/ }).click();
+    await page
+      .waitForFunction(
+        () =>
+          [...document.querySelectorAll("[role=tabpanel]")].some(
+            (el) => !el.hidden && /my wall|camera/i.test(el.textContent ?? ""),
+          ),
+        null,
+        { timeout: 8000 },
+      )
+      .catch(() => {});
+
+    const before = await actions();
+    record(
+      "ar-recovery",
+      "a device claiming AR support is offered AR",
+      Boolean(before[0] && /place on my wall/i.test(before[0])),
+      before.join(" | ").slice(0, 90),
+    );
+
+    // Wait for the model to be loaded before launching. Clicking earlier gets
+    // "the 3D view is still loading", which returns without arming the
+    // watchdog — correct behaviour, and it made this test look like the
+    // recovery was broken when it was the test that was too quick.
+    await page.waitForFunction(
+      () => document.querySelector("model-viewer")?.loaded === true,
+      null,
+      { timeout: 15000 },
+    );
+    await page.getByRole("button", { name: /place on my wall/i }).click();
+    // Past the in-page watchdog, which is what catches a launch that produces
+    // no event at all.
+    await page.waitForFunction(
+      () =>
+        [...document.querySelectorAll("[role=tabpanel]")].some(
+          (el) => !el.hidden && /preview with your camera/i.test(el.textContent ?? ""),
+        ),
+      null,
+      { timeout: 12000 },
+    );
+
+    const after = await actions();
+    record(
+      "ar-recovery",
+      "after a failed launch the camera preview becomes the first action",
+      Boolean(after[0] && /preview with your camera/i.test(after[0])),
+      after.join(" | ").slice(0, 90),
+    );
+    record(
+      "ar-recovery",
+      "AR stays available as a secondary retry",
+      after.some((a) => /try ar again/i.test(a)),
+      after.join(" | ").slice(0, 90),
+    );
+
+    const message = await page.evaluate(
+      () =>
+        document
+          .querySelector("[role=tabpanel]:not([hidden]) [role=status]")
+          ?.textContent?.replace(/\s+/g, " ")
+          .trim() ?? "",
+    );
+    record(
+      "ar-recovery",
+      "the failure names its likely cause rather than saying try again",
+      /google play services for ar/i.test(message) &&
+        !/^AR could not start\. Please try again\.$/.test(message),
+      message.slice(0, 90),
+    );
+  } catch (err) {
+    record("ar-recovery", "failure-recovery group completed without throwing", false, String(err).slice(0, 110));
+  }
+  await context.close();
 }
 
 async function testReducedMotion(browser) {
@@ -1302,6 +1423,7 @@ async function main() {
   }
 
   await testAndroidArTiers(browser);
+  await testArFailureRecovery(browser);
   await testReducedMotion(browser);
   await testRateLimit(browser);
   await browser.close();

@@ -92,7 +92,29 @@ export function ArPanel({
   const [status, setStatus] = useState<ArStatus | null>(null);
   const [launchError, setLaunchError] = useState<string | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
+  /**
+   * Set once a launch has demonstrably failed on this device.
+   *
+   * `navigator.xr.isSessionSupported("immersive-ar")` is a capability claim, not
+   * an availability guarantee. Chrome on Android answers true whenever the
+   * browser supports AR, without checking that Google Play Services for AR is
+   * installed or even installable — so a handset where the Play Store calls
+   * that app "incompatible with this device" reports immersive-ar as supported
+   * and then fails at requestSession, which is where the visitor meets a
+   * "Google Play Services for AR required" screen. Confirmed on a real device
+   * reporting immersive-ar: true and immersive-vr: true, both untrue in
+   * practice.
+   *
+   * No web API can tell us this in advance. So the promise of never a dead end
+   * is kept by recovering rather than by predicting: after a failure the panel
+   * stops leading with AR and leads with the camera preview, which needs no AR
+   * runtime at all.
+   */
+  const [arFailed, setArFailed] = useState(false);
   const viewerRef = useRef<ModelViewerElement | null>(null);
+  const launchWatchdog = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Mirrors `status` so the watchdog can read it without a state updater. */
+  const statusRef = useRef<ArStatus | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -112,11 +134,17 @@ export function ArPanel({
 
   const handleStatus = useCallback(
     (next: ArStatus) => {
+      statusRef.current = next;
       setStatus(next);
       onAnalytics?.("ar_status", { status: next, title, size: sizeLabel });
+      if (next === "session-started" && launchWatchdog.current) {
+        clearTimeout(launchWatchdog.current);
+        launchWatchdog.current = null;
+      }
       if (next === "failed") {
+        setArFailed(true);
         setLaunchError(
-          "Your device could not start AR. The scale preview above still shows this piece at true size.",
+          "This device could not start AR — usually because Google Play Services for AR is not available for it. The camera preview below works without it, and shows the piece at its true size.",
         );
       }
     },
@@ -141,15 +169,63 @@ export function ArPanel({
       return;
     }
     setLaunchError(null);
+
+    /**
+     * Watch for a WebXR session that never starts.
+     *
+     * Not every failure arrives as an event: Chrome can take the visitor to a
+     * Play Services install screen and return them with no ar-status at all, so
+     * waiting for one would leave the panel looking like nothing happened. A
+     * session that has not started after five seconds has not started.
+     *
+     * Only for in-page AR. On the handoff tiers the page is backgrounded while
+     * the platform viewer is open, so a timer there would report failure for a
+     * launch that worked.
+     */
+    if (!capability?.handsOff) {
+      if (launchWatchdog.current) clearTimeout(launchWatchdog.current);
+      launchWatchdog.current = setTimeout(() => {
+        launchWatchdog.current = null;
+        const current = statusRef.current;
+        if (current === "session-started" || current === "object-placed") return;
+        setArFailed(true);
+        setLaunchError(
+          "AR did not start on this device — usually because Google Play Services for AR is not available for it. The camera preview below works without it, and shows the piece at its true size.",
+        );
+        onAnalytics?.("ar_launch_timeout", { title, size: sizeLabel });
+      }, 5000);
+    }
+
     try {
       await element.activateAR();
     } catch {
-      setLaunchError("AR could not start. Please try again.");
+      if (launchWatchdog.current) {
+        clearTimeout(launchWatchdog.current);
+        launchWatchdog.current = null;
+      }
+      setArFailed(true);
+      setLaunchError(
+        "AR could not start on this device — usually because Google Play Services for AR is not available for it. The camera preview below works without it.",
+      );
       onAnalytics?.("ar_launch_error", { title, size: sizeLabel });
     }
-  }, [onAnalytics, title, sizeLabel]);
+  }, [onAnalytics, title, sizeLabel, capability?.handsOff]);
 
-  const copy = capability ? TIER_COPY[capability.tier] : null;
+  useEffect(
+    () => () => {
+      if (launchWatchdog.current) clearTimeout(launchWatchdog.current);
+    },
+    [],
+  );
+
+  /**
+   * A launch that failed demotes AR for the rest of the visit. The overlay
+   * branch below then becomes the primary path, and AR stays available as a
+   * clearly secondary retry — leading with something that has already failed
+   * once on this device is the dead end this panel exists to avoid.
+   */
+  const copy = capability && !arFailed ? TIER_COPY[capability.tier] : null;
+  const showOverlayFirst = Boolean(capability) && (arFailed || capability?.tier === "overlay");
 
   return (
     <div className="rounded-xl border border-line bg-surface p-4 sm:p-5">
@@ -186,7 +262,7 @@ export function ArPanel({
             cannot be resized, so what you see is what arrives.
           </p>
         </>
-      ) : capability.tier === "overlay" ? (
+      ) : showOverlayFirst ? (
         <>
           <button
             type="button"
@@ -196,15 +272,28 @@ export function ArPanel({
             Preview with your camera
           </button>
           <p className="mt-2 text-xs leading-5 text-muted">
-            This device has no AR runtime, so the piece will not stay pinned to
-            the wall — but you can still hold it up against the room, and
-            calibrate against a sheet of paper to see its true size.
+            {arFailed
+              ? "The piece will not stay pinned to the wall here — but you can still hold it up against the room, and calibrate against a sheet of paper to see its true size."
+              : "This device has no AR runtime, so the piece will not stay pinned to the wall — but you can still hold it up against the room, and calibrate against a sheet of paper to see its true size."}
           </p>
           {/* Scene Viewer stays reachable on Android, but as a secondary and
               honestly labelled: it is expected to fail here, and the reason is
               stated so a tap that goes nowhere is not a surprise. Making it the
               primary action is what left this device with a dead button. */}
-          {capability.sceneViewerFallback && (
+          {arFailed && (
+            <p className="mt-3 text-xs leading-5 text-muted">
+              <button
+                type="button"
+                onClick={launch}
+                className="inline-flex min-h-11 items-center font-semibold text-accent underline underline-offset-4"
+              >
+                Try AR again
+              </button>{" "}
+              — worth one retry if you have since installed Google Play Services
+              for AR.
+            </p>
+          )}
+          {!arFailed && capability.sceneViewerFallback && (
             <p className="mt-3 text-xs leading-5 text-muted">
               <button
                 type="button"
@@ -241,8 +330,10 @@ export function ArPanel({
       )}
 
       {/* Offered from the same UI whichever tier the device landed on, so a
-          failed handoff always has somewhere to go. */}
-      {(capability?.handsOff || capability?.tier === "overlay" || launchError) && (
+          failed handoff always has somewhere to go. Suppressed once the camera
+          preview has become the primary action, where it would only repeat the
+          button directly above it. */}
+      {!showOverlayFirst && (capability?.handsOff || launchError) && (
         <p className="mt-3 text-xs leading-5 text-muted">
           <button
             type="button"
