@@ -1,19 +1,26 @@
 import "server-only";
 import { site } from "@/config/site.config";
-import { TIMELINE_LABELS, type InquiryInput } from "@/lib/inquiry/schema";
+import {
+  TIMELINE_LABELS,
+  type InquiryHandover,
+  type InquiryInput,
+} from "@/lib/inquiry/schema";
 import { getVenueById } from "@/lib/content";
 
 /**
  * Delivers an inquiry to the studio.
  *
  * Email goes out through Resend when `RESEND_API_KEY` is configured. Without
- * it — local development, or a deployment before the key is set — the inquiry
- * is logged in full and reported as delivered.
+ * it — local development, or a deployment before the key is set — the inquiry is
+ * logged in full and reported as **not** delivered. The docstring here used to
+ * claim the opposite, which is the mistake the caller was written to defend
+ * against: reporting success for something that only reached a log file.
  *
- * That fallback is deliberate but narrow: it keeps the form testable end to
- * end without credentials, and the log line is complete enough to recover a
- * real inquiry by hand. `assertDeliveryConfigured()` exists so the launch
- * checklist can fail loudly rather than discovering the gap from a customer.
+ * The log line is complete enough to recover a real inquiry by hand, and
+ * `composeHandover` turns the same data into a prefilled WhatsApp or email
+ * message so the visitor can complete it themselves in one tap.
+ * `assertDeliveryConfigured()` exists so the launch checklist can fail loudly
+ * rather than discovering the gap from a customer.
  */
 
 const escapeHtml = (value: string) =>
@@ -72,6 +79,72 @@ function renderHtml(input: InquiryInput, reference: string): string {
 </div>`;
 }
 
+/**
+ * Budgets for a prefilled link, measured on the *encoded* length.
+ *
+ * Measuring the decoded string would be wrong for this site in particular:
+ * `encodeURIComponent` turns one Urdu or Arabic character into nine bytes of
+ * percent-escapes, so an Urdu message that looks well within budget produces a
+ * URL three times over it. Both numbers leave room for the scheme, the address
+ * and the encoded subject on top.
+ */
+const MAILTO_BODY_BUDGET = 1500;
+const WHATSAPP_BODY_BUDGET = 3000;
+
+/** Trim `body` until its encoded form fits, marking it if anything was cut. */
+function clampToUrlBudget(body: string, budget: number): { text: string; truncated: boolean } {
+  if (encodeURIComponent(body).length <= budget) return { text: body, truncated: false };
+  const marker = "\n\n[Message cut short to fit — happy to send the rest.]";
+  // Binary search on characters: the encoded length is not proportional to the
+  // character count once scripts are mixed, so stepping by bytes would either
+  // overshoot or take thousands of iterations.
+  let low = 0;
+  let high = body.length;
+  while (low < high) {
+    const mid = Math.ceil((low + high) / 2);
+    if (encodeURIComponent(body.slice(0, mid) + marker).length <= budget) low = mid;
+    else high = mid - 1;
+  }
+  return { text: body.slice(0, low).trimEnd() + marker, truncated: true };
+}
+
+/**
+ * The same inquiry, composed for a person to send by hand.
+ *
+ * Built from `renderLines` so it carries exactly the fields the email would —
+ * a handover that quietly drops the wall size is a handover that costs the
+ * studio a follow-up question.
+ */
+export function composeHandover(input: InquiryInput, reference: string): InquiryHandover {
+  const lines = renderLines(input);
+  const body = (omit: string) => {
+    const kept = lines
+      .filter(([label]) => label !== omit)
+      .map(([label, value]) => `${label}: ${value}`)
+      .join("\n");
+    return `Inquiry ${reference}\n\n${kept}\n\n${input.message}\n`;
+  };
+
+  // Each channel already carries one of the two contact handles: WhatsApp shows
+  // the sender's number, and an email shows the sender's address. Repeating it
+  // in the body only lengthens a URL that has a hard limit.
+  const whatsapp = clampToUrlBudget(body("Phone"), WHATSAPP_BODY_BUDGET);
+  const email = clampToUrlBudget(body("Email"), MAILTO_BODY_BUDGET);
+
+  return {
+    subject: subjectFor(input),
+    whatsapp: whatsapp.text,
+    email: email.text,
+    truncated: whatsapp.truncated || email.truncated,
+  };
+}
+
+function subjectFor(input: InquiryInput): string {
+  return input.artworkTitle
+    ? `Inquiry: ${input.artworkTitle} — ${input.name}`
+    : `Inquiry from ${input.name} (${input.city})`;
+}
+
 /** True when real email delivery is configured. */
 export function isDeliveryConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY && process.env.INQUIRY_FROM_EMAIL);
@@ -91,9 +164,7 @@ export async function deliverInquiry(
   input: InquiryInput,
   reference: string,
 ): Promise<{ delivered: boolean; detail: string }> {
-  const subject = input.artworkTitle
-    ? `Inquiry: ${input.artworkTitle} — ${input.name}`
-    : `Inquiry from ${input.name} (${input.city})`;
+  const subject = subjectFor(input);
 
   if (!isDeliveryConfigured()) {
     console.info(

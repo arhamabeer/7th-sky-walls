@@ -1086,6 +1086,79 @@ async function testInquiryForm(page, vp) {
     `${afterEmpty.invalid} marked`,
   );
 
+
+  /**
+   * A rejected submission must not cost the visitor what they typed.
+   *
+   * React resets an uncontrolled form once its action completes — error or not —
+   * so this used to wipe every field when one of them was wrong, on the only path
+   * to a sale on the site. The server now echoes the raw values back and the form
+   * remounts with them.
+   */
+  const filled = {
+    name: "Ayesha Khan",
+    email: "ayesha@example.com",
+    city: "Karachi",
+    wallSize: "about 3.5m wide",
+  };
+  for (const [field, value] of Object.entries(filled)) {
+    await page.fill(`main form input[name="${field}"]`, value);
+  }
+  await page.selectOption('main form select[name="venue"]', "office");
+  // Too short for the schema, so the submission is valid HTML and invalid input.
+  await page.fill('main form textarea[name="message"]', "short");
+
+  const readBack = async () =>
+    page.evaluate(() => ({
+      name: document.querySelector('main form input[name="name"]')?.value ?? "",
+      email: document.querySelector('main form input[name="email"]')?.value ?? "",
+      city: document.querySelector('main form input[name="city"]')?.value ?? "",
+      wallSize: document.querySelector('main form input[name="wallSize"]')?.value ?? "",
+      venue: document.querySelector('main form select[name="venue"]')?.value ?? "",
+      message: document.querySelector('main form textarea[name="message"]')?.value ?? "",
+      honeypot: document.querySelector('main form input[name="website"]')?.value ?? "",
+    }));
+
+  await page.locator('main form button[type="submit"]').click();
+  await page.waitForTimeout(1800);
+  const kept = await readBack();
+  record(
+    vp.name,
+    "a rejected submission keeps every field the visitor typed",
+    kept.name === filled.name &&
+      kept.email === filled.email &&
+      kept.city === filled.city &&
+      kept.wallSize === filled.wallSize &&
+      kept.venue === "office" &&
+      kept.message === "short",
+    JSON.stringify(kept).slice(0, 110),
+  );
+  record(
+    vp.name,
+    "re-seeding never fills the honeypot",
+    kept.honeypot === "",
+    `honeypot="${kept.honeypot}"`,
+  );
+
+  /**
+   * The same error twice, and the reason the remount token exists at all.
+   *
+   * Removing it and re-running this group is instructive: the text inputs still
+   * survive, because React updates their value attribute and the reset restores
+   * them to it — but the `<select>` snaps back to empty, since defaultValue on a
+   * select sets `selected` on an option and that is not re-applied to a mounted
+   * element. So the token is carrying the select, and this check is what says so.
+   */
+  await page.locator('main form button[type="submit"]').click();
+  await page.waitForTimeout(1800);
+  const keptAgain = await readBack();
+  record(
+    vp.name,
+    "fields survive the same error happening twice",
+    keptAgain.name === filled.name && keptAgain.message === "short",
+    JSON.stringify(keptAgain).slice(0, 90),
+  );
+
   // A complete submission must be accepted and acknowledged with a reference.
   await page.fill('main form input[name="name"]', "Ayesha Khan");
   await page.fill('main form input[name="email"]', "ayesha@example.com");
@@ -1122,8 +1195,11 @@ async function testInquiryForm(page, vp) {
    * pair, and the run reports which one it saw.
    */
   const acknowledged = /thank you/i.test(afterValid.text) && /INQ-/.test(afterValid.text);
-  const declaredUndelivered =
-    /not connected/i.test(afterValid.text) && /whatsapp/i.test(afterValid.text);
+  // Deliberately only the message. It used to also require the word "whatsapp"
+  // somewhere in the alert, which the handover buttons happen to supply — so
+  // deleting the handover made *this* check fail instead of the handover checks
+  // that exist for it. One assertion, one thing.
+  const declaredUndelivered = /not connected/i.test(afterValid.text);
   record(
     vp.name,
     "a complete inquiry ends in an honest state, never a false success",
@@ -1134,6 +1210,56 @@ async function testInquiryForm(page, vp) {
         ? "declared undelivered and offered the direct channels"
         : `neither: ${afterValid.text.slice(0, 70)}`,
   );
+
+  /**
+   * When a valid inquiry cannot be delivered, the visitor must be one tap from
+   * sending the same thing themselves — not reading a paragraph asking them to
+   * find WhatsApp and retype everything still on screen.
+   *
+   * Only assertable in the undelivered state, which is the state of any build
+   * without RESEND_API_KEY. With delivery configured the success panel replaces
+   * the form and there is nothing to hand over.
+   */
+  if (declaredUndelivered) {
+    const handover = await page.evaluate(() => {
+      const alert = document.querySelector("main form [role=alert]");
+      const links = [...(alert?.querySelectorAll("a") ?? [])].map((a) => a.getAttribute("href") ?? "");
+      const decoded = links.map((h) => decodeURIComponent(h));
+      return {
+        count: links.length,
+        whatsapp: links.find((h) => h.includes("wa.me")) ?? "",
+        mailto: links.find((h) => h.startsWith("mailto:")) ?? "",
+        // `every` on an empty array is true, so the count guard is what stops
+        // these two from passing vacuously when there are no links at all —
+        // which is exactly the regression the check above is for.
+        carriesMessage:
+          decoded.length > 0 && decoded.every((d) => /fitting out a new reception/i.test(d)),
+        carriesCity: decoded.length > 0 && decoded.every((d) => /Karachi/.test(d)),
+        // URLSearchParams encodes a space as "+", which a mail client renders
+        // literally in the body. mailto wants percent-encoding.
+        mailtoHasPlus: (links.find((h) => h.startsWith("mailto:")) ?? "").includes("+"),
+      };
+    });
+    record(
+      vp.name,
+      "an undeliverable inquiry offers both channels, prefilled",
+      Boolean(handover.whatsapp) && Boolean(handover.mailto),
+      `${handover.count} link(s)`,
+    );
+    record(
+      vp.name,
+      "the prefilled links carry what was actually typed",
+      handover.carriesMessage && handover.carriesCity,
+      `message: ${handover.carriesMessage}, city: ${handover.carriesCity}`,
+    );
+    record(
+      vp.name,
+      "the mailto body is percent-encoded, not form-encoded",
+      Boolean(handover.mailto) && !handover.mailtoHasPlus,
+      handover.mailto.slice(0, 60),
+    );
+  }
+
   record(
     vp.name,
     "WhatsApp remains offered after submitting",

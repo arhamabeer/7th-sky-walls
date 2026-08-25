@@ -107,9 +107,15 @@ export function telLink(): string {
   return `tel:${site.contact.phone.replace(/[^+\d]/g, "")}`;
 }
 
-export function mailtoLink(subject?: string): string {
+export function mailtoLink(subject?: string, body?: string): string {
   const base = `mailto:${site.contact.email}`;
-  return subject ? `${base}?subject=${encodeURIComponent(subject)}` : base;
+  const params = new URLSearchParams();
+  if (subject) params.set("subject", subject);
+  if (body) params.set("body", body);
+  const query = params.toString();
+  // URLSearchParams encodes a space as "+", which mail clients render literally
+  // in the body. Percent-encoding is what mailto actually specifies.
+  return query ? `${base}?${query.replace(/\+/g, "%20")}` : base;
 }
 
 /** Absolute URL for a site path, for canonicals/OG/JSON-LD. */
