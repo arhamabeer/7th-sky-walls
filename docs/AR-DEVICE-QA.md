@@ -69,6 +69,29 @@ and one Android handset.
    The panel must either prompt to install it or explain the limitation — it
    must never present a button that does nothing.
 
+## Configured wording — Android and desktop only
+
+A piece set with the customer's own words is built into a GLB in the browser, so
+the 3D view and the WebXR path show it. Quick Look does not: it takes a USDZ,
+which is pre-built, and the panel says so.
+
+1. Open a customisable piece — Sabr or Name in Gold — and go to **Make it
+   yours**.
+2. Type something, then switch to **On your wall**. The 3D view must show your
+   words, not the original piece.
+3. **Urdu.** Choose the Urdu voice and type Urdu. The letters must join and read
+   right to left. Isolated, unconnected letterforms mean the Nastaliq face did
+   not load and something fell back — that is the failure to look for, and it is
+   obvious once seen.
+4. **Arabic.** Choose the Arabic voice. It must be Naskh, not Nastaliq. If
+   Arabic renders in the Nastaliq hand the two faces have been crossed.
+5. Launch AR on Android and measure the placed piece. Configured or not, at
+   Large a portrait piece is 90 × 120 cm — the wording changes the texture, never
+   the size.
+6. On an iPhone, confirm the handoff opens the **original** piece and that the
+   panel said it would. A silent substitution is the bug; a stated one is the
+   design.
+
 ## Both platforms
 
 - **Backgrounding.** Leave AR, switch apps, return. The page should still be

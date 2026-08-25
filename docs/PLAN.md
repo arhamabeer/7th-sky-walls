@@ -117,7 +117,7 @@ Done:
   to read rather than shrinking to a sliver, and every piece matted to its box
   rather than cropped to fill it
 - Collection landing pages, plus a collections index
-- Verification harnesses: 31-viewport responsive audit, 234-check interaction
+- Verification harnesses: 31-viewport responsive audit, 259-check interaction
   test suite, image dimension guard
 
 **Enhancements adopted during the phase** (approved standing instruction to

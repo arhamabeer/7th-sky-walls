@@ -13,6 +13,7 @@ npm run lint
 npm run check:images
 npm run check:ar
 npm run check:slug-refs
+npm run check:analytics
 npm run verify
 npm run test:interaction
 npm run lighthouse
@@ -21,9 +22,9 @@ npm run lighthouse
 | Command | What it proves |
 | --- | --- |
 | `check:images` | Every artwork file on disk matches the dimensions the site declares. A mismatch causes layout shift and letterboxed renders. |
-| `check:ar` | All 96 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires. |
+| `check:ar` | All 112 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires. |
 | `verify` | Production build, hero wall arrangement, and the responsive audit across 31 viewports — desktop, laptop, tablet and phone, portrait and landscape. |
-| `test:interaction` | 234 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path and the modal focus traps. |
+| `test:interaction` | 259 behavioural checks across nine contexts — mobile, tablet, desktop, the Android AR tiers, AR launch-failure recovery, custom wording, Urdu and Arabic, reduced motion and the rate limiter. |
 | `lighthouse` | SEO, best practices and accessibility at 90+ on eleven routes. All three currently sit at 100. |
 | `check:slug-refs` | Every artwork and collection slug referenced by a test, audit or page still exists. Renaming the catalogue leaves stale references that fail as broken features rather than as stale strings. |
 | `check:brand` | Swaps in a 44-character studio name and a different palette, rebuilds, and confirms no trace of the real brand survives and the header still contains its contents at 320–430px. Restores the real config either way. Two builds, so run it before launch and after touching the header, footer or config shape — not on every change. |

@@ -122,7 +122,7 @@ The first command picks up each dropped file, gives it a hashed name, deletes
 the placeholder it replaces, refreshes the blur map and the OpenGraph card, and
 rewrites `artworks.json`. The second rebuilds the AR models, which bake the
 artwork as a texture and are otherwise still showing the placeholder. The
-checks confirm the declared dimensions match the files and that all 96 AR pairs
+checks confirm the declared dimensions match the files and that all 112 AR pairs
 still encode their advertised sizes.
 
 Do not run `generate:placeholders` without `--blur-only` once real images are
