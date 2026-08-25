@@ -99,6 +99,8 @@ export const copy = {
     formTitle: "Tell us about your wall",
     formSubtitle:
       "The more you can share about the space, the more useful our first reply will be — we'd rather send ideas than questions.",
+    formSubtitleArtwork:
+      "Tell us where it's going and we'll come back with sizes, finishes and a mockup on a photo of your wall.",
     channelsTitle: "Reach us directly",
     whatsappCard: { title: "WhatsApp", text: "Fastest response — send us a photo of your wall." },
     emailCard: { title: "Email", text: "Best for detailed briefs and documents." },

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { mailtoLink, site, telLink, whatsappLink } from "@/config/site.config";
-import { copy } from "@/content/copy";
+import { artworkInquiryMessage, copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { getVenues } from "@/lib/content";
+import { getArtworkBySlug, getVenues } from "@/lib/content";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { InquiryForm } from "@/components/inquiry/inquiry-form";
@@ -13,8 +13,14 @@ export const metadata: Metadata = pageMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
   const venues = getVenues().map((v) => ({ id: v.id, name: v.name }));
+
+  // An inquiry started from an artwork page arrives with the piece named, so
+  // the visitor does not retype what they were already looking at.
+  const params = await searchParams;
+  const slug = typeof params.artwork === "string" ? params.artwork : undefined;
+  const artwork = slug ? getArtworkBySlug(slug) : undefined;
 
   return (
     <>
@@ -34,15 +40,21 @@ export default function ContactPage() {
           <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
             <div>
               <h2 className="font-display text-2xl font-medium tracking-tight">
-                {copy.contact.formTitle}
+                {artwork ? `About ${artwork.title}` : copy.contact.formTitle}
               </h2>
               <p className="mt-2 max-w-lg text-sm leading-6 text-muted">
-                {copy.contact.formSubtitle}
+                {artwork ? copy.contact.formSubtitleArtwork : copy.contact.formSubtitle}
               </p>
               <div className="mt-8">
                 <InquiryForm
                   venues={venues}
-                  whatsappMessage={copy.contact.inquiryDefaultMessage}
+                  artworkSlug={artwork?.slug}
+                  artworkTitle={artwork?.title}
+                  whatsappMessage={
+                    artwork
+                      ? artworkInquiryMessage(artwork.title)
+                      : copy.contact.inquiryDefaultMessage
+                  }
                 />
               </div>
             </div>

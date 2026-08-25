@@ -224,8 +224,19 @@ export default async function ArtworkPage({
               your space.
             </p>
             <div className="mt-5 flex flex-col gap-3">
-              <LinkButton href={whatsappLink(artworkInquiryMessage(artwork.title))} external>
+              {/* Carries the piece through to the form so the visitor does not
+                  retype what they were already looking at. */}
+              <LinkButton
+                href={`/contact?artwork=${encodeURIComponent(artwork.slug)}`}
+              >
                 {copy.cta.inquireArtwork}
+              </LinkButton>
+              <LinkButton
+                href={whatsappLink(artworkInquiryMessage(artwork.title))}
+                external
+                variant="outline"
+              >
+                {copy.cta.whatsapp}
               </LinkButton>
               <LinkButton
                 href={mailtoLink(`Inquiry: ${artwork.title}`)}

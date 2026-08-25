@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/jsonld-script";
 import { localBusinessJsonLd, webSiteJsonLd } from "@/lib/seo/jsonld";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { SiteAnalytics } from "@/components/analytics/analytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
+        <SiteAnalytics />
       </body>
     </html>
   );
