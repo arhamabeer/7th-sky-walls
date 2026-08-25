@@ -370,7 +370,13 @@ export function ArtworkExperience({
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 fetchPriority="high"
                 loading="eager"
-                className="h-auto max-h-[64svh] w-auto max-w-full object-contain shadow-[0_14px_34px_-16px_rgba(25,21,16,0.5)]"
+                // drop-shadow, not shadow. This is a transparent PNG of cut
+                // letters on a painted wall, and a box-shadow follows the
+                // element's rectangle rather than the alpha — so the most
+                // prominent image on the site had a faint paper edge around it.
+                // A filter shadow follows the letters, which is what standoff
+                // mounting actually looks like.
+                className="h-auto max-h-[64svh] w-auto max-w-full object-contain drop-shadow-[0_12px_22px_rgba(25,21,16,0.45)]"
                 {...(blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {})}
               />
               <span
