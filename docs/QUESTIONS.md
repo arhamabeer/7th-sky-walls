@@ -52,7 +52,7 @@ it sells.
 
 ## Re-opened
 
-### 7a. Materials and lead times — answered, but for the wrong product
+### 7a. Materials and lead times — researched, fire behaviour added
 Confirmed on 2026-08-25 as 370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium
 composite and Class B fire-rated wall covering. Those describe **printing**, and
 the reference photographs that arrived later the same day show the studio makes
@@ -75,9 +75,42 @@ panel. Lead times were left as they were — concepts in five working days,
 installs in three to six weeks — but they were confirmed against printing and
 should be checked against fabrication.
 
-**Needed:** confirm or correct each thickness, each finish, and whether these are
-the five materials the studio actually works in. Everything else about the
-rebuild is safe to leave; this is the part that makes a public claim.
+**Narrowed 2026-08-26.** The studio asked for these to be researched properly
+rather than left, so they were — and the research changed the recommendations,
+not just the numbers.
+
+Two pages tell the reader that fire rating is the first thing a facilities
+manager asks, and nothing answered it. Every material now carries its fire
+behaviour, and the answers are not what the old list implied:
+
+| Material | In fire |
+| --- | --- |
+| Expanded PVC | Self-extinguishing. Chlorine is over half its mass; limiting oxygen index 35–45%; thin gauges reach Class A under ASTM E84 |
+| Aluminium | Non-combustible |
+| MDF | Class D as standard; fire-retardant MDF reaches Class B |
+| Acrylic, including mirror | Combustible. Standard cast acrylic is not fire resistant |
+| PLA | Combustible, no useful rating |
+
+That reversed a recommendation. Acrylic was being offered for schools and
+corridors, and it is the worst fire performer of the five — so PVC foam is now
+the default there, and aluminium is what answers a specification with no room in
+it. Getting this backwards on a site aimed at schools and hotels would have been
+found by a procurement officer rather than by us.
+
+**Each claim is a property of the material, never a certified result for this
+studio's letters.** "Expanded PVC is self-extinguishing" is a fact about PVC;
+"our letters are Class B certified" would need a test certificate. The copy says
+supplier test data is available on request, which is true and is the studio's to
+send.
+
+Thicknesses are now written as "typically 10 mm", "typically 19 mm" rather than
+as commitments.
+
+**Still needed, and it is narrower now:** the thicknesses actually stocked, and
+the lead times — five working days to concept and three to six weeks to install
+were confirmed against printing, not against cutting, spraying and hanging
+letters. Everything else stands on material science rather than on an assumption
+about this studio.
 
 ## Answered — waiting on material from the studio
 
