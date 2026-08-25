@@ -209,6 +209,26 @@ export default async function ArtworkPage({
                 ))}
               </tbody>
             </table>
+
+            {/* Beside the size table on purpose. This is where someone is
+                deciding between 90cm and 120cm, and it is the one place on the
+                site where true size is available to a desktop or an iPhone —
+                neither of which gets the in-page AR that answers it on
+                Android. */}
+            {/* A block link rather than one set inside the sentence: inline, it
+                was a 19px-tall touch target, and it cannot carry min-h-11
+                without breaking the line it sits in. */}
+            <div className="mt-3">
+              <Link
+                href={`/portfolio/${artwork.slug}/template`}
+                className="inline-flex min-h-11 items-center font-medium text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
+              >
+                {copy.artwork.templateLink}
+              </Link>
+              <p className="text-sm leading-6 text-muted">
+                {copy.artwork.templateLinkNote}
+              </p>
+            </div>
           </section>
 
           <section>

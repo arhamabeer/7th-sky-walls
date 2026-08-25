@@ -416,6 +416,7 @@ export function ArtworkExperience({
               stageBackground={
                 customGlb && config ? getGround(config.ground).value : wallColour(wallTone)
               }
+              templateHref={`/portfolio/${slug}/template?size=${size.id}`}
               onAnalytics={trackAr}
             />
           ) : (

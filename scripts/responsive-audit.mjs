@@ -84,6 +84,12 @@ const PAGES = [
   { path: "/portfolio/ask-better-questions", name: "artwork-landscape" },
   { path: "/portfolio/outside-the-box", name: "artwork-square" },
   { path: "/portfolio/sabr?size=xl", name: "artwork-deep-linked-size" },
+  // The print route's own geometry is checked by check:print, which measures it
+  // in print media. It is here for the other half: on screen it is a normal page
+  // with a control panel and a stack of sheet previews, and that has to survive a
+  // 320px phone like everything else.
+  { path: "/portfolio/sabr/template", name: "template-spec" },
+  { path: "/portfolio/sabr/template?mode=corners", name: "template-corners" },
   { path: "/services", name: "services" },
   { path: "/about", name: "about" },
   { path: "/contact", name: "contact" },
@@ -267,7 +273,13 @@ const PROBE = () => {
       .filter((el) => {
         const fs = parseFloat(getComputedStyle(el).fontSize);
         const txt = (el.textContent || "").trim();
-        return fs > 0 && fs < 11 && txt.length > 6;
+        if (!(fs > 0 && fs < 11 && txt.length > 6)) return false;
+        // A scaled preview of a printed page is exempt. This rule is about
+        // interface text being hard to read, and inside a sheet preview the type
+        // is a fixed physical 3.2mm that shrinks with the whole page — the same
+        // way a document thumbnail does. Enlarging it would misrepresent what
+        // comes out of the printer, which is the one thing the preview is for.
+        return !el.closest("[data-preview-scaled]");
       })
       .slice(0, 5)
       .map((el) => `${Math.round(parseFloat(getComputedStyle(el).fontSize))}px: "${(el.textContent || "").trim().slice(0, 28)}"`);

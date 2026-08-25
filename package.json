@@ -20,7 +20,8 @@
     "check:analytics": "node scripts/check-analytics.mjs",
     "serve": "node scripts/serve.mjs",
     "check:brand": "node scripts/check-brand-swap.mjs",
-    "check:slug-refs": "node scripts/check-slug-refs.mjs"
+    "check:slug-refs": "node scripts/check-slug-refs.mjs",
+    "check:print": "node scripts/check-print-template.mjs"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",

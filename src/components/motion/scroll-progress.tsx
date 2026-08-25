@@ -12,5 +12,5 @@
  * decorative, so nothing is lost.
  */
 export function ScrollProgress() {
-  return <div aria-hidden className="scroll-progress" />;
+  return <div aria-hidden data-site-chrome className="scroll-progress" />;
 }

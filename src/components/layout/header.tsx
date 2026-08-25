@@ -7,7 +7,7 @@ import { NAV_LINKS } from "@/components/layout/nav-links";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-background/85 backdrop-blur-md">
+    <header data-site-chrome className="sticky top-0 z-40 border-b border-line bg-background/85 backdrop-blur-md">
       {/* min-h rather than a fixed height: the wordmark is whatever the brand
           config says it is, and a long name wrapping to two or three lines
           inside a 64px box escaped the bar and crossed the border onto the

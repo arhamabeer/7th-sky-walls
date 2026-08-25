@@ -835,6 +835,92 @@ async function testWallPlanner(page, vp) {
   );
 }
 
+/**
+ * Printable templates.
+ *
+ * The geometry that reaches paper is checked by check:print, which measures the
+ * sheets in print media and reads the page boxes back out of a generated PDF.
+ * What that cannot see is the navigation around them: whether the chips are
+ * wired to the URLs they claim, whether the sheet counts printed on them are the
+ * counts you get, and whether the artwork page hands over the chosen size.
+ *
+ * Every step waits on the URL rather than on networkidle. These are client-side
+ * navigations with no load event, so networkidle resolves while the previous page
+ * is still mounted — which made the first version of this group read every value
+ * one step behind and report four failures that were entirely its own.
+ */
+async function testPrintTemplates(page, vp) {
+  await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+
+  // The route has to be reachable from the piece. The href with no query is the
+  // one beside the size table; the AR panel's carries a size.
+  await page.locator('main a[href$="/template"]').first().click();
+  await page.waitForURL(/\/portfolio\/sabr\/template/, { timeout: 5000 });
+  record(
+    vp.name,
+    "the artwork page links through to the template",
+    true,
+    page.url().replace(BASE, ""),
+  );
+
+  const sheetCount = () => page.locator(".tpl-sheet").count();
+  const chip = (label) => page.locator("main a", { hasText: label }).first();
+
+  // Specification is the default because it costs one sheet.
+  record(vp.name, "the default mode is the one-page specification", (await sheetCount()) === 1);
+
+  // Each chip advertises a sheet count; pressing it has to produce that many.
+  for (const [label, mode] of [
+    ["Corner marks", "corners"],
+    ["Full template", "full"],
+  ]) {
+    const promised = await chip(label).textContent();
+    const n = parseInt((promised ?? "").match(/(\d+)\s+sheets?/)?.[1] ?? "0", 10);
+    await chip(label).click();
+    await page.waitForURL(new RegExp(`mode=${mode}`), { timeout: 5000 });
+    await page.waitForFunction(
+      (expected) => document.querySelectorAll(".tpl-sheet").length === expected,
+      n,
+      { timeout: 5000 },
+    ).catch(() => {});
+    const actual = await sheetCount();
+    record(
+      vp.name,
+      `"${label}" prints the ${n} sheets it advertises`,
+      n > 0 && actual === n,
+      `promised ${n}, rendered ${actual}`,
+    );
+  }
+
+  // Size has to reach the sheets, not just the URL.
+  await page.goto(`${BASE}/portfolio/sabr/template?mode=corners&size=s`, {
+    waitUntil: "networkidle",
+  });
+  const small = await page.locator(".tpl-sheet").first().innerText();
+  await page.goto(`${BASE}/portfolio/sabr/template?mode=corners&size=xl`, {
+    waitUntil: "networkidle",
+  });
+  const large = await page.locator(".tpl-sheet").first().innerText();
+  record(
+    vp.name,
+    "the chosen size is the size printed on the sheet",
+    /45 × 60 cm/.test(small) && /120 × 160 cm/.test(large),
+    `${small.match(/\d+ × \d+ cm/)?.[0]} then ${large.match(/\d+ × \d+ cm/)?.[0]}`,
+  );
+
+  // A hand-edited or forwarded URL with nonsense in it should still print.
+  const res = await page.goto(
+    `${BASE}/portfolio/sabr/template?mode=nonsense&paper=a3&size=enormous`,
+    { waitUntil: "networkidle" },
+  );
+  record(
+    vp.name,
+    "unrecognised query values fall back instead of failing",
+    res.status() === 200 && (await sheetCount()) === 1,
+    `status ${res.status()}`,
+  );
+}
+
 async function testPortfolioFiltering(page, vp) {
   await page.goto(`${BASE}/portfolio`, { waitUntil: "networkidle" });
   const total = await page.locator('main a[href^="/portfolio/"]').count();
@@ -1703,6 +1789,7 @@ async function main() {
       ["AR panel", testArPanel],
       ["text configurator", testTextConfigurator],
       ["wall planner", testWallPlanner],
+      ["print templates", testPrintTemplates],
       ["portfolio filtering", testPortfolioFiltering],
       ["grid reveals", testGridReveals],
       ["inquiry form", testInquiryForm],

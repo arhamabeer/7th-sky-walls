@@ -65,7 +65,19 @@ const shutdown = server.stop;
 console.log("→ Checking the hero wall arrangement...");
 const heroCode = run("node", ["scripts/check-hero-layout.mjs", `http://localhost:${PORT}`]);
 
-// --- 5. Audit. ------------------------------------------------------------
+// --- 5. Printable templates. ---------------------------------------------
+// Measured in print media, where nothing else in this pipeline looks: sheet and
+// page-box sizes in millimetres, the calibration bar's exact length, and the page
+// count of a generated PDF. A template that is silently 6% small is worse than no
+// template, because it is confidently wrong.
+console.log("→ Checking the printable templates...");
+const printCode = run("node", [
+  "scripts/check-print-template.mjs",
+  `http://localhost:${PORT}`,
+  ".audit",
+]);
+
+// --- 6. Audit. ------------------------------------------------------------
 const auditCode = run("node", [
   "scripts/responsive-audit.mjs",
   "--url",
@@ -74,4 +86,4 @@ const auditCode = run("node", [
 ]);
 
 shutdown();
-process.exit(auditCode || heroCode);
+process.exit(auditCode || heroCode || printCode);

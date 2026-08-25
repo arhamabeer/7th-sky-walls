@@ -14,6 +14,7 @@ npm run check:images
 npm run check:ar
 npm run check:slug-refs
 npm run check:analytics
+npm run check:print
 npm run verify
 npm run test:interaction
 npm run lighthouse
@@ -23,9 +24,10 @@ npm run lighthouse
 | --- | --- |
 | `check:images` | Every artwork file on disk matches the dimensions the site declares. A mismatch causes layout shift and letterboxed renders. |
 | `check:ar` | All 112 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires. |
-| `verify` | Production build, hero wall arrangement, and the responsive audit across 31 viewports — desktop, laptop, tablet and phone, portrait and landscape. |
-| `test:interaction` | 259 behavioural checks across nine contexts — mobile, tablet, desktop, the Android AR tiers, AR launch-failure recovery, custom wording, Urdu and Arabic, reduced motion and the rate limiter. |
-| `lighthouse` | SEO, best practices and accessibility at 90+ on eleven routes. All three currently sit at 100. |
+| `verify` | Production build, hero wall arrangement, the printable templates, and the responsive audit across 31 viewports — desktop, laptop, tablet and phone, portrait and landscape. |
+| `test:interaction` | 280 behavioural checks across nine contexts — mobile, tablet, desktop, the Android AR tiers, AR launch-failure recovery, custom wording, Urdu and Arabic, reduced motion and the rate limiter. |
+| `lighthouse` | SEO, best practices and accessibility at 90+ on twelve routes. All three sit at 100 everywhere except the print template, which scores best practices 96 and is exempt from the SEO gate. Both are deliberate and explained below. |
+| `check:print` | The printable templates measured in print media, where nothing else looks: sheet and PDF page boxes in millimetres, the calibration bar at exactly 100mm, nothing clipped by the sheet edge, one PDF page per sheet, and the tiled template actually carrying the piece. Also refuses to run against a server holding a stale build. Included in `verify`. |
 | `check:slug-refs` | Every artwork and collection slug referenced by a test, audit or page still exists. Renaming the catalogue leaves stale references that fail as broken features rather than as stale strings. |
 | `check:brand` | Swaps in a 44-character studio name and a different palette, rebuilds, and confirms no trace of the real brand survives and the header still contains its contents at 320–430px. Restores the real config either way. Two builds, so run it before launch and after touching the header, footer or config shape — not on every change. |
 
@@ -35,6 +37,24 @@ a build other than the one on disk. Starting `next start` by hand is how a
 stale server ends up answering, and that failure presents as an unstyled page
 or a defect that was already fixed rather than as an error. `npm run verify`
 starts and checks its own server.
+
+### The print template's two non-perfect Lighthouse scores
+
+Both are deliberate, and recorded here so neither gets "fixed" into something
+worse.
+
+**SEO 69** is entirely `is-crawlable`. The route is `noindex` on purpose: it
+duplicates the artwork page's content and is a poor answer to any search that
+could surface it. `scripts/lighthouse.mjs` exempts this one route from the SEO
+gate and prints the exemption on every run, so it cannot become invisible.
+
+**Best practices 96** is entirely `font-size`, and it is measuring the sheet
+preview. Type on a sheet is a fixed physical 3.2mm; previewing an A4 page inside
+a 393px phone therefore renders it at about 5px, and half the page's text is
+inside that preview. Two things were done about it: the preview drops to the
+first sheet only below 640px, and a line on screen says so. Actually clearing the
+audit would mean forcing a 1000px-wide preview on a phone — worse for the person
+holding it, purely to move a number. The gate is 90.
 
 ### Error boundaries
 
