@@ -14,6 +14,7 @@ import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ArtworkGrid } from "@/components/ui/artwork-grid";
+import { HeroWall } from "@/components/home/hero-wall";
 import { Reveal } from "@/components/motion/reveal";
 import { staggerDelay } from "@/components/motion/stagger";
 
@@ -21,61 +22,53 @@ export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/") },
 };
 
-const HERO_ARTWORK_SLUG = "dawn-over-clifton";
+/**
+ * The hero wall, hung in a deliberate order rather than taken from the top of
+ * the catalogue: a mix of orientations and palettes so the arrangement reads
+ * as curated. The third piece is the visual anchor and the LCP element.
+ */
+const HERO_SLUGS = [
+  "lahore-jaali",
+  "monsoon-leaves",
+  "meridian-seven",
+  "sabr",
+  "amber-hour",
+  "deep-work",
+];
 
 export default function HomePage() {
-  const heroArtwork = getArtworks().find((a) => a.slug === HERO_ARTWORK_SLUG);
-  const heroBlur = heroArtwork ? getBlurDataURL(heroArtwork.slug) : undefined;
+  const allArtworks = getArtworks();
+  const heroPieces = HERO_SLUGS.map((slug) =>
+    allArtworks.find((a) => a.slug === slug),
+  ).filter((a): a is NonNullable<typeof a> => Boolean(a));
   const collections = getCollections();
   const featured = getFeaturedArtworks().slice(0, 6);
   const venues = getVenues();
-  const artworks = getArtworks();
+  const artworks = allArtworks;
 
   return (
     <>
-      {/* Hero — base version; the cinematic scroll treatment lands in a later phase. */}
-      <section className="relative flex min-h-[85svh] items-end overflow-hidden">
-        {heroArtwork && (
-          <Image
-            src={heroArtwork.image.src}
-            alt={heroArtwork.alt}
-            fill
-            sizes="100vw"
-            fetchPriority="high"
-            loading="eager"
-            className="object-cover"
-            {...(heroBlur ? { placeholder: "blur" as const, blurDataURL: heroBlur } : {})}
-          />
-        )}
-        {/* Scrim guarantees text contrast over any artwork, whatever its palette. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/70 to-ink/25"
-        />
-        <Container className="relative pb-16 pt-40 sm:pb-24">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-soft">
-            {copy.home.heroEyebrow}
-          </p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-tight text-background sm:text-6xl">
-            {copy.home.heroTitle}
-          </h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-background/85 sm:text-lg">
-            {copy.home.heroSubtitle}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <LinkButton href="/portfolio" variant="inverted">
-              {copy.cta.explore}
-            </LinkButton>
-            <LinkButton
-              href={whatsappLink(copy.contact.inquiryDefaultMessage)}
-              external
-              variant="outlineInverted"
-            >
-              {copy.cta.whatsapp}
-            </LinkButton>
-          </div>
-        </Container>
-      </section>
+      <HeroWall artworks={heroPieces}>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent">
+          {copy.home.heroEyebrow}
+        </p>
+        <h1 className="mt-4 max-w-3xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+          {copy.home.heroTitle}
+        </h1>
+        <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg">
+          {copy.home.heroSubtitle}
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <LinkButton href="/portfolio">{copy.cta.explore}</LinkButton>
+          <LinkButton
+            href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+            external
+            variant="outline"
+          >
+            {copy.cta.whatsapp}
+          </LinkButton>
+        </div>
+      </HeroWall>
 
       {/* Collections */}
       <section className="py-20 sm:py-28">

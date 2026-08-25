@@ -169,7 +169,14 @@ if (served && served !== expectedBuildId) {
 }
 console.log(`→ Verified server is serving build ${served ?? expectedBuildId}\n`);
 
-// --- 5. Audit. ------------------------------------------------------------
+// --- 5. Hero arrangement. -------------------------------------------------
+// The hero wall is hand-tuned percentages and each frame's height depends on
+// its artwork's aspect, so changing which pieces are featured can silently
+// make two frames collide.
+console.log("→ Checking the hero wall arrangement...");
+const heroCode = run("node", ["scripts/check-hero-layout.mjs", `http://localhost:${PORT}`]);
+
+// --- 6. Audit. ------------------------------------------------------------
 const auditCode = run("node", [
   "scripts/responsive-audit.mjs",
   "--url",
@@ -178,4 +185,4 @@ const auditCode = run("node", [
 ]);
 
 shutdown();
-process.exit(auditCode);
+process.exit(auditCode || heroCode);
