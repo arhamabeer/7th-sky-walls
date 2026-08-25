@@ -75,11 +75,22 @@ export function ArPanel({
   sizeLabel,
   widthCm,
   heightCm,
+  customImage,
   onAnalytics,
 }: {
   glb: string;
   usdz: string;
   poster: string;
+  /**
+   * The customer's own wording, rendered to a transparent PNG.
+   *
+   * Used for the camera preview, which composites a flat image and can show it.
+   * The GLB and USDZ cannot: they are built ahead of time and a customer's words
+   * are not known then, so the 3D view and real AR still show the original
+   * piece — and the panel says so rather than letting the difference pass
+   * unmentioned.
+   */
+  customImage?: string | null;
   alt: string;
   title: string;
   sizeLabel: string;
@@ -245,6 +256,18 @@ export function ArPanel({
         {title} at {sizeLabel} — {widthCm} × {heightCm} cm. Drag to turn the piece.
       </p>
 
+      {/* Never let a customised piece quietly become the original. The 3D model
+          is built ahead of time, so it cannot carry the customer's words — say
+          that plainly, and point at the view that can. */}
+      {customImage && (
+        <p className="mt-2 rounded-lg border border-accent/40 bg-surface p-3 text-xs leading-5">
+          The 3D view and AR above show the original piece — your wording is set
+          by hand before printing, so it is not in the 3D model. The camera
+          preview below does show your words, and your settings travel with the
+          inquiry either way.
+        </p>
+      )}
+
       {capability === null ? (
         <p className="mt-3 text-sm text-muted">Checking what your device supports…</p>
       ) : copy ? (
@@ -349,7 +372,7 @@ export function ArPanel({
 
       {cameraOpen && (
         <CameraPreview
-          imageSrc={poster}
+          imageSrc={customImage ?? poster}
           imageAlt={alt}
           title={title}
           widthCm={widthCm}
