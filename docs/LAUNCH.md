@@ -12,6 +12,7 @@ during development, which is why they exist.
 npm run lint
 npm run check:images
 npm run check:ar
+npm run check:slug-refs
 npm run verify
 npm run test:interaction
 npm run lighthouse
@@ -24,6 +25,7 @@ npm run lighthouse
 | `verify` | Production build, hero wall arrangement, and the responsive audit across 31 viewports — desktop, laptop, tablet and phone, portrait and landscape. |
 | `test:interaction` | 234 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path and the modal focus traps. |
 | `lighthouse` | SEO, best practices and accessibility at 90+ on eleven routes. All three currently sit at 100. |
+| `check:slug-refs` | Every artwork and collection slug referenced by a test, audit or page still exists. Renaming the catalogue leaves stale references that fail as broken features rather than as stale strings. |
 | `check:brand` | Swaps in a 44-character studio name and a different palette, rebuilds, and confirms no trace of the real brand survives and the header still contains its contents at 320–430px. Restores the real config either way. Two builds, so run it before launch and after touching the header, footer or config shape — not on every change. |
 
 `npm run test:interaction` and `npm run lighthouse` need a server already
@@ -69,9 +71,14 @@ keeping its `h1` and its hanging notes while only the panel is replaced.
       `isPlaceholder: false` in `case-studies.json` once real project stories
       and photography exist. Until then the page says plainly that they are
       examples, and it should keep saying so.
-- [ ] **Check the materials list** in `materials.json` against what the studio
-      actually prints on. The fire rating and GSM figures are the ones a
-      facilities manager will quote back.
+- [ ] **Confirm the materials list** in `materials.json`. It was rewritten for
+      cut dimensional lettering — acrylic, PVC foam, MDF, brushed aluminium,
+      printed PLA — from research rather than from the studio, and the
+      thicknesses and finishes are stated publicly where a facilities manager
+      will quote them back. See question 7a in [QUESTIONS.md](QUESTIONS.md).
+- [ ] **Check the lead times** in `services.json`. Concepts in five working days
+      and installs in three to six weeks were confirmed against printing, not
+      against fabrication and installation of cut letters.
 
 ## Environment
 

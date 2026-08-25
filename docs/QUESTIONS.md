@@ -8,6 +8,35 @@ All nine queued questions were answered on 2026-08-25. What is left is not a
 decision but material: the repo URL, the real business details, and the email
 credentials, each noted below with who does what.
 
+## Re-opened
+
+### 7a. Materials and lead times — answered, but for the wrong product
+Confirmed on 2026-08-25 as 370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium
+composite and Class B fire-rated wall covering. Those describe **printing**, and
+the reference photographs that arrived later the same day show the studio makes
+**cut dimensional lettering**. So the confirmation stands for a catalogue that no
+longer exists.
+
+The replacement list is researched, not confirmed, and it is stated publicly
+where a facilities manager will quote it back:
+
+| Material | Spec as written |
+| --- | --- |
+| Laser-cut acrylic | 10 mm cast acrylic, flame-polished edge, matte or gloss face |
+| PVC foam board | 19 mm expanded PVC, sprayed satin, sealed edge |
+| CNC-routed MDF | 19 mm MDF, primed and sprayed, sealed faces |
+| Brushed aluminium | 3 mm face on 15 mm returns, clear anodised |
+| 3D-printed PLA | continuous-line print, 8 mm depth, colour through the material |
+
+Mounting is offered as flush, 12 mm standoff, 25 mm standoff or on a backer
+panel. Lead times were left as they were — concepts in five working days,
+installs in three to six weeks — but they were confirmed against printing and
+should be checked against fabrication.
+
+**Needed:** confirm or correct each thickness, each finish, and whether these are
+the five materials the studio actually works in. Everything else about the
+rebuild is safe to leave; this is the part that makes a public claim.
+
 ## Answered — waiting on material from the studio
 
 ### 1. Real business details — the studio will edit them directly
@@ -75,11 +104,10 @@ size of a piece shares one aspect ratio, so nothing is cropped to fit. Made to
 measure stays available through the inquiry, which every artwork page already
 says.
 
-### 7. Materials and lead times — **confirmed as is**
-370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium composite, Class B
-fire-rated wall covering; concepts in five working days, installs in three to
-six weeks. These are stated publicly and a facilities manager will quote them
-back, so they are now confirmed rather than assumed.
+### 7. Materials and lead times — **superseded, see 7a**
+Confirmed as 370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium composite and
+Class B fire-rated wall covering. Those describe printing, and the catalogue is
+no longer printed work. Re-opened at the top of this file.
 
 ### 8. Case studies — **keep the placeholders, keep the label**
 Three illustrative projects stay on the About and space pages, each carrying its

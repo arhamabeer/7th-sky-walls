@@ -305,6 +305,30 @@ the wall — so the answer is either "it fits" or a specific statement of by how
 much it does not. Hanging conventions are stated rather than assumed, and the
 arrangement travels to the inquiry written out in full.
 
+## Product category corrected, 2026-08-25
+
+Reference photographs of the studio's actual work arrived after the ninth
+question was answered, and they changed what is being built. The work is **cut
+dimensional lettering** — raised letters and word-cloud panels mounted on office
+walls — not printed pictures. The catalogue had been abstract prints and
+gradients throughout.
+
+What that changed, and why each was not optional:
+
+| Was | Is | Because |
+| --- | --- | --- |
+| Six painting series | Word Clouds, Statement Walls, Line & Wire, Values Boards, Sacred Lines, Brand Walls | The collections were categories of image; these are categories of made object |
+| Opaque JPEG artwork | PNG with alpha and no ground | Cut lettering has no substrate. The letters are the artwork; the wall is the room's |
+| Site surface behind every piece | Each piece's declared `wallTone` | A white-lettered piece is invisible on a white tile, and that is a property of the installation |
+| Canvas, cotton rag, wall covering | Acrylic, PVC foam, MDF, brushed aluminium, printed PLA | The old specs describe printing. Researched, and **awaiting the studio's confirmation** — see QUESTIONS 7a |
+| Four frame finishes | Four mountings: flush, 12 mm, 25 mm, backer panel | There is no frame. What a customer chooses is the standoff, which is what the shadow is a function of |
+| Framed panel in AR | Panel on the piece's wall tone | An interim step: see Phase 10 |
+
+Reference images were not taken from the web. They are other studios' products
+and photographs, and putting them in this portfolio would claim work this studio
+has not done. Six generators draw the style instead, from measured font metrics,
+until real installation photography arrives.
+
 ## Confirmed on 2026-08-25, awaiting go-ahead
 
 Nine queued questions were answered (see [QUESTIONS.md](QUESTIONS.md)). Six
@@ -343,7 +367,16 @@ type-fit sizing checked against Nastaliq's much greater line height, and the
 chosen script carried into the inquiry so the studio receives the words in the
 script they were typed in.
 
-### Phase 10 — customer wording in AR
+### Phase 10 — frameless AR, then customer wording in AR
+
+**First, and smaller than it sounds:** AR still models each piece as a panel
+carrying the artwork on its wall tone. For cut lettering the honest model is a
+plane with an alpha-masked texture and no panel at all, so the visitor's own
+wall shows between the letters. That needs `alphaMode: "MASK"` in the GLB, an
+`opacityThreshold` on the USDZ shader, and the geometry switched from a box to a
+plane — plus confirmation of how Quick Look handles cutout alpha, which takes an
+iPhone. It is deliberately not done unverified: that is exactly how the
+empty-USDZ bug happened, and it shipped nothing visible to every iPhone.
 
 Confirmed in scope. No configurator text reaches AR today, in any script,
 because assets are built ahead of time and a customer's words are not known

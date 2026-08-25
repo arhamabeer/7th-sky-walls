@@ -6,9 +6,15 @@ rather than rendering a broken page.
 
 ## Adding an artwork
 
-1. Add the artwork image to `public/artworks/<slug>.jpg`. Use a real
-   photograph or flat scan at roughly 1600×2000 (portrait), 2000×1500
-   (landscape) or 1800×1800 (square).
+1. Add the artwork image to `public/artworks/<slug>.png` — **PNG with a
+   transparent ground**, at 1500×2000 (portrait), 2000×1500 (landscape),
+   1800×1800 (square) or 2500×1000 (panorama).
+
+   Transparent because the work is cut lettering: there is no substrate behind
+   the letters, so the image is the letters and nothing else. The site paints
+   the piece's `wallTone` behind it, and AR puts it on the visitor's own wall. A
+   photograph with its own wall baked in will show as a rectangle of the wrong
+   colour on every wall the site places it on.
 2. Append an entry to `src/content/artworks.json`:
 
 ```json
@@ -19,13 +25,14 @@ rather than rendering a broken page.
   "description": "At least 20 characters. Shown on the detail page and used as the meta description.",
   "alt": "Descriptive alt text for screen readers and image SEO.",
   "venues": ["office", "hotel"],
-  "styles": ["abstract", "geometric"],
+  "styles": ["word cloud", "typography"],
   "orientation": "portrait",
-  "image": { "src": "/artworks/kebab-case-unique-id.jpg", "width": 1600, "height": 2000 },
+  "wallTone": "dark",
+  "image": { "src": "/artworks/kebab-case-unique-id.png", "width": 1500, "height": 2000 },
   "sizes": ["s", "m", "l", "xl"],
   "defaultSize": "l",
   "customText": false,
-  "materials": ["Archival matte canvas", "Floating hardwood frame"],
+  "materials": ["Laser-cut acrylic", "12 mm standoff mounting"],
   "year": 2026,
   "featured": false
 }
@@ -38,8 +45,8 @@ npm run generate:placeholders -- --blur-only
 ```
 
    This also gives the image a content-addressed filename — it renames
-   `<slug>.jpg` to `<slug>.<hash>.jpg`, removes the old revision, and rewrites
-   `image.src` in `artworks.json` to match. Write the plain `<slug>.jpg` name
+   `<slug>.png` to `<slug>.<hash>.png`, removes the old revision, and rewrites
+   `image.src` in `artworks.json` to match. Write the plain `<slug>.png` name
    in the JSON and let the script fill in the hash; committing the change it
    makes is part of the edit.
 
@@ -60,7 +67,8 @@ npm run generate:placeholders -- --blur-only
 | `slug` | Kebab-case, becomes the URL at `/portfolio/<slug>` |
 | `collection` | Must match an `id` in `collections.json` — the build fails otherwise |
 | `venues` | Any of `office`, `cafe`, `restaurant`, `hotel`, `school`, `university`; drives the portfolio filters |
-| `orientation` | `portrait`, `landscape` or `square`; controls card aspect ratio and how size dimensions are read |
+| `orientation` | `portrait`, `landscape`, `square` or `panorama`; controls card aspect ratio and how size dimensions are read |
+| `wallTone` | `dark`, `light` or `accent` — the wall the piece is specified for, painted behind it in every preview. Pale letters need a dark wall; dark letters need a light or colour one |
 | `sizes` | Any of `s`, `m`, `l`, `xl`, `square`, `panorama`; defined in `src/content/catalog.ts` |
 | `defaultSize` | Must appear in `sizes`; used for AR model generation and structured data dimensions |
 | `customText` | `true` for calligraphy and typography pieces that support customer-supplied text |
@@ -100,7 +108,7 @@ npm run generate:placeholders
 
 ## Replacing placeholder artwork with real photography
 
-Drop real files at `public/artworks/<slug>.jpg` — the plain name, alongside the
+Drop real files at `public/artworks/<slug>.png` — the plain name, alongside the
 hashed placeholders already there — update the `image.width` and `image.height`
 values to the real pixel dimensions, then run:
 
