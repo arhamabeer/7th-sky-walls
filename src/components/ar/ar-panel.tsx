@@ -200,6 +200,23 @@ export function ArPanel({
             the wall — but you can still hold it up against the room, and
             calibrate against a sheet of paper to see its true size.
           </p>
+          {/* Scene Viewer stays reachable on Android, but as a secondary and
+              honestly labelled: it is expected to fail here, and the reason is
+              stated so a tap that goes nowhere is not a surprise. Making it the
+              primary action is what left this device with a dead button. */}
+          {capability.sceneViewerFallback && (
+            <p className="mt-3 text-xs leading-5 text-muted">
+              <button
+                type="button"
+                onClick={launch}
+                className="inline-flex min-h-11 items-center font-semibold text-accent underline underline-offset-4"
+              >
+                Try Google&apos;s AR viewer anyway
+              </button>{" "}
+              — it needs Google Play Services for AR, which this device reports
+              as unavailable.
+            </p>
+          )}
         </>
       ) : (
         <p className="mt-3 text-sm leading-6 text-muted">

@@ -1104,6 +1104,108 @@ async function testMobileNav(page, vp) {
   );
 }
 
+/**
+ * Android AR tiering, which is where the promise "never a dead AR button" is
+ * hardest to keep.
+ *
+ * WebXR and Scene Viewer are both gated on Google Play Services for AR. The
+ * detection used to offer Scene Viewer on every Android, reasoning that the app
+ * prompts to install itself when absent — but on a handset the Play Store calls
+ * "incompatible with this device" there is nothing to install, so the primary
+ * button was dead and the only working option was a small link beneath it.
+ * Found on a real device, and this is what keeps it from coming back.
+ *
+ * navigator.xr is overridden rather than trusting a UA string, because that is
+ * the actual signal the code reads.
+ */
+async function testAndroidArTiers(browser) {
+  const ANDROID_UA =
+    "Mozilla/5.0 (Linux; Android 14; SM-A155F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36";
+
+  const cases = [
+    {
+      name: "no ARCore: immersive-ar answered no",
+      script: () => {
+        Object.defineProperty(navigator, "xr", {
+          value: { isSessionSupported: async () => false },
+          configurable: true,
+        });
+      },
+      // The working action must come first, and the failing one must be
+      // labelled with why it will fail.
+      expectFirst: /preview with your camera/i,
+      expectAlso: /ar viewer anyway/i,
+    },
+    {
+      name: "ARCore present: immersive-ar answered yes",
+      script: () => {
+        Object.defineProperty(navigator, "xr", {
+          value: { isSessionSupported: async () => true },
+          configurable: true,
+        });
+      },
+      expectFirst: /place on my wall/i,
+      expectAlso: null,
+    },
+    {
+      name: "no navigator.xr at all: support unknown",
+      script: () => {
+        Object.defineProperty(navigator, "xr", { value: undefined, configurable: true });
+      },
+      expectFirst: /place on my wall/i,
+      expectAlso: /preview it with your camera/i,
+    },
+  ];
+
+  for (const testCase of cases) {
+    const context = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      isMobile: true,
+      hasTouch: true,
+      userAgent: ANDROID_UA,
+    });
+    const page = await context.newPage();
+    await page.addInitScript(testCase.script);
+    try {
+      await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+      await page.locator("[role=tab]", { hasText: /^On your wall$/ }).click();
+      await page
+        .waitForFunction(
+          () =>
+            [...document.querySelectorAll("[role=tabpanel]")].some(
+              (el) => !el.hidden && /camera|my wall/i.test(el.textContent ?? ""),
+            ),
+          null,
+          { timeout: 8000 },
+        )
+        .catch(() => {});
+      const actions = (
+        await page.locator("[role=tabpanel]:not([hidden]) button, [role=tabpanel]:not([hidden]) a").allInnerTexts()
+      )
+        .map((t) => t.replace(/s+/g, " ").trim())
+        .filter(Boolean);
+
+      record(
+        "android-ar",
+        `${testCase.name} — the first action is the one that works`,
+        Boolean(actions[0] && testCase.expectFirst.test(actions[0])),
+        actions.join(" | ").slice(0, 110),
+      );
+      if (testCase.expectAlso) {
+        record(
+          "android-ar",
+          `${testCase.name} — the other path stays reachable`,
+          actions.some((a) => testCase.expectAlso.test(a)),
+          actions.join(" | ").slice(0, 110),
+        );
+      }
+    } catch (err) {
+      record("android-ar", `${testCase.name} completed without throwing`, false, String(err).slice(0, 110));
+    }
+    await context.close();
+  }
+}
+
 async function testReducedMotion(browser) {
   const context = await browser.newContext({
     viewport: { width: 1280, height: 800 },
@@ -1199,6 +1301,7 @@ async function main() {
     await context.close();
   }
 
+  await testAndroidArTiers(browser);
   await testReducedMotion(browser);
   await testRateLimit(browser);
   await browser.close();
