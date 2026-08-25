@@ -253,15 +253,43 @@ Full list:
   file); print-resolution masters stay private
 - Domain go-live, content authoring guide, error monitoring
 
+## Built beyond the original plan
+
+Both were in the post-launch backlog and both were brought forward, because
+they are what the competitor research identified as uncontested ground.
+
+### Venue landing pages (`/spaces`, `/spaces/<venue>`)
+
+Venues were filter values; they are now pages. Each covers what actually
+changes about specifying art in that kind of space — downlights and glare in
+offices, seating heights and phone cameras in cafés, contact damage and fire
+rating in schools — alongside the pieces we would put forward first, the
+services that apply, the materials that suit, and a scale preview set in that
+room.
+
+Every studio in this space offers venue categories; every one fills them with
+a product grid. The considerations are the difference, and they are what a
+procurement conversation turns on.
+
+### Gallery wall planner (`/planner`)
+
+Answers the question that follows "which piece" for anyone furnishing a space
+rather than a room. Real wall dimensions in, arrangement out, checked against
+the wall — so the answer is either "it fits" or a specific statement of by how
+much it does not. Hanging conventions are stated rather than assumed, and the
+arrangement travels to the inquiry written out in full.
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.
 
 - Admin panel for self-managed artwork uploads
 - Customized artwork in AR (server-side USDZ generation)
-- Urdu localization (`next-intl`, `dir="rtl"`, Noto Nastaliq Urdu)
+- Urdu localization (`next-intl`, `dir="rtl"`, Noto Nastaliq Urdu) — the
+  configurator would need a Nastaliq face and RTL handling in its preview
 - Paid iOS in-page AR via an App Clip-injected WebXR provider, if drag-on-wall
   AR on iPhone becomes a hard requirement
-- Venue and style SEO guides
-- Multi-piece gallery-wall planner
+- Long-form venue and style guides for search
 - Printable true-size templates
+- In-AR size switching via a custom WebXR session, if device testing shows
+  model-viewer's own path is not enough

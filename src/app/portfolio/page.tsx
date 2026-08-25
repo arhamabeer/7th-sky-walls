@@ -81,6 +81,12 @@ export default async function PortfolioPage({
               <li>
                 <Chip href="/collections">All collections &rarr;</Chip>
               </li>
+              <li>
+                <Chip href="/spaces">Browse by space &rarr;</Chip>
+              </li>
+              <li>
+                <Chip href="/planner">Plan a wall &rarr;</Chip>
+              </li>
               {collections.map((c) => (
                 <li key={c.id}>
                   <Chip

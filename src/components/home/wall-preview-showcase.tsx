@@ -67,8 +67,13 @@ export function WallPreviewShowcase({
               ))}
             </ol>
 
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap gap-3">
               <LinkButton href={`/portfolio/${artwork.slug}`}>{ctaLabel}</LinkButton>
+              {/* The planner answers the same question for more than one
+                  piece, so it belongs beside this rather than buried. */}
+              <LinkButton href="/planner" variant="outline">
+                Plan a whole wall
+              </LinkButton>
             </div>
           </div>
 
