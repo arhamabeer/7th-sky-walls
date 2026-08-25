@@ -62,6 +62,7 @@ const PAGES = {
   "portfolio-office": "/portfolio?venue=office",
   collections: "/collections",
   "collection-detail": "/collections/sacred-lines",
+  planner: "/planner",
   spaces: "/spaces",
   "space-detail": "/spaces/school",
   "artwork-portrait": "/portfolio/meridian-seven",

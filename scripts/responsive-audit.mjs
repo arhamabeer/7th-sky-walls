@@ -78,6 +78,7 @@ const PAGES = [
   { path: "/collections", name: "collections" },
   { path: "/collections/sacred-lines", name: "collection-detail" },
   { path: "/spaces", name: "spaces" },
+  { path: "/planner", name: "planner" },
   { path: "/spaces/school", name: "space-detail" },
   { path: "/portfolio/meridian-seven", name: "artwork-portrait" },
   { path: "/portfolio/glass-horizon", name: "artwork-landscape" },

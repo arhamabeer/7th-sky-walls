@@ -26,6 +26,8 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
   // Choices made in the configurator arrive as query parameters and are read
   // back as a sentence, so the studio receives a brief rather than a URL.
   const configuration = artwork ? describeConfig(params, artwork) : null;
+  // The wall planner sends its arrangement as a written sentence.
+  const plan = typeof params.plan === "string" ? params.plan.slice(0, 600) : null;
 
   return (
     <>
@@ -55,7 +57,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
                   venues={venues}
                   artworkSlug={artwork?.slug}
                   artworkTitle={artwork?.title}
-                  configuration={configuration ?? undefined}
+                  configuration={configuration ?? plan ?? undefined}
                   whatsappMessage={
                     artwork
                       ? artworkInquiryMessage(artwork.title)

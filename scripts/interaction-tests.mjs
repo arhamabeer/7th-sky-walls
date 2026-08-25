@@ -518,6 +518,107 @@ async function testTextConfigurator(page, vp) {
   );
 }
 
+async function testWallPlanner(page, vp) {
+  await page.goto(`${BASE}/planner`, { waitUntil: "networkidle" });
+
+  const readout = () =>
+    page.evaluate(() => document.querySelector("[aria-live=polite]")?.textContent ?? "");
+  const problems = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll("main [role=status]")].map((n) => n.textContent ?? ""),
+    );
+  const pieceCount = () =>
+    page.evaluate(() => document.querySelectorAll("main [role=img] > div").length);
+
+  const initial = await readout();
+  record(
+    vp.name,
+    "planner opens with an arrangement that fits the default wall",
+    /3 pieces spanning/.test(initial) && (await problems()).length === 0,
+    initial.slice(0, 70),
+  );
+
+  // Making the wall narrower than the arrangement must be reported, with the
+  // actual overflow rather than a vague warning.
+  await page.fill('main input[type="number"]', "150");
+  await page.waitForTimeout(400);
+  const narrowProblems = await problems();
+  record(
+    vp.name,
+    "an arrangement wider than the wall is reported with the overflow",
+    narrowProblems.some((p) => /wider than the wall/.test(p) && /\d+ cm/.test(p)),
+    narrowProblems[0]?.slice(0, 80) ?? "no problem reported",
+  );
+
+  await page.fill('main input[type="number"]', "320");
+  await page.waitForTimeout(400);
+
+  // Adding and removing pieces.
+  const before = await pieceCount();
+  await page.locator("main button", { hasText: "Ascent" }).first().click();
+  await page.waitForTimeout(350);
+  const afterAdd = await pieceCount();
+  record(vp.name, "adding a piece places it on the wall", afterAdd === before + 1, `${before} → ${afterAdd}`);
+
+  await page.locator('main button[aria-label^="Remove"]').first().click();
+  await page.waitForTimeout(350);
+  const afterRemove = await pieceCount();
+  record(
+    vp.name,
+    "removing a piece takes it off the wall",
+    afterRemove === afterAdd - 1,
+    `${afterAdd} → ${afterRemove}`,
+  );
+
+  // Arrangements must actually differ from one another.
+  const positions = async () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll("main [role=img] > div")]
+        .map((el) => `${el.style.left}|${el.style.bottom}`)
+        .join(","),
+    );
+  const rowPositions = await positions();
+  await page.locator("main button", { hasText: "Two rows" }).click();
+  await page.waitForTimeout(400);
+  const gridPositions = await positions();
+  await page.locator("main button", { hasText: "Salon hang" }).click();
+  await page.waitForTimeout(400);
+  const salonPositions = await positions();
+
+  record(
+    vp.name,
+    "each arrangement produces a different layout",
+    rowPositions !== gridPositions && gridPositions !== salonPositions,
+  );
+
+  // Changing a size must change the span.
+  await page.locator("main button", { hasText: "Single row" }).click();
+  await page.waitForTimeout(300);
+  const spanBefore = await readout();
+  await page.selectOption("main select", { index: 3 });
+  await page.waitForTimeout(400);
+  const spanAfter = await readout();
+  record(
+    vp.name,
+    "changing a size changes the measured span",
+    spanBefore !== spanAfter,
+    spanAfter.slice(0, 60),
+  );
+
+  // The arrangement must reach the inquiry form as readable text.
+  await page.locator("main a", { hasText: "Send this arrangement" }).click();
+  await page.waitForURL(/\/contact/, { timeout: 10000 });
+  const message = await page.evaluate(
+    () => document.querySelector('main form textarea[name="message"]')?.value ?? "",
+  );
+  record(
+    vp.name,
+    "the arrangement reaches the inquiry pre-written",
+    /planned a wall arrangement/i.test(message) && /cm/.test(message),
+    message.slice(0, 90),
+  );
+}
+
 async function testPortfolioFiltering(page, vp) {
   await page.goto(`${BASE}/portfolio`, { waitUntil: "networkidle" });
   const total = await page.locator('main a[href^="/portfolio/"]').count();
@@ -877,6 +978,7 @@ async function main() {
       ["artwork page", testArtworkPage],
       ["AR panel", testArPanel],
       ["text configurator", testTextConfigurator],
+      ["wall planner", testWallPlanner],
       ["portfolio filtering", testPortfolioFiltering],
       ["grid reveals", testGridReveals],
       ["inquiry form", testInquiryForm],

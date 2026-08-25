@@ -58,6 +58,27 @@ export const copy = {
     ctaTitle: "Have a wall in mind?",
     ctaSubtitle: "Tell us about your space — we'll respond with ideas within one working day.",
   },
+  planner: {
+    eyebrow: "Plan a wall",
+    title: "Gallery wall planner",
+    subtitle:
+      "Most walls take more than one piece. Set your wall's real dimensions, add pieces at the sizes you're considering, and see whether the arrangement actually fits — drawn at true relative scale, with eye level marked.",
+    notesTitle: "How we hang",
+    notes: [
+      {
+        title: "Eye level, not wall centre",
+        text: "The centre of an arrangement sits at about 145 cm — where a standing adult looks. Centring on the wall instead is the single most common mistake, and it always reads as slightly too high.",
+      },
+      {
+        title: "Gaps of 10–15 cm",
+        text: "Closer than that and separate pieces start reading as one crowded block. Wider and the arrangement stops holding together.",
+      },
+      {
+        title: "Leave the wall room",
+        text: "An arrangement spanning more than about two-thirds of a wall loses its impact. If it barely fits, fewer pieces at larger sizes usually looks better.",
+      },
+    ],
+  },
   spaces: {
     eyebrow: "By space",
     title: "Spaces",
