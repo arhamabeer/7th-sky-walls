@@ -60,6 +60,16 @@ are stated publicly and should match what the studio can actually deliver.
 Three placeholder projects are on the About and space pages, each visibly
 marked as illustrative. They should be replaced with real work, or removed.
 
+### 9. Error reporting service
+The error boundaries log the failure and its digest, which is what correlates a
+browser report to the server log — but nothing collects those logs, so a
+failure a visitor hits is invisible unless they mention it. Vercel shows
+server-side runtime logs already; client-side errors need a service. Sentry is
+the usual choice and has a free tier that would comfortably cover this site's
+traffic. It is a paid dependency and an external processor of visitor data, so
+it is the studio's call rather than mine. Wiring one in is a small change
+either way — the boundaries are already the place it hooks into.
+
 ## Resolved
 
 - **Tier 2 AR (custom WebXR session).** Research established that

@@ -96,7 +96,7 @@ Deployed, browsable, SEO-complete five-page site on a premium base design.
   branded OG image
 - Placeholder artwork generation script with blur-placeholder output
 
-### Phase 2 — Immersive portfolio and artwork pages — IN PROGRESS
+### Phase 2 — Immersive portfolio and artwork pages — COMPLETE
 
 Done:
 
@@ -111,14 +111,14 @@ Done:
 - Aspect-consistent size model so an artwork never changes proportion between
   sizes — a prerequisite for correct AR models in Phase 3
 - Per-artwork social share cards, composed at build time
-- Verification harnesses: 31-viewport responsive audit, 79-check interaction
+- Previous/next navigation between pieces, wrapping within the collection
+- Editorial grid: uniform row heights so captions align across differing
+  proportions, panoramic works spanning two columns so a 5:2 canvas gets width
+  to read rather than shrinking to a sliver, and every piece matted to its box
+  rather than cropped to fill it
+- Collection landing pages, plus a collections index
+- Verification harnesses: 31-viewport responsive audit, 231-check interaction
   test suite, image dimension guard
-
-Remaining:
-
-- Previous/next navigation between artworks within a collection
-- Editorial grid treatment for the portfolio index
-- Collection landing pages
 
 **Enhancements adopted during the phase** (approved standing instruction to
 improve the app as opportunities appear):
@@ -226,13 +226,30 @@ consider after device testing, not a gap.
 Done:
 
 - Lighthouse runner gating SEO, best practices and accessibility at 90 across
-  seven routes. All three now score **100** on every route.
+  eleven routes. All three now score **100** on every route.
 - Two real contrast defects and one heading-order defect fixed, found by the
   audit rather than by eye.
 - Performance work driven by measurement: dropped the display font's
   optical-size axis, stopped preloading the configurator's typeface, made the
   smooth-scroll library a dynamic import so phones stop downloading it, and
   removed the animation library entirely in favour of CSS.
+- **Error boundaries at three levels.** There were none, so any runtime error
+  in a client island replaced the page with Next's own "Application error"
+  screen — the wrong failure mode on a site whose signature feature is
+  client-side. `error.tsx` retries the segment, `global-error.tsx` covers the
+  root layout and sets the brand itself, and `FeatureBoundary` contains a
+  failure to one panel so a lost preview does not cost the inquiry. All three
+  were triggered deliberately to confirm they work; the method is recorded in
+  the launch checklist.
+- **Keyboard access, properly tested.** Lighthouse scores accessibility 100 and
+  never presses Tab. Behind that score, both modal overlays declared
+  `aria-modal="true"` with nothing keeping focus inside them, and form fields
+  had suppressed the site's focus outline in favour of a 1.73:1 halo. Both are
+  fixed and both are now covered by tests that were confirmed to fail without
+  the fix.
+- A branded not-found page, because a dead end on a portfolio is a lost
+  inquiry. The audit checks the HTTP status of every route, with this one
+  declared as expecting 404.
 - [Launch checklist](LAUNCH.md) covering the automated gates, the content and
   environment work, and post-deploy verification.
 
@@ -250,12 +267,17 @@ Full list:
   string on a local source (HTTP 400), so the cache key had to be the filename.
   The authoring workflow is unchanged: drop `<slug>.jpg` and the script does
   the renaming.
-- Lighthouse: 90+ SEO and Best Practices; performance tuned on a throttled
-  mid-range Android profile
-- Accessibility pass; keyboard navigation and focus states
+- ~~Lighthouse: 90+ SEO and Best Practices~~ — 100 on both across eleven
+  routes. Performance is 76–97 on the throttled mobile profile, with the
+  remaining cost being the artwork imagery itself.
+- ~~Accessibility pass; keyboard navigation and focus states~~ — done, see
+  above.
 - Web-resolution USDZ only (iOS 26's Quick Look share sheet exposes the raw
   file); print-resolution masters stay private
-- Domain go-live, content authoring guide, error monitoring
+- Domain go-live, content authoring guide, error monitoring. The boundaries log
+  with the error digest, which is what correlates a report to the server log;
+  choosing a reporting service is a decision for the studio (queued in
+  [QUESTIONS.md](QUESTIONS.md)).
 
 ## Built beyond the original plan
 

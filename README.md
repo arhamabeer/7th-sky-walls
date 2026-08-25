@@ -25,17 +25,18 @@ everything else works.
 
 | Script | Purpose |
 | --- | --- |
-| `npm run generate:placeholders` | Regenerate placeholder artwork, blur placeholders, social cards and app icons. Also clears Next's optimized-image cache, which is keyed on a URL that does not change when a file is replaced. |
-| `npm run generate:placeholders -- --blur-only` | Refresh blur placeholders only. Use this once real artwork is in place — the full command would overwrite it. |
+| `npm run generate:placeholders` | Regenerate placeholder artwork, blur placeholders, social cards and app icons. Gives each image a content-addressed filename and rewrites `artworks.json`, because `next/image` keys its cache on a URL that would otherwise not change when a file is replaced. |
+| `npm run generate:placeholders -- --blur-only` | Ingest real artwork dropped at `public/artworks/<slug>.jpg`: hashes and renames it, prunes the file it replaces, and refreshes blur placeholders and social cards. Use this once real artwork is in place — the full command would overwrite it. |
 | `npm run generate:ar` | Build the GLB and USDZ for every artwork at every size, plus the manifest the app reads. |
 
 ### Checking
 
 | Script | Purpose |
 | --- | --- |
-| `npm run verify` | Build, serve, check the hero arrangement, then audit 31 viewports. Refuses to audit a stale build. |
-| `npm run test:interaction` | 183 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts. Needs a server running. |
-| `npm run lighthouse` | SEO, best practices and accessibility gated at 90 across seven routes. Needs a server running. |
+| `npm run verify` | Build, serve, check the hero arrangement, then audit 31 viewports across 16 pages. Refuses to audit a stale build. |
+| `npm run serve` | Serve the production build for the checks that need one. Frees the port first and refuses to serve anything but the build on disk. |
+| `npm run test:interaction` | 231 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
+| `npm run lighthouse` | SEO, best practices and accessibility gated at 90 across eleven routes. Needs a server running. |
 | `npm run lighthouse:detail <report>` | Read a saved report and show what is costing time. |
 | `npm run check:images` | Every artwork file matches its declared dimensions. |
 | `npm run check:ar` | Every AR asset encodes its advertised size and is Quick Look shaped. |
