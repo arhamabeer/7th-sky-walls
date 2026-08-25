@@ -20,9 +20,18 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
 const argv = process.argv.slice(2);
-const selectorIndex = argv.indexOf("--selector");
-const SELECTOR = selectorIndex !== -1 ? argv[selectorIndex + 1] : null;
-if (selectorIndex !== -1) argv.splice(selectorIndex, 2);
+
+const takeFlag = (name) => {
+  const i = argv.indexOf(name);
+  if (i === -1) return null;
+  const value = argv[i + 1];
+  argv.splice(i, 2);
+  return value;
+};
+
+const SELECTOR = takeFlag("--selector");
+/** Text of a control to click before capturing, e.g. a tab. */
+const CLICK_TEXT = takeFlag("--click");
 
 const BASE = (argv[0] || "http://localhost:4010").replace(/\/$/, "");
 const VIEWPORT_ARG = argv[1] || "desktop";
@@ -44,6 +53,7 @@ const PAGES = {
   collections: "/collections",
   "collection-detail": "/collections/sacred-lines",
   "artwork-portrait": "/portfolio/meridian-seven",
+  "artwork-custom": "/portfolio/sabr",
   "artwork-panorama": "/portfolio/glass-horizon",
   "artwork-square": "/portfolio/night-grid",
   services: "/services",
@@ -71,6 +81,18 @@ for (const name of chosenPages) {
     continue;
   }
   await page.goto(BASE + route, { waitUntil: "networkidle", timeout: 45000 });
+
+  if (CLICK_TEXT) {
+    const control = page
+      .locator("button, [role=tab], a", { hasText: CLICK_TEXT })
+      .first();
+    if ((await control.count()) > 0) {
+      await control.click();
+      await page.waitForTimeout(900);
+    } else {
+      console.log(`  note: nothing matching "${CLICK_TEXT}" on ${name}`);
+    }
+  }
 
   // Walk down the page so every reveal fires, then return to the top.
   await page.evaluate(async () => {

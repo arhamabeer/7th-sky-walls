@@ -12,6 +12,7 @@ import {
   getArtworks,
   getBlurDataURL,
   getCollectionById,
+  getOrientationAspect,
   getSizeDimensions,
   getVenueById,
 } from "@/lib/content";
@@ -26,6 +27,7 @@ import {
   type SizeOption,
 } from "@/components/artwork/artwork-experience";
 import { sceneForVenue } from "@/components/artwork/room-scenes";
+import { defaultFinishFor } from "@/content/finishes";
 import { ArtworkPager } from "@/components/artwork/artwork-pager";
 
 export async function generateStaticParams() {
@@ -133,6 +135,11 @@ export default async function ArtworkPage({
             sizes={sizeOptions}
             defaultSizeId={artwork.defaultSize}
             defaultSceneId={sceneForVenue(artwork.venues[0]).id}
+            defaultFinishId={defaultFinishFor(artwork.materials).id}
+            customisable={artwork.customText}
+            defaultText={artwork.title}
+            aspect={getOrientationAspect(artwork.orientation)}
+            slug={artwork.slug}
             sizeNote={copy.artwork.sizesNote}
           >
             {collection && (

@@ -3,6 +3,7 @@ import { mailtoLink, site, telLink, whatsappLink } from "@/config/site.config";
 import { artworkInquiryMessage, copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getArtworkBySlug, getVenues } from "@/lib/content";
+import { describeConfig } from "@/lib/inquiry/describe-config";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { InquiryForm } from "@/components/inquiry/inquiry-form";
@@ -21,6 +22,10 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
   const params = await searchParams;
   const slug = typeof params.artwork === "string" ? params.artwork : undefined;
   const artwork = slug ? getArtworkBySlug(slug) : undefined;
+
+  // Choices made in the configurator arrive as query parameters and are read
+  // back as a sentence, so the studio receives a brief rather than a URL.
+  const configuration = artwork ? describeConfig(params, artwork) : null;
 
   return (
     <>
@@ -50,6 +55,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
                   venues={venues}
                   artworkSlug={artwork?.slug}
                   artworkTitle={artwork?.title}
+                  configuration={configuration ?? undefined}
                   whatsappMessage={
                     artwork
                       ? artworkInquiryMessage(artwork.title)

@@ -1,4 +1,4 @@
-import { Fraunces, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Fraunces, Manrope } from "next/font/google";
 
 /**
  * Typography proposal (Phase 1): Fraunces — a characterful display serif
@@ -21,4 +21,17 @@ export const bodyFont = Manrope({
   display: "swap",
 });
 
-export const fontVariables = `${displayFont.variable} ${bodyFont.variable}`;
+/**
+ * A third face offered only inside the text-art configurator, for customers
+ * setting their own words. Lighter and more classical than the display face,
+ * which suits verse and quotations.
+ */
+export const scriptFont = Cormorant_Garamond({
+  variable: "--font-script",
+  subsets: ["latin"],
+  weight: ["300", "500"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+export const fontVariables = `${displayFont.variable} ${bodyFont.variable} ${scriptFont.variable}`;

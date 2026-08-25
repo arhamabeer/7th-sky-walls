@@ -7,6 +7,11 @@ import type { ReactNode } from "react";
 import { RoomScalePreview } from "@/components/artwork/room-scale-preview";
 import { ROOM_SCENES } from "@/components/artwork/room-scenes";
 import { ArPanel } from "@/components/ar/ar-panel";
+import {
+  TextArtConfigurator,
+  type TextArtConfig,
+} from "@/components/artwork/text-art-configurator";
+import { LinkButton } from "@/components/ui/link-button";
 import { aspectClass } from "@/components/ui/aspect";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +45,11 @@ export function ArtworkExperience({
   sizes,
   defaultSizeId,
   defaultSceneId,
+  defaultFinishId,
+  customisable,
+  defaultText,
+  aspect,
+  slug,
   sizeNote,
   children,
 }: {
@@ -56,12 +66,22 @@ export function ArtworkExperience({
   defaultSizeId: string;
   /** Room scene matching the artwork's primary recommended venue. */
   defaultSceneId: string;
+  /** Frame finish inferred from the artwork's stated materials. */
+  defaultFinishId: string;
+  /** Text pieces can be reset with the customer's own words. */
+  customisable: boolean;
+  /** Starting text for the configurator — the piece's own words. */
+  defaultText: string;
+  /** width / height of the finished piece. */
+  aspect: number;
+  slug: string;
   sizeNote: string;
   children: ReactNode;
 }) {
   const [sizeId, setSizeId] = useState(defaultSizeId);
   const [sceneId, setSceneId] = useState(defaultSceneId);
-  const [view, setView] = useState<"artwork" | "room" | "ar">("artwork");
+  const [view, setView] = useState<"artwork" | "room" | "ar" | "custom">("artwork");
+  const [config, setConfig] = useState<TextArtConfig | null>(null);
   const [zoomed, setZoomed] = useState(false);
   const reduced = useReducedMotion();
   const tabsId = useId();
@@ -89,6 +109,23 @@ export function ArtworkExperience({
    * so there is never a frame where the wrong model is on screen.
    */
   const activeView = view === "ar" && !size.ar ? "room" : view;
+
+  /**
+   * The configuration travels to the inquiry form as query parameters rather
+   * than as a serialised blob, so the studio can read it straight from the URL
+   * in a support conversation and the customer can share the link.
+   */
+  const customInquiryHref = (() => {
+    const params = new URLSearchParams({ artwork: slug, size: sizeId });
+    if (config) {
+      if (config.text.trim()) params.set("text", config.text.trim().slice(0, 200));
+      params.set("typeface", config.typeface);
+      params.set("ink", config.ink);
+      params.set("ground", config.ground);
+      params.set("finish", config.finish);
+    }
+    return `/contact?${params.toString()}`;
+  })();
 
   /**
    * Size is mirrored in the URL so a configuration can be shared, and adopted
@@ -135,20 +172,33 @@ export function ArtworkExperience({
     };
   }, [zoomed, closeZoom]);
 
+  /**
+   * Tabs wrap to two rows on the narrowest phones. With four views the strip
+   * cannot fit on one line at 320px, and a horizontally scrolled tab bar hides
+   * options behind a gesture people do not always discover.
+   */
   const tabClass = (active: boolean) =>
     cn(
-      "inline-flex min-h-11 flex-1 items-center justify-center rounded-full px-4 text-sm font-semibold transition-colors",
+      "inline-flex min-h-11 flex-1 basis-[calc(50%-0.25rem)] items-center justify-center",
+      "rounded-full px-3 text-sm font-semibold transition-colors sm:basis-auto sm:px-4",
       active ? "bg-ink text-background" : "text-muted hover:text-ink",
     );
 
   return (
-    <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+    <div
+      className={cn(
+        "grid gap-10 lg:gap-14",
+        // The configurator needs the full width: its preview and its controls
+        // are each about as wide as the whole stage column would be.
+        activeView === "custom" ? "grid-cols-1" : "lg:grid-cols-2",
+      )}
+    >
       {/* Stage */}
       <div>
         <div
           role="tablist"
           aria-label="Artwork view"
-          className="mb-4 flex gap-1 rounded-full border border-line bg-surface p-1"
+          className="mb-4 flex flex-wrap gap-1 rounded-3xl border border-line bg-surface p-1 sm:rounded-full"
         >
           <button
             type="button"
@@ -172,6 +222,19 @@ export function ArtworkExperience({
           >
             To scale
           </button>
+          {customisable && (
+            <button
+              type="button"
+              role="tab"
+              id={`${tabsId}-tab-custom`}
+              aria-selected={activeView === "custom"}
+              aria-controls={`${tabsId}-panel`}
+              onClick={() => setView("custom")}
+              className={tabClass(activeView === "custom")}
+            >
+              Make it yours
+            </button>
+          )}
           {/* Only offered when AR assets exist for the selected size. */}
           {size.ar && (
             <button
@@ -221,6 +284,27 @@ export function ArtworkExperience({
                 Tap to enlarge
               </span>
             </button>
+          ) : activeView === "custom" && customisable ? (
+            <div>
+              <TextArtConfigurator
+                aspect={aspect}
+                defaultText={defaultText}
+                defaultFinish={defaultFinishId}
+                widthCm={size.widthCm}
+                heightCm={size.heightCm}
+                onChange={setConfig}
+              />
+              <div className="mt-6 rounded-xl border border-line bg-surface p-5">
+                <p className="text-sm leading-6 text-muted">
+                  Happy with it? Send the settings over and we&apos;ll set your
+                  words properly by hand, proof it, and come back with the
+                  finished artwork before anything is printed.
+                </p>
+                <LinkButton href={customInquiryHref} className="mt-4">
+                  Send this configuration
+                </LinkButton>
+              </div>
+            </div>
           ) : activeView === "ar" && size.ar ? (
             <ArPanel
               glb={size.ar.glb}

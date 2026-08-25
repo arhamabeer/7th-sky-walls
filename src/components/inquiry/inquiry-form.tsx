@@ -29,12 +29,15 @@ export function InquiryForm({
   artworkSlug,
   artworkTitle,
   sizeLabel,
+  configuration,
   whatsappMessage,
 }: {
   venues: VenueOption[];
   artworkSlug?: string;
   artworkTitle?: string;
   sizeLabel?: string;
+  /** A sentence describing choices already made in the configurator. */
+  configuration?: string;
   whatsappMessage: string;
 }) {
   const [result, action, pending] = useActionState<InquiryResult | null, FormData>(
@@ -267,9 +270,11 @@ export function InquiryForm({
           rows={5}
           required
           defaultValue={
-            artworkTitle
-              ? `I'm interested in ${artworkTitle}${sizeLabel ? ` at ${sizeLabel}` : ""}. `
-              : ""
+            configuration
+              ? `${configuration}\n\n`
+              : artworkTitle
+                ? `I'm interested in ${artworkTitle}${sizeLabel ? ` at ${sizeLabel}` : ""}. `
+                : ""
           }
           placeholder="What's the room, what's on the wall now, and what feeling are you after?"
           aria-invalid={Boolean(fieldError("message"))}

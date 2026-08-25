@@ -314,6 +314,128 @@ async function testArPanel(page, vp) {
   );
 }
 
+async function testTextConfigurator(page, vp) {
+  // Only text pieces are configurable; a non-text piece must not offer it.
+  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  record(
+    vp.name,
+    "configurator is not offered on a non-text piece",
+    (await page.locator("[role=tab]", { hasText: "Make it yours" }).count()) === 0,
+  );
+
+  await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+  const tab = page.locator("[role=tab]", { hasText: "Make it yours" });
+  record(vp.name, "configurator is offered on a text piece", (await tab.count()) > 0);
+  if ((await tab.count()) === 0) return;
+
+  await tab.click();
+  await page.waitForTimeout(400);
+
+  const preview = () =>
+    page.evaluate(() => {
+      const p = document.querySelector("[role=tabpanel] p");
+      if (!p) return null;
+      const s = getComputedStyle(p);
+      const ground = p.parentElement ? getComputedStyle(p.parentElement).backgroundColor : "";
+      return {
+        text: p.textContent ?? "",
+        family: s.fontFamily,
+        colour: s.color,
+        style: s.fontStyle,
+        fontSize: parseFloat(s.fontSize),
+        ground,
+      };
+    });
+
+  const initial = await preview();
+  record(
+    vp.name,
+    "preview starts from the piece's own words",
+    initial?.text.trim() === "Sabr",
+    initial?.text.trim(),
+  );
+
+  // Typing must drive the preview, and longer text must be set smaller so it
+  // fits rather than running off the canvas.
+  await page.fill('[role=tabpanel] textarea', "Begin again\nevery morning");
+  await page.waitForTimeout(300);
+  const afterText = await preview();
+  record(
+    vp.name,
+    "typing updates the preview",
+    /Begin again/.test(afterText?.text ?? ""),
+    afterText?.text.replace(/\n/g, " / "),
+  );
+  record(
+    vp.name,
+    "longer wording is set smaller so it fits",
+    Boolean(afterText && initial && afterText.fontSize < initial.fontSize),
+    `${initial?.fontSize}px → ${afterText?.fontSize}px`,
+  );
+
+  // Each control must actually change the rendered result.
+  await page.locator("[role=tabpanel] button", { hasText: "Classical" }).click();
+  await page.waitForTimeout(250);
+  const afterFace = await preview();
+  record(
+    vp.name,
+    "changing the voice changes the typeface",
+    Boolean(afterFace && afterText && afterFace.family !== afterText.family),
+    afterFace?.family?.slice(0, 40),
+  );
+
+  await page.locator("[role=tabpanel] button", { hasText: "Brass" }).click();
+  await page.waitForTimeout(250);
+  const afterInk = await preview();
+  record(
+    vp.name,
+    "changing the ink changes the text colour",
+    Boolean(afterInk && afterFace && afterInk.colour !== afterFace.colour),
+    afterInk?.colour,
+  );
+
+  // Ink on a ground of the same tone must be called out rather than accepted.
+  await page.locator("[role=tabpanel] fieldset", { hasText: "Ground" })
+    .locator("button", { hasText: "Ink" })
+    .click();
+  await page.waitForTimeout(250);
+  await page.locator("[role=tabpanel] fieldset", { hasText: "Ink" })
+    .first()
+    .locator("button", { hasText: /^Ink$/ })
+    .click();
+  await page.waitForTimeout(300);
+  const warning = await page.evaluate(
+    () => document.querySelector("[role=tabpanel] [role=status]")?.textContent ?? "",
+  );
+  record(
+    vp.name,
+    "an unreadable ink and ground combination is flagged",
+    /hard to read/i.test(warning),
+    warning.slice(0, 60),
+  );
+
+  // The configuration must survive the trip to the inquiry form.
+  await page.locator("[role=tabpanel] a", { hasText: "Send this configuration" }).click();
+  await page.waitForURL(/\/contact\?/, { timeout: 10000 });
+  const carried = await page.evaluate(() => ({
+    url: location.search,
+    message: document.querySelector('main form textarea[name="message"]')?.value ?? "",
+    heading: document.querySelector("main h2")?.textContent ?? "",
+  }));
+  record(
+    vp.name,
+    "configuration is carried in the URL",
+    /artwork=sabr/.test(carried.url) && /typeface=/.test(carried.url),
+    carried.url.slice(0, 80),
+  );
+  record(
+    vp.name,
+    "the inquiry opens pre-written with the configuration",
+    /configured Sabr/i.test(carried.message) && /Begin again/.test(carried.message),
+    carried.message.slice(0, 80).replace(/\n/g, " / "),
+  );
+}
+
 async function testPortfolioFiltering(page, vp) {
   await page.goto(`${BASE}/portfolio`, { waitUntil: "networkidle" });
   const total = await page.locator('main a[href^="/portfolio/"]').count();
@@ -666,6 +788,7 @@ async function main() {
 
     await testArtworkPage(page, vp);
     await testArPanel(page, vp);
+    await testTextConfigurator(page, vp);
     await testPortfolioFiltering(page, vp);
     await testGridReveals(page, vp);
     await testInquiryForm(page, vp);

@@ -170,21 +170,29 @@ measured true scale and scale lock cannot be confirmed without a phone.
    It is written against the exporter's exact output structure so the only
    deliberate difference is JPEG encoding.
 
-### Phase 4 — Inquiry engine and contact
+### Phase 4 — Inquiry engine and contact — COMPLETE
 
-- Inquiry form (venue type, city, wall size, timeline, optional wall photo)
-  with React Hook Form + Zod, Resend delivery, honeypot and rate limiting
-- WhatsApp deep links with prefilled context from artwork and service pages
-- Vercel Analytics + GA4 with the artwork view → AR launch → inquiry funnel
+- Inquiry form on a server action, working without JavaScript, validated on
+  both sides, with a honeypot and per-address rate limiting that still points
+  at WhatsApp when it refuses
+- Resend delivery with a logged fallback, and `assertDeliveryConfigured()` so
+  launch fails loudly rather than silently logging leads
+- Artwork pages carry the piece into the form; WhatsApp deep links carry
+  prefilled context
+- Vercel Analytics and Speed Insights on Vercel only, GA4 only when a
+  measurement id is set, AR funnel events instrumented
 
-### Phase 5 — Signature pages: home, services, about
+### Phase 5 — Signature pages: home, services, about — COMPLETE
 
-- Home: scroll-linked bento hero gallery, venue verticals, featured
-  collections carousel, AR showcase story, social proof
-- Services: sticky scroll-reveal storytelling, process transparency, per-service
-  CTAs
-- About: founder story, materials and craft, case studies, testimonials
-- Parallax via fixed image layers, never `background-attachment: fixed`
+- Home: a gallery-wall hero built from catalogue data, a wall-preview
+  demonstration using the real scale component, collections, featured works,
+  venue verticals and an inquiry band
+- Services: alternating full-width panels, each with a representative piece,
+  deliverables, typical timing and venue fit; four-step process band
+- About: studio story, values, a materials section with real specifications
+  and reasoning, and case studies marked as illustrative until real ones exist
+- Parallax applied imperatively, transform only, desktop only — never
+  `background-attachment: fixed`, which breaks on iOS Safari
 
 ### Phase 6 — Artwork customizer (on-screen)
 
