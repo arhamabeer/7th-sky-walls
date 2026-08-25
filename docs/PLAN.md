@@ -432,6 +432,48 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The inquiry never dies at the last step — 2026-08-26
+
+Two defects on the only path to a sale on the site, one of them long-standing.
+
+**The form emptied itself on any error.** React resets an uncontrolled form once
+its action completes, and it does not care whether the action succeeded — so a
+visitor who mistyped their email lost their name, city, wall size and the
+paragraph they had just written about their space. The server now echoes the raw
+submission back and the form re-seeds from it. Text inputs would very nearly
+survive on `defaultValue` alone, because React updates the value attribute and
+the reset restores to it, but a `<select>` will not: `defaultValue` on a select
+sets `selected` on an option and that is not re-applied to a mounted element. So
+each error carries a token and the form keys its fields on it, remounting them.
+The interaction suite asserts retention, retention on the *same* error twice, and
+that re-seeding never fills the honeypot — which would reject a real person's
+second attempt.
+
+**A failed delivery was a dead end.** Without `RESEND_API_KEY` the action
+correctly refuses to claim success, but it then told the visitor to go and use
+WhatsApp — with everything they had typed still on screen in front of them. Every
+failure of a *valid* submission now returns a handover: the same inquiry composed
+into a prefilled WhatsApp message and a prefilled email, built from the same
+`renderLines` the notification email uses so the two cannot describe different
+inquiries. Validation errors get no handover, because there the right move is to
+fix the field.
+
+The composition detail that matters on this site in particular: the URL budgets
+are measured on the **encoded** length. `encodeURIComponent` turns one Urdu or
+Arabic character into nine bytes of percent-escapes, so a decoded-length budget
+would let an Urdu message produce a URL three times over the limit — and this site
+puts Urdu into the artwork on purpose. Measured: a 3082-character Latin message
+and a 2014-character Urdu one now both land at 3024 and 1585 characters of href.
+Each channel also drops the contact handle it already carries — WhatsApp shows
+the sender's number, an email shows their address — rather than spending URL
+budget repeating it.
+
+Also fixed here: `mailtoLink` gained a body, percent-encoded rather than
+form-encoded, because `URLSearchParams` writes a space as `+` and a mail client
+renders that literally. And `deliver.ts`'s docstring claimed an unconfigured
+inquiry was "reported as delivered", which is the exact mistake its caller was
+written to prevent.
+
 ### Printable true-size templates — DONE, 2026-08-26
 
 Brought forward from the backlog, because the gap it fills is the one the whole

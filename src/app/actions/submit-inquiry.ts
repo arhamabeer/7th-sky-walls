@@ -1,22 +1,66 @@
 "use server";
 
 import { headers } from "next/headers";
-import { inquirySchema, type InquiryResult } from "@/lib/inquiry/schema";
+import {
+  inquirySchema,
+  type InquiryResult,
+  type InquiryValues,
+} from "@/lib/inquiry/schema";
 import { checkRateLimit } from "@/lib/inquiry/rate-limit";
-import { deliverInquiry } from "@/lib/inquiry/deliver";
+import { composeHandover, deliverInquiry } from "@/lib/inquiry/deliver";
 
 /**
  * Handles an inquiry submission.
  *
  * Validation runs here as well as in the browser: client-side checks are for
  * the person filling the form, not for trusting what arrives.
+ *
+ * Every failure of a *valid* submission comes back with a handover — the same
+ * inquiry composed into a prefilled WhatsApp or email message. Validation errors
+ * do not get one, because there the right move is to fix the field. The
+ * distinction matters: an undeliverable inquiry is the last step of the only
+ * action this site exists to produce, and leaving someone to find WhatsApp and
+ * retype everything they just wrote is where a lead is actually lost.
  */
+/**
+ * The fields to hand back so the form can re-seed itself.
+ *
+ * Read from the raw submission rather than the parsed data, because a validation
+ * error is exactly the case where the parse failed and the invalid value is the
+ * one the visitor needs to see and correct. Capped in length: the schema's limits
+ * are what the browser was asked to enforce, not what has to arrive.
+ */
+const ECHOED: Array<keyof InquiryValues> = [
+  "name",
+  "email",
+  "phone",
+  "organisation",
+  "venue",
+  "city",
+  "wallSize",
+  "timeline",
+  "message",
+];
+
+function echoValues(raw: Record<string, unknown>): InquiryValues {
+  const out: InquiryValues = {};
+  for (const key of ECHOED) {
+    const value = raw[key];
+    if (typeof value === "string" && value !== "") out[key] = value.slice(0, 4000);
+  }
+  return out;
+}
+
 export async function submitInquiry(
   _previous: InquiryResult | null,
   formData: FormData,
 ): Promise<InquiryResult> {
   const raw = Object.fromEntries(formData.entries());
   const parsed = inquirySchema.safeParse(raw);
+  const values = echoValues(raw);
+  // Unique per submission, so the form remounts its fields even when the same
+  // error repeats.
+  const token = Date.now().toString(36);
 
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
@@ -28,6 +72,8 @@ export async function submitInquiry(
       status: "error",
       message: "Please check the highlighted fields.",
       fieldErrors,
+      values,
+      token,
     };
   }
 
@@ -52,7 +98,10 @@ export async function submitInquiry(
     const minutes = Math.max(1, Math.ceil(limit.retryAfterMs / 60000));
     return {
       status: "error",
-      message: `That's several inquiries in a short time. Please try again in about ${minutes} minute${minutes === 1 ? "" : "s"}, or message us on WhatsApp.`,
+      message: `That's several inquiries in a short time. Please try again in about ${minutes} minute${minutes === 1 ? "" : "s"} — or send this one straight through below, which is not rate limited.`,
+      handover: composeHandover(input, `INQ-${token.toUpperCase().slice(-6)}`),
+      values,
+      token,
     };
   }
 
@@ -80,7 +129,10 @@ export async function submitInquiry(
       return {
         status: "error",
         message:
-          "Sorry — our inquiry email is not connected yet, so that did not reach us. Please send it on WhatsApp or by email instead and we will reply the same way.",
+          "Sorry — our inquiry email is not connected yet, so that did not reach us. Nothing you typed is lost: send it straight through below and we will reply the same way.",
+        handover: composeHandover(input, reference),
+        values,
+        token,
       };
     }
 
@@ -89,7 +141,10 @@ export async function submitInquiry(
     return {
       status: "error",
       message:
-        "We could not send that just now. Please try again, or reach us on WhatsApp — we will see it either way.",
+        "We could not send that just now. Try again, or send it straight through below — nothing you typed is lost.",
+      handover: composeHandover(input, reference),
+      values,
+      token,
     };
   }
 }

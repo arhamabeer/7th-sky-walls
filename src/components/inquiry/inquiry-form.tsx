@@ -2,9 +2,9 @@
 
 import { useActionState, useEffect, useId, useRef } from "react";
 import { submitInquiry } from "@/app/actions/submit-inquiry";
-import type { InquiryResult } from "@/lib/inquiry/schema";
+import type { InquiryHandover, InquiryResult } from "@/lib/inquiry/schema";
 import { TIMELINE_LABELS } from "@/lib/inquiry/schema";
-import { whatsappLink } from "@/config/site.config";
+import { mailtoLink, whatsappLink } from "@/config/site.config";
 import { cn } from "@/lib/utils";
 
 interface VenueOption {
@@ -55,6 +55,18 @@ export function InquiryForm({
   const fieldError = (name: string) =>
     result?.status === "error" ? result.fieldErrors?.[name] : undefined;
 
+  /**
+   * What the visitor typed, handed back by the server.
+   *
+   * React resets an uncontrolled form once its action completes, error or not, so
+   * without re-seeding a single mistyped field wiped the whole form — on the only
+   * path to a sale on this site. Changing `defaultValue` does not update an input
+   * that is already mounted, which is what the token below is for: it keys the
+   * form, so a completed submission remounts the fields with these values.
+   */
+  const echoed = result?.status === "error" ? result.values : undefined;
+  const seeded = (name: keyof NonNullable<typeof echoed>) => echoed?.[name];
+
   const inputClass = (name: string) =>
     cn(
       "mt-1.5 block min-h-12 w-full rounded-lg border bg-background px-4 py-3 text-base",
@@ -101,7 +113,12 @@ export function InquiryForm({
   }
 
   return (
-    <form action={action} className="space-y-5" noValidate>
+    <form
+      key={result?.status === "error" ? result.token : "fresh"}
+      action={action}
+      className="space-y-5"
+      noValidate
+    >
       {/* Context carried from an artwork page, so the studio knows what prompted the inquiry. */}
       {artworkSlug && <input type="hidden" name="artworkSlug" value={artworkSlug} />}
       {artworkTitle && <input type="hidden" name="artworkTitle" value={artworkTitle} />}
@@ -121,6 +138,7 @@ export function InquiryForm({
           className="rounded-lg border border-accent/50 bg-accent/10 p-4 text-sm leading-6 focus:outline-none"
         >
           {result.message}
+          {result.handover && <Handover handover={result.handover} />}
         </div>
       )}
 
@@ -134,6 +152,7 @@ export function InquiryForm({
             name="name"
             required
             autoComplete="name"
+            defaultValue={seeded("name")}
             aria-invalid={Boolean(fieldError("name"))}
             aria-describedby={fieldError("name") ? `${formId}-name-error` : undefined}
             className={inputClass("name")}
@@ -153,6 +172,7 @@ export function InquiryForm({
             id={`${formId}-organisation`}
             name="organisation"
             autoComplete="organization"
+            defaultValue={seeded("organisation")}
             className={inputClass("organisation")}
           />
         </div>
@@ -167,6 +187,7 @@ export function InquiryForm({
             type="email"
             required
             autoComplete="email"
+            defaultValue={seeded("email")}
             inputMode="email"
             aria-invalid={Boolean(fieldError("email"))}
             aria-describedby={fieldError("email") ? `${formId}-email-error` : undefined}
@@ -188,6 +209,7 @@ export function InquiryForm({
             name="phone"
             type="tel"
             autoComplete="tel"
+            defaultValue={seeded("phone")}
             inputMode="tel"
             className={inputClass("phone")}
           />
@@ -201,7 +223,7 @@ export function InquiryForm({
             id={`${formId}-venue`}
             name="venue"
             required
-            defaultValue=""
+            defaultValue={seeded("venue") ?? ""}
             aria-invalid={Boolean(fieldError("venue"))}
             className={inputClass("venue")}
           >
@@ -226,6 +248,7 @@ export function InquiryForm({
             name="city"
             required
             autoComplete="address-level2"
+            defaultValue={seeded("city")}
             aria-invalid={Boolean(fieldError("city"))}
             className={inputClass("city")}
           />
@@ -239,6 +262,7 @@ export function InquiryForm({
           <input
             id={`${formId}-wallSize`}
             name="wallSize"
+            defaultValue={seeded("wallSize")}
             placeholder="Roughly — “about 3m wide” is fine"
             className={inputClass("wallSize")}
           />
@@ -251,7 +275,7 @@ export function InquiryForm({
           <select
             id={`${formId}-timeline`}
             name="timeline"
-            defaultValue=""
+            defaultValue={seeded("timeline") ?? ""}
             className={inputClass("timeline")}
           >
             <option value="">No fixed date</option>
@@ -273,12 +297,15 @@ export function InquiryForm({
           name="message"
           rows={5}
           required
+          // What the visitor wrote wins over the opening line the page suggested,
+          // or re-seeding after an error would overwrite their words with it.
           defaultValue={
-            configuration
+            seeded("message") ??
+            (configuration
               ? `${configuration}\n\n`
               : artworkTitle
                 ? `I'm interested in ${artworkTitle}${sizeLabel ? ` at ${sizeLabel}` : ""}. `
-                : ""
+                : "")
           }
           placeholder="What's the room, what's on the wall now, and what feeling are you after?"
           aria-invalid={Boolean(fieldError("message"))}
@@ -313,5 +340,48 @@ export function InquiryForm({
         We use your details only to answer this inquiry.
       </p>
     </form>
+  );
+}
+
+/**
+ * Two links that send the inquiry the visitor already typed.
+ *
+ * Shown when a valid submission did not reach the studio — an email outage, or a
+ * deployment before the delivery key is set. The alternative, which this
+ * replaced, was a paragraph telling them to go and use WhatsApp: everything they
+ * had written was still on screen, and they were being asked to type it again at
+ * the exact moment they had least patience for it.
+ *
+ * The bodies are composed on the server, where the validated inquiry already is,
+ * so the two channels cannot disagree about what was sent and neither can drift
+ * from what the email would have contained.
+ */
+function Handover({ handover }: { handover: InquiryHandover }) {
+  const linkClass =
+    "inline-flex min-h-12 flex-1 items-center justify-center rounded-full px-5 text-center text-sm font-semibold transition-opacity hover:opacity-85";
+  return (
+    <div className="mt-4">
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <a
+          href={whatsappLink(handover.whatsapp)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${linkClass} bg-ink text-background`}
+        >
+          Send it on WhatsApp
+        </a>
+        <a
+          href={mailtoLink(handover.subject, handover.email)}
+          className={`${linkClass} border border-ink text-ink`}
+        >
+          Send it by email
+        </a>
+      </div>
+      <p className="mt-2 text-xs leading-5 text-muted">
+        Both open already filled in with what you wrote — nothing to retype.
+        {handover.truncated &&
+          " Your message was long, so the end is trimmed to fit; send the rest in the same thread."}
+      </p>
+    </div>
   );
 }
