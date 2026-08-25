@@ -17,7 +17,8 @@
     "shots": "node scripts/screenshots.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
     "lighthouse:detail": "node scripts/lighthouse-detail.mjs",
-    "check:analytics": "node scripts/check-analytics.mjs"
+    "check:analytics": "node scripts/check-analytics.mjs",
+    "serve": "node scripts/serve.mjs"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",
