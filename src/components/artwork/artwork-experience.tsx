@@ -12,6 +12,7 @@ import {
 } from "@/components/artwork/text-art-configurator";
 import { LinkButton } from "@/components/ui/link-button";
 import { useFocusTrap } from "@/components/ui/use-focus-trap";
+import { renderCustomArt } from "@/components/artwork/render-custom-art";
 import { wallColour, type WallToneId } from "@/content/finishes";
 import { whatsappLink } from "@/config/site.config";
 import { artworkInquiryMessage, copy } from "@/content/copy";
@@ -85,6 +86,17 @@ export function ArtworkExperience({
   const [sceneId, setSceneId] = useState(defaultSceneId);
   const [view, setView] = useState<"artwork" | "room" | "ar" | "custom">("artwork");
   const [config, setConfig] = useState<TextArtConfig | null>(null);
+  /**
+   * The configured wording as a transparent PNG, for the previews that can show
+   * a flat image.
+   *
+   * Configuring a piece and then switching to "On your wall" used to show the
+   * original silently, which is the worst kind of wrong: the visitor believes
+   * they are looking at their own words. Kept here rather than in the panel so
+   * it survives switching between views, and stored with the key of the
+   * configuration it was rendered from — see customKey below.
+   */
+  const [rendered, setRendered] = useState<{ key: string; url: string } | null>(null);
   const [zoomed, setZoomed] = useState(false);
   /**
    * Drives the enter transition. The dialog mounts hidden and is revealed on
@@ -159,6 +171,44 @@ export function ArtworkExperience({
     else url.searchParams.set("size", sizeId);
     window.history.replaceState(null, "", url);
   }, [sizeId, defaultSizeId]);
+
+  /**
+   * Identifies the configuration a rendered image belongs to.
+   *
+   * The rendered URL is stored against this key and only used when the key
+   * still matches, which does two things: nothing has to be cleared in an
+   * effect, and a slow render that finishes after the wording changed cannot
+   * show the visitor a stale version of their own words.
+   */
+  const customKey = (() => {
+    const text = config?.text.trim();
+    if (!config || !text) return null;
+    return `${config.typeface}|${config.ink}|${aspect}|${text}`;
+  })();
+
+  useEffect(() => {
+    if (!customKey || !config) return;
+    // Debounced: without this it runs on every keystroke, and each run measures
+    // text and rasterises a 1400px canvas.
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      void renderCustomArt({
+        lines: config.text.split("\n"),
+        typefaceId: config.typeface,
+        inkId: config.ink,
+        aspect,
+      }).then((url) => {
+        if (!cancelled && url) setRendered({ key: customKey, url });
+      });
+    }, 350);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [customKey, config, aspect]);
+
+  /** Only ever the image for the configuration currently on screen. */
+  const customImage = customKey && rendered?.key === customKey ? rendered.url : null;
 
   const closeZoom = useCallback(() => {
     setZoomVisible(false);
@@ -334,6 +384,7 @@ export function ArtworkExperience({
               sizeLabel={size.label}
               widthCm={size.widthCm}
               heightCm={size.heightCm}
+              customImage={customImage}
               onAnalytics={trackAr}
             />
           ) : (

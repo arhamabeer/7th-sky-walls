@@ -1327,6 +1327,91 @@ async function testArFailureRecovery(browser) {
   await context.close();
 }
 
+/**
+ * A configured piece must not quietly become the original one.
+ *
+ * Reported from a phone: customise in "Make it yours", switch back to "On your
+ * wall", and the default artwork was shown. Nothing said so, which is the worst
+ * version of wrong — the visitor believes they are looking at their own words.
+ *
+ * The camera preview composites a flat image and can carry the wording; the GLB
+ * and USDZ are built ahead of time and cannot. So the requirement is two-sided:
+ * the camera preview shows the customer's words, and the panel states that the
+ * 3D view does not.
+ */
+async function testCustomTextReachesPreview(browser) {
+  const context = await browser.newContext({
+    viewport: { width: 393, height: 852 },
+    isMobile: true,
+    hasTouch: true,
+    permissions: ["camera"],
+  });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+    await page.locator("[role=tab]", { hasText: /^Make it yours$/ }).click();
+    await page.locator("[role=tabpanel]:not([hidden]) textarea").fill("Rizq\nBarkat");
+    // Past the render debounce.
+    await page.waitForTimeout(1500);
+    await page.locator("[role=tab]", { hasText: /^On your wall$/ }).click();
+
+    const noticed = await page
+      .waitForFunction(
+        () =>
+          [...document.querySelectorAll("[role=tabpanel]")].some(
+            (el) => !el.hidden && /show the original piece/i.test(el.textContent ?? ""),
+          ),
+        null,
+        { timeout: 10000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+    record(
+      "custom-text",
+      "the panel says the 3D view does not carry the custom wording",
+      noticed,
+    );
+
+    await page.getByRole("button", { name: /preview with your camera/i }).first().click();
+    await page.getByRole("button", { name: /start the camera/i }).click().catch(() => {});
+    await page.waitForTimeout(2000);
+
+    const overlay = await page.evaluate(() => {
+      const dialog = document.querySelector("[role=dialog][aria-modal=true]");
+      const img = dialog?.querySelector("img");
+      const box = img?.parentElement;
+      return {
+        usesCustomRender: (img?.getAttribute("src") ?? "").startsWith("data:image/png"),
+        boxShadow: box ? getComputedStyle(box).boxShadow : "missing",
+        imageFilter: img ? getComputedStyle(img).filter : "missing",
+      };
+    });
+    record(
+      "custom-text",
+      "the camera preview composites the customer's own wording",
+      overlay.usesCustomRender,
+      `src starts data:image/png = ${overlay.usesCustomRender}`,
+    );
+    // The artwork is a transparent PNG of cut letters, so a bordered, shadowed
+    // rectangle around it reads as a sheet of paper on the wall.
+    record(
+      "custom-text",
+      "no rectangle is drawn around the piece on the wall",
+      overlay.boxShadow === "none",
+      `box-shadow: ${overlay.boxShadow}`,
+    );
+    record(
+      "custom-text",
+      "the shadow follows the letters rather than a box",
+      /drop-shadow/.test(overlay.imageFilter),
+      overlay.imageFilter,
+    );
+  } catch (err) {
+    record("custom-text", "custom-text group completed without throwing", false, String(err).slice(0, 110));
+  }
+  await context.close();
+}
+
 async function testReducedMotion(browser) {
   const context = await browser.newContext({
     viewport: { width: 1280, height: 800 },
@@ -1377,7 +1462,11 @@ async function testReducedMotion(browser) {
 }
 
 async function main() {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({
+    // The camera preview needs a stream; without these getUserMedia is denied
+    // and the group cannot reach what it is testing.
+    args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"],
+  });
 
   for (const vp of VIEWPORTS) {
     const context = await browser.newContext({
@@ -1424,6 +1513,7 @@ async function main() {
 
   await testAndroidArTiers(browser);
   await testArFailureRecovery(browser);
+  await testCustomTextReachesPreview(browser);
   await testReducedMotion(browser);
   await testRateLimit(browser);
   await browser.close();

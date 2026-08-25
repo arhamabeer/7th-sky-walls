@@ -252,7 +252,12 @@ export function CameraPreview({
               role="button"
               tabIndex={0}
               aria-label="Drag to position the artwork"
-              className="absolute cursor-move touch-none shadow-[0_18px_44px_-16px_rgba(0,0,0,0.8)] ring-1 ring-white/20"
+              // No ring and no box shadow. The artwork is a transparent PNG of
+              // cut letters, so a bordered, shadowed rectangle around it read as
+              // a sheet of paper taped to the wall — which is the opposite of
+              // what this preview is for. The shadow moves onto the image
+              // itself, where it follows the letters.
+              className="absolute cursor-move touch-none"
               style={{
                 left: `${placement.x}%`,
                 top: `${placement.y}%`,
@@ -265,7 +270,8 @@ export function CameraPreview({
                 alt={imageAlt}
                 fill
                 sizes="80vw"
-                className="pointer-events-none object-contain"
+                unoptimized={imageSrc.startsWith("data:")}
+                className="pointer-events-none object-contain drop-shadow-[0_10px_22px_rgba(0,0,0,0.55)]"
               />
             </div>
 
