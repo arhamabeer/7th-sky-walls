@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { RoomScalePreview } from "@/components/artwork/room-scale-preview";
@@ -83,7 +82,12 @@ export function ArtworkExperience({
   const [view, setView] = useState<"artwork" | "room" | "ar" | "custom">("artwork");
   const [config, setConfig] = useState<TextArtConfig | null>(null);
   const [zoomed, setZoomed] = useState(false);
-  const reduced = useReducedMotion();
+  /**
+   * Drives the enter transition. The dialog mounts hidden and is revealed on
+   * the next frame so CSS has two states to animate between — the same trick
+   * the reveal component uses, and the reason this needs no animation library.
+   */
+  const [zoomVisible, setZoomVisible] = useState(false);
   const tabsId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
   const openerRef = useRef<HTMLButtonElement>(null);
@@ -152,11 +156,13 @@ export function ArtworkExperience({
   }, [sizeId, defaultSizeId]);
 
   const closeZoom = useCallback(() => {
+    setZoomVisible(false);
     setZoomed(false);
     openerRef.current?.focus();
   }, []);
 
-  // Escape closes the viewer; body scroll is locked while it is open.
+  // Escape closes the viewer; body scroll is locked while it is open. The
+  // reveal is deferred one frame so the CSS transition has a start state.
   useEffect(() => {
     if (!zoomed) return;
     const onKey = (e: KeyboardEvent) => {
@@ -166,7 +172,9 @@ export function ArtworkExperience({
     const previous = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
     closeRef.current?.focus();
+    const frame = requestAnimationFrame(() => setZoomVisible(true));
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = previous;
     };
@@ -409,26 +417,20 @@ export function ArtworkExperience({
         </div>
       </div>
 
-      {/* Fullscreen viewer */}
-      <AnimatePresence>
-        {zoomed && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-4 sm:p-8"
-            initial={reduced ? { opacity: 1 } : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={reduced ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${title}, full screen`}
-            onClick={closeZoom}
-          >
-            <motion.div
-              className="relative max-h-full w-full max-w-4xl"
-              initial={reduced ? false : { scale: 0.94, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={reduced ? undefined : { scale: 0.96, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      {/* Fullscreen viewer. Transitions are CSS — see the `zoom-*` classes in
+          globals.css — so no animation library is needed on any page. */}
+      {zoomed && (
+        <div
+          data-zoom={zoomVisible ? "shown" : "pending"}
+          className="zoom-backdrop fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-4 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${title}, full screen`}
+          onClick={closeZoom}
+        >
+            <div
+              data-zoom={zoomVisible ? "shown" : "pending"}
+              className="zoom-panel relative max-h-full w-full max-w-4xl"
               onClick={(e) => e.stopPropagation()}
             >
               <Image
@@ -443,19 +445,18 @@ export function ArtworkExperience({
               <p className="mt-3 text-center text-sm text-background/80">
                 {title} — {size.widthCm} × {size.heightCm} cm
               </p>
-            </motion.div>
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={closeZoom}
-              aria-label="Close full screen view"
-              className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-background/15 text-2xl leading-none text-background transition-colors hover:bg-background/25 sm:right-8 sm:top-8"
-            >
-              <span aria-hidden>×</span>
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={closeZoom}
+            aria-label="Close full screen view"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-background/15 text-2xl leading-none text-background transition-colors hover:bg-background/25 sm:right-8 sm:top-8"
+          >
+            <span aria-hidden>×</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

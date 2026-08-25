@@ -73,7 +73,7 @@ export default function ServicesPage() {
                 )}
               >
                 <div>
-                  <p className="font-display text-5xl font-medium leading-none text-accent-soft">
+                  <p className="font-display text-5xl font-medium leading-none text-accent">
                     {String(i + 1).padStart(2, "0")}
                   </p>
                   <h2 className="mt-4 font-display text-3xl font-medium tracking-tight sm:text-4xl">
@@ -194,7 +194,7 @@ export default function ServicesPage() {
                 delay={staggerDelay(i)}
                 className="flex flex-col bg-background p-6"
               >
-                <p className="font-display text-4xl font-medium leading-none text-accent-soft">
+                <p className="font-display text-4xl font-medium leading-none text-accent">
                   {i + 1}
                 </p>
                 <h3 className="mt-4 font-display text-lg font-medium">{step.step}</h3>

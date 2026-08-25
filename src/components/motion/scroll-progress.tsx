@@ -1,30 +1,16 @@
-"use client";
-
-import { motion, useScroll, useSpring } from "motion/react";
-
 /**
- * Thin reading-progress bar pinned under the header. Purely decorative, so it
- * is hidden from assistive technology.
+ * Reading-progress bar, driven entirely by CSS.
  *
- * Visibility is handled in CSS (`.scroll-progress` is display:none under
- * reduced motion) rather than by returning null from a client-only hook.
- * Branching the rendered tree on a hook that differs between server and client
- * leaves hydration to reconcile a structural change, which is the same hazard
- * that stranded hidden styles on reveal targets.
+ * This was previously a client component using a spring and a scroll
+ * subscription, which pulled the animation library into the bundle of every
+ * page for one decorative line. A CSS scroll-driven animation runs on the
+ * compositor, costs no JavaScript at all, and cannot contribute to input
+ * delay.
+ *
+ * Where `animation-timeline` is unsupported the bar simply never appears —
+ * see globals.css, where it is drawn only inside an @supports block. It is
+ * decorative, so nothing is lost.
  */
 export function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 220,
-    damping: 40,
-    restDelta: 0.001,
-  });
-
-  return (
-    <motion.div
-      aria-hidden
-      style={{ scaleX }}
-      className="scroll-progress fixed inset-x-0 top-16 z-40 h-0.5 origin-left bg-accent"
-    />
-  );
+  return <div aria-hidden className="scroll-progress" />;
 }

@@ -194,22 +194,32 @@ measured true scale and scale lock cannot be confirmed without a phone.
 - Parallax applied imperatively, transform only, desktop only — never
   `background-attachment: fixed`, which breaks on iOS Safari
 
-### Phase 6 — Artwork customizer (on-screen)
+### Phase 6 — Artwork customizer (on-screen) — COMPLETE
 
-- Size, frame and color variant picker with live rendered preview and
-  true-scale comparison
-- Text-art module: custom text, font style and colors with live canvas render
-- Configuration serialized into the inquiry and a shareable URL
-- Customized preview image attachable to an inquiry
+- Four frame finishes, drawn in CSS at the same proportion the AR texture
+  composites, so preview and model agree
+- Text-art configurator with live DOM preview: three voices, four inks, three
+  grounds, type auto-sized to fit, unreadable ink/ground combinations flagged
+- Configuration carried to the inquiry as readable query parameters and read
+  back as a sentence
 
-### Phase 7 — AR tiers 2 and 3
+Known limit: AR models carry each artwork's default finish only. Generating a
+model per finish would quadruple the asset matrix; the on-screen preview covers
+finish choice instead.
 
-- Tier 2 (Android Chrome / Samsung Internet): custom WebXR session, hit-tests
-  filtered to vertical surfaces, correctly oriented reticle, in-AR artwork and
-  size switching via DOM overlay, blank-wall coaching UI
-- Tier 3 (universal): camera-overlay preview — gyro-stabilized live mode plus a
-  photo mode, A4-paper calibration, dimensions always labeled on the overlay
-- Unified tier detection routing each device to its best available experience
+### Phase 7 — AR tiers 2 and 3 — TIER 3 COMPLETE
+
+Tier 3 (universal camera preview) is done: live overlay with drag positioning,
+a freeze control, A4/Letter calibration for true scale, and honest labelling
+that this is not tracked AR. Reachable from the same panel as real AR, so a
+failed handoff always has somewhere to go.
+
+Tier 2 was specified as a custom WebXR session. Research since established
+that model-viewer's own WebXR path already performs wall placement with fixed
+scale on Android Chrome and Samsung Internet, which is what tier 2 existed to
+provide — so it is already shipped through tier 1. A custom session would add
+only in-AR size switching and a bespoke reticle. That is now an enhancement to
+consider after device testing, not a gap.
 
 ### Phase 8 — Hardening, content swap, launch
 

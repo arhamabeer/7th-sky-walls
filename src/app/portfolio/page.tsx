@@ -4,6 +4,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import {
   getArtworks,
   getCollections,
+  getVenueById,
   getVenues,
 } from "@/lib/content";
 import { venueIdSchema } from "@/lib/content/schema";
@@ -102,6 +103,17 @@ export default async function PortfolioPage({
 
       <section className="py-14 sm:py-20">
         <Container>
+          {/* The grid's card titles are h3, so the section needs an h2 between
+              them and the page h1 — and naming the current result set is
+              genuinely useful when navigating by heading. */}
+          <h2 className="sr-only">
+            {artworks.length}{" "}
+            {artworks.length === 1 ? "artwork" : "artworks"}
+            {venue ? ` for ${getVenueById(venue)?.name.toLowerCase()}` : ""}
+            {collection
+              ? ` in ${collections.find((c) => c.id === collection)?.name}`
+              : ""}
+          </h2>
           {artworks.length === 0 ? (
             <p className="py-20 text-center text-muted">{copy.portfolio.emptyState}</p>
           ) : (

@@ -153,8 +153,11 @@ export default async function ArtworkPage({
             <h1 className="mt-1 font-display text-3xl font-medium tracking-tight sm:text-4xl">
               {artwork.title}
             </h1>
+            {/* The badge sits on the plain surface, not a tinted accent
+                ground: accent on accent/10 measured 4.25:1, just under the
+                4.5:1 that small text needs. */}
             {artwork.customText && (
-              <p className="mt-3 inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+              <p className="mt-3 inline-block rounded-full border border-accent/40 bg-surface px-3 py-1 text-xs font-semibold text-accent">
                 {copy.artwork.customizableBadge}
               </p>
             )}

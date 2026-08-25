@@ -1,6 +1,5 @@
 "use client";
 
-import Lenis from "lenis";
 import { useEffect } from "react";
 
 /**
@@ -17,17 +16,25 @@ import { useEffect } from "react";
  * 2. Touch devices keep native scrolling. Lenis interpolates on the main
  *    thread, competing with hydration and 3D work for CPU, which surfaces as
  *    input delay on mid-range phones. Reduced-motion users are excluded too.
+ *
+ * 3. The library is imported dynamically, inside the branch that uses it. A
+ *    static import shipped it to every phone that would never run it — a
+ *    library downloaded, parsed and discarded on the devices least able to
+ *    afford the main-thread time.
  */
 export function SmoothScroll() {
   useEffect(() => {
     const pointerFine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const noPreference = window.matchMedia("(prefers-reduced-motion: no-preference)");
 
-    let lenis: Lenis | null = null;
+    let lenis: { raf: (time: number) => void; destroy: () => void } | null = null;
     let frame = 0;
+    let cancelled = false;
 
-    const start = () => {
+    const start = async () => {
       if (lenis) return;
+      const { default: Lenis } = await import("lenis");
+      if (cancelled || lenis) return;
       lenis = new Lenis({ duration: 0.9, smoothWheel: true, syncTouch: false });
       const raf = (time: number) => {
         lenis?.raf(time);
@@ -43,7 +50,7 @@ export function SmoothScroll() {
     };
 
     const evaluate = () => {
-      if (pointerFine.matches && noPreference.matches) start();
+      if (pointerFine.matches && noPreference.matches) void start();
       else stop();
     };
 
@@ -52,6 +59,7 @@ export function SmoothScroll() {
     noPreference.addEventListener("change", evaluate);
 
     return () => {
+      cancelled = true;
       pointerFine.removeEventListener("change", evaluate);
       noPreference.removeEventListener("change", evaluate);
       stop();

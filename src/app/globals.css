@@ -50,6 +50,71 @@ body {
 }
 
 /*
+ * Reading-progress bar. Drawn only where scroll-driven animations exist, so
+ * it needs no JavaScript and no fallback — it is decorative, and where the
+ * browser cannot run it on the compositor it simply is not shown.
+ */
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-progress {
+      display: block;
+      position: fixed;
+      inset-inline: 0;
+      top: 4rem;
+      z-index: 40;
+      height: 2px;
+      background: var(--brand-accent);
+      transform-origin: 0 50%;
+      animation: scroll-progress-grow linear;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+@keyframes scroll-progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/*
+ * Fullscreen artwork viewer. Two states so CSS has something to animate
+ * between; no animation library involved.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .zoom-backdrop {
+    transition: opacity 0.22s ease-out;
+  }
+  .zoom-backdrop[data-zoom="pending"] {
+    opacity: 0;
+  }
+  .zoom-backdrop[data-zoom="shown"] {
+    opacity: 1;
+  }
+
+  .zoom-panel {
+    transition:
+      opacity 0.3s var(--ease-out-soft),
+      transform 0.3s var(--ease-out-soft);
+  }
+  .zoom-panel[data-zoom="pending"] {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  .zoom-panel[data-zoom="shown"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
  * Entrance reveals (see components/motion/reveal.tsx).
  *
  * The hidden state lives ONLY inside the no-preference query, so reduced-motion
@@ -76,10 +141,6 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  /* Decorative only — nothing is lost by removing it. */
-  .scroll-progress {
-    display: none;
   }
   *,
   *::before,
