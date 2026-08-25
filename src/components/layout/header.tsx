@@ -8,14 +8,25 @@ import { NAV_LINKS } from "@/components/layout/nav-links";
 export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center 2xl:max-w-[84rem] justify-between gap-4 px-4 sm:px-6 2xl:px-10">
+      {/* min-h rather than a fixed height: the wordmark is whatever the brand
+          config says it is, and a long name wrapping to two or three lines
+          inside a 64px box escaped the bar and crossed the border onto the
+          page. Growing is the correct response to a longer name. */}
+      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6 2xl:max-w-[84rem] 2xl:px-10">
         <Link
           href="/"
-          className="flex min-h-11 items-center gap-2.5"
+          className="flex min-h-11 min-w-0 items-center gap-2.5"
           aria-label={site.name}
         >
-          <Image src={site.assets.mark} alt="" width={30} height={30} loading="eager" />
-          <span className="font-display text-lg font-semibold tracking-tight">
+          <Image
+            src={site.assets.mark}
+            alt=""
+            width={30}
+            height={30}
+            loading="eager"
+            className="shrink-0"
+          />
+          <span className="font-display text-base font-semibold leading-tight tracking-tight sm:text-lg">
             {site.name}
           </span>
         </Link>

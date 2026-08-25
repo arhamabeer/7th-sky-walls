@@ -41,6 +41,7 @@ everything else works.
 | `npm run check:images` | Every artwork file matches its declared dimensions. |
 | `npm run check:ar` | Every AR asset encodes its advertised size and is Quick Look shaped. |
 | `npm run check:analytics` | Analytics load where they work and, just as importantly, not where they do not. |
+| `npm run check:brand` | Renaming the studio touches one config file and nothing else. Swaps in a long name and a new palette, rebuilds, checks the output and the header, then restores. Two builds — not for every change. |
 | `npm run audit:responsive` | The viewport audit on its own, against a running server. |
 | `npm run shots` | Full-page screenshots for review. `--selector` captures one element; `--click` presses a control first. |
 

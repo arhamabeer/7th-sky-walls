@@ -18,7 +18,8 @@
     "lighthouse": "node scripts/lighthouse.mjs",
     "lighthouse:detail": "node scripts/lighthouse-detail.mjs",
     "check:analytics": "node scripts/check-analytics.mjs",
-    "serve": "node scripts/serve.mjs"
+    "serve": "node scripts/serve.mjs",
+    "check:brand": "node scripts/check-brand-swap.mjs"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",
