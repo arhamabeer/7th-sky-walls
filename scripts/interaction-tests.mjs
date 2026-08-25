@@ -1078,15 +1078,50 @@ async function testMobileNav(page, vp) {
   const toggle = page.locator('button[aria-controls="mobile-menu"]');
   await toggle.click();
   await page.waitForTimeout(200);
-  const open = await page.evaluate(() => ({
-    expanded: document.querySelector('button[aria-controls="mobile-menu"]')?.getAttribute("aria-expanded"),
-    menu: Boolean(document.getElementById("mobile-menu")),
-    links: document.querySelectorAll("#mobile-menu a").length,
-    locked: document.documentElement.style.overflow === "hidden",
-  }));
+  const open = await page.evaluate(() => {
+    const menu = document.getElementById("mobile-menu");
+    const links = [...(menu?.querySelectorAll("a") ?? [])];
+    const last = links.at(-1)?.getBoundingClientRect();
+    const header = document.querySelector("header")?.getBoundingClientRect();
+    const first = links[0]?.getBoundingClientRect();
+    return {
+      expanded: document
+        .querySelector('button[aria-controls="mobile-menu"]')
+        ?.getAttribute("aria-expanded"),
+      menu: Boolean(menu),
+      links: links.length,
+      locked: document.documentElement.style.overflow === "hidden",
+      panelHeight: menu ? Math.round(menu.getBoundingClientRect().height) : 0,
+      viewportHeight: window.innerHeight,
+      lastLinkReachable: last ? last.bottom <= window.innerHeight + 1 : false,
+      firstLinkClearsHeader: first && header ? first.top >= header.height : false,
+    };
+  });
   record(vp.name, "mobile menu opens with correct aria state", open.expanded === "true" && open.menu);
   record(vp.name, "mobile menu lists all routes", open.links >= 5, `${open.links} links`);
   record(vp.name, "mobile menu locks page scroll", open.locked);
+  /**
+   * The panel must fill the viewport.
+   *
+   * It did not: the header carries backdrop-filter for its translucency, which
+   * makes it the containing block for any fixed-position descendant, so a panel
+   * nested inside it resolved top/bottom against the header's 65px box. The box
+   * collapsed to 64px while its content needed 505px, and overflow-y: auto
+   * turned the menu into a scrollable sliver rather than failing visibly. It is
+   * portalled to the body now, and this is what notices if that changes.
+   */
+  record(
+    vp.name,
+    "mobile menu fills the viewport rather than collapsing",
+    Math.abs(open.panelHeight - open.viewportHeight) <= 1,
+    `panel ${open.panelHeight}px in a ${open.viewportHeight}px viewport`,
+  );
+  record(vp.name, "every menu link is reachable without clipping", open.lastLinkReachable);
+  record(
+    vp.name,
+    "the first menu link clears the sticky header",
+    open.firstLinkClearsHeader,
+  );
 
   // Navigating must close it and release the scroll lock.
   await page.locator("#mobile-menu a", { hasText: "Services" }).click();
