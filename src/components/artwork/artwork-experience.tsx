@@ -11,6 +11,7 @@ import {
   type TextArtConfig,
 } from "@/components/artwork/text-art-configurator";
 import { LinkButton } from "@/components/ui/link-button";
+import { useFocusTrap } from "@/components/ui/use-focus-trap";
 import { cn } from "@/lib/utils";
 
 export interface SizeOption {
@@ -88,6 +89,7 @@ export function ArtworkExperience({
   const tabsId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
   const openerRef = useRef<HTMLButtonElement>(null);
+  const zoomRef = useRef<HTMLDivElement>(null);
 
   const size = sizes.find((s) => s.id === sizeId) ?? sizes[0];
 
@@ -176,6 +178,9 @@ export function ArtworkExperience({
       document.documentElement.style.overflow = previous;
     };
   }, [zoomed, closeZoom]);
+
+  // aria-modal="true" claims focus cannot leave; this is what makes that true.
+  useFocusTrap(zoomRef, zoomed);
 
   /**
    * Tabs wrap to two rows on the narrowest phones. With four views the strip
@@ -420,6 +425,7 @@ export function ArtworkExperience({
           globals.css — so no animation library is needed on any page. */}
       {zoomed && (
         <div
+          ref={zoomRef}
           data-zoom={zoomVisible ? "shown" : "pending"}
           className="zoom-backdrop fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-4 sm:p-8"
           role="dialog"

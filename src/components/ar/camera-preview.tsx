@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusTrap } from "@/components/ui/use-focus-trap";
 import { cn } from "@/lib/utils";
 
 /**
@@ -66,6 +67,10 @@ export function CameraPreview({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // The overlay covers the page and claims aria-modal, so Tab has to stay in it.
+  useFocusTrap(rootRef, true);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -203,6 +208,7 @@ export function CameraPreview({
 
   return (
     <div
+      ref={rootRef}
       className="fixed inset-0 z-50 flex flex-col bg-ink text-background"
       role="dialog"
       aria-modal="true"

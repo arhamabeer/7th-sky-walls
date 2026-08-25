@@ -29,6 +29,157 @@ const record = (viewport, name, pass, detail = "") =>
 const ratio = (w, h) => Math.round((w / h) * 100) / 100;
 const near = (a, b, tol = 0.06) => Math.abs(a - b) <= tol;
 
+/**
+ * Keyboard access.
+ *
+ * Lighthouse scores accessibility 100 on every route and still says nothing
+ * about any of this: it does not press Tab. These are the failures that only
+ * appear when someone actually navigates by keyboard — an invisible focus ring,
+ * a control that cannot be reached, a dialog that lets focus escape behind it.
+ */
+async function testKeyboardNavigation(page, vp) {
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+
+  // The skip link must be the first stop, or a keyboard user walks the whole
+  // header on every page load.
+  await page.keyboard.press("Tab");
+  const first = await page.evaluate(() => {
+    const el = document.activeElement;
+    return { href: el?.getAttribute("href") ?? "", visible: el ? el.getBoundingClientRect().width > 0 : false };
+  });
+  record(vp.name, "first tab stop is the skip link", first.href === "#content", `focused href: ${first.href}`);
+  record(vp.name, "skip link becomes visible when focused", first.visible);
+
+  await page.keyboard.press("Enter");
+  const skipped = await page.evaluate(() => {
+    const main = document.getElementById("content");
+    return {
+      hash: location.hash,
+      focusInMain: Boolean(main && main.contains(document.activeElement)),
+    };
+  });
+  record(
+    vp.name,
+    "skip link moves past the header",
+    skipped.hash === "#content" || skipped.focusInMain,
+    `hash ${skipped.hash}`,
+  );
+
+  // A positive tabindex reorders the tab sequence away from the reading order,
+  // which is a defect wherever it appears.
+  const positiveTabindex = await page.evaluate(
+    () =>
+      [...document.querySelectorAll("[tabindex]")].filter(
+        (el) => Number(el.getAttribute("tabindex")) > 0,
+      ).length,
+  );
+  record(vp.name, "no positive tabindex reorders the tab sequence", positiveTabindex === 0);
+
+  /**
+   * Walk the tab order and require every stop to render an indicator. The site
+   * sets one globally on :focus-visible, so a failure here means something
+   * suppressed it locally — which is exactly the edit that is easy to make and
+   * impossible to notice with a mouse.
+   */
+  const noIndicator = [];
+  let stops = 0;
+  let stuck = 0;
+  for (let i = 0; i < 45; i += 1) {
+    await page.keyboard.press("Tab");
+    const stop = await page.evaluate(() => {
+      const el = document.activeElement;
+      if (!el || el === document.body || el === document.documentElement) return null;
+      const cs = getComputedStyle(el);
+      const outlined = cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) > 0;
+      const shadowed = cs.boxShadow !== "none" && cs.boxShadow !== "";
+      // Identity has to be the element itself. Comparing a tag-and-class
+      // string reported every pair of sibling nav links as the same control,
+      // so the trap check failed on a page with no trap at all.
+      const repeat = el.hasAttribute("data-kbd-seen");
+      el.setAttribute("data-kbd-seen", "");
+      return {
+        id: `${el.tagName}.${(el.getAttribute("class") ?? "").slice(0, 40)}`,
+        label: (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 40),
+        indicated: outlined || shadowed,
+        repeat,
+      };
+    });
+    if (!stop) break;
+    stops += 1;
+    if (!stop.indicated) noIndicator.push(`${stop.id} "${stop.label}"`);
+    // A repeat before the sequence has wrapped means focus is going backwards
+    // into somewhere it has already been, which is what a trap looks like.
+    if (stop.repeat && stops < 12) stuck += 1;
+  }
+
+  record(
+    vp.name,
+    "every tab stop shows a focus indicator",
+    noIndicator.length === 0,
+    noIndicator.slice(0, 3).join(" | "),
+  );
+  record(vp.name, "tabbing is not trapped on a single control", stuck === 0);
+  record(vp.name, "the header and page are reachable by keyboard", stops >= 8, `${stops} stops`);
+}
+
+/**
+ * An overlay that declares aria-modal="true" must not leak focus to the page
+ * behind it. Both overlays here are divs rather than native `<dialog>`
+ * elements, so nothing traps focus for them and Tab used to walk straight out
+ * into content the overlay was covering.
+ */
+async function testDialogFocusTrap(page, vp) {
+  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.locator("[role=tab]", { hasText: /^Artwork$/ }).click();
+  await page.locator("main button[aria-label*='full screen']").click();
+
+  const open = await page
+    .waitForFunction(() => Boolean(document.querySelector("[role=dialog][aria-modal=true]")), null, {
+      timeout: 4000,
+    })
+    .then(() => true)
+    .catch(() => false);
+  if (!open) {
+    record(vp.name, "fullscreen viewer opens for the focus-trap check", false);
+    return;
+  }
+
+  // Enough presses to run past the controls inside and off the end.
+  const escaped = [];
+  for (let i = 0; i < 12; i += 1) {
+    await page.keyboard.press("Tab");
+    const where = await page.evaluate(() => {
+      const dlg = document.querySelector("[role=dialog][aria-modal=true]");
+      const el = document.activeElement;
+      if (!dlg || !el) return "no-dialog";
+      if (dlg.contains(el)) return "inside";
+      return `${el.tagName}.${(el.getAttribute("class") ?? "").slice(0, 30)}`;
+    });
+    if (where !== "inside") escaped.push(`press ${i + 1}: ${where}`);
+  }
+  record(
+    vp.name,
+    "focus stays inside the open viewer while tabbing",
+    escaped.length === 0,
+    escaped.slice(0, 2).join(" | "),
+  );
+
+  // Shift+Tab off the front must wrap backwards rather than fall out.
+  for (let i = 0; i < 4; i += 1) await page.keyboard.press("Shift+Tab");
+  const backwards = await page.evaluate(() => {
+    const dlg = document.querySelector("[role=dialog][aria-modal=true]");
+    return Boolean(dlg && dlg.contains(document.activeElement));
+  });
+  record(vp.name, "shift-tabbing off the front wraps inside the viewer", backwards);
+
+  await page.keyboard.press("Escape");
+  await page
+    .waitForFunction(() => !document.querySelector("[role=dialog][aria-modal=true]"), null, {
+      timeout: 3000,
+    })
+    .catch(() => {});
+}
+
 async function testArtworkPage(page, vp) {
   // A panoramic piece exercises the aspect handling most strictly.
   await page.goto(`${BASE}/portfolio/glass-horizon`, { waitUntil: "networkidle" });
@@ -983,6 +1134,8 @@ async function main() {
       ["grid reveals", testGridReveals],
       ["inquiry form", testInquiryForm],
       ["mobile navigation", testMobileNav],
+      ["keyboard navigation", testKeyboardNavigation],
+      ["dialog focus trap", testDialogFocusTrap],
     ];
 
     for (const [name, run] of groups) {
