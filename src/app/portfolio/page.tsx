@@ -4,11 +4,12 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import {
   getArtworks,
   getCollections,
+  getVenueById,
   getVenues,
 } from "@/lib/content";
 import { venueIdSchema } from "@/lib/content/schema";
 import { Container } from "@/components/ui/container";
-import { ArtworkCard } from "@/components/ui/artwork-card";
+import { ArtworkGrid } from "@/components/ui/artwork-grid";
 import { Chip } from "@/components/ui/chip";
 
 export const metadata: Metadata = pageMetadata({
@@ -77,6 +78,15 @@ export default async function PortfolioPage({
 
           <nav aria-label="Filter by collection" className="mt-3">
             <ul className="flex flex-wrap gap-2">
+              <li>
+                <Chip href="/collections">All collections &rarr;</Chip>
+              </li>
+              <li>
+                <Chip href="/spaces">Browse by space &rarr;</Chip>
+              </li>
+              <li>
+                <Chip href="/planner">Plan a wall &rarr;</Chip>
+              </li>
               {collections.map((c) => (
                 <li key={c.id}>
                   <Chip
@@ -99,16 +109,21 @@ export default async function PortfolioPage({
 
       <section className="py-14 sm:py-20">
         <Container>
+          {/* The grid's card titles are h3, so the section needs an h2 between
+              them and the page h1 — and naming the current result set is
+              genuinely useful when navigating by heading. */}
+          <h2 className="sr-only">
+            {artworks.length}{" "}
+            {artworks.length === 1 ? "artwork" : "artworks"}
+            {venue ? ` for ${getVenueById(venue)?.name.toLowerCase()}` : ""}
+            {collection
+              ? ` in ${collections.find((c) => c.id === collection)?.name}`
+              : ""}
+          </h2>
           {artworks.length === 0 ? (
             <p className="py-20 text-center text-muted">{copy.portfolio.emptyState}</p>
           ) : (
-            <ul className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {artworks.map((artwork) => (
-                <li key={artwork.slug}>
-                  <ArtworkCard artwork={artwork} />
-                </li>
-              ))}
-            </ul>
+            <ArtworkGrid artworks={artworks} />
           )}
         </Container>
       </section>

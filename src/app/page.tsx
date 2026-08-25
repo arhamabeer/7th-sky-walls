@@ -13,67 +13,65 @@ import {
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { ArtworkCard } from "@/components/ui/artwork-card";
+import { ArtworkGrid } from "@/components/ui/artwork-grid";
+import { HeroWall } from "@/components/home/hero-wall";
+import { WallPreviewShowcase } from "@/components/home/wall-preview-showcase";
+import { Reveal } from "@/components/motion/reveal";
+import { staggerDelay } from "@/components/motion/stagger";
 
 export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/") },
 };
 
-const HERO_ARTWORK_SLUG = "dawn-over-clifton";
+/**
+ * The hero wall, hung in a deliberate order rather than taken from the top of
+ * the catalogue: a mix of orientations and palettes so the arrangement reads
+ * as curated. The third piece is the visual anchor and the LCP element.
+ */
+const HERO_SLUGS = [
+  "lahore-jaali",
+  "monsoon-leaves",
+  "meridian-seven",
+  "sabr",
+  "amber-hour",
+  "deep-work",
+];
 
 export default function HomePage() {
-  const heroArtwork = getArtworks().find((a) => a.slug === HERO_ARTWORK_SLUG);
-  const heroBlur = heroArtwork ? getBlurDataURL(heroArtwork.slug) : undefined;
+  const allArtworks = getArtworks();
+  const heroPieces = HERO_SLUGS.map((slug) =>
+    allArtworks.find((a) => a.slug === slug),
+  ).filter((a): a is NonNullable<typeof a> => Boolean(a));
   const collections = getCollections();
   const featured = getFeaturedArtworks().slice(0, 6);
   const venues = getVenues();
-  const artworks = getArtworks();
+  const artworks = allArtworks;
+  // A confident, office-appropriate piece for the wall-preview demonstration.
+  const showcasePiece = allArtworks.find((a) => a.slug === "meridian-seven");
 
   return (
     <>
-      {/* Hero — base version; the cinematic scroll treatment lands in a later phase. */}
-      <section className="relative flex min-h-[85svh] items-end overflow-hidden">
-        {heroArtwork && (
-          <Image
-            src={heroArtwork.image.src}
-            alt={heroArtwork.alt}
-            fill
-            sizes="100vw"
-            fetchPriority="high"
-            loading="eager"
-            className="object-cover"
-            {...(heroBlur ? { placeholder: "blur" as const, blurDataURL: heroBlur } : {})}
-          />
-        )}
-        {/* Scrim guarantees text contrast over any artwork, whatever its palette. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/70 to-ink/25"
-        />
-        <Container className="relative pb-16 pt-40 sm:pb-24">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-soft">
-            {copy.home.heroEyebrow}
-          </p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-tight text-background sm:text-6xl">
-            {copy.home.heroTitle}
-          </h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-background/85 sm:text-lg">
-            {copy.home.heroSubtitle}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <LinkButton href="/portfolio" variant="inverted">
-              {copy.cta.explore}
-            </LinkButton>
-            <LinkButton
-              href={whatsappLink(copy.contact.inquiryDefaultMessage)}
-              external
-              variant="outlineInverted"
-            >
-              {copy.cta.whatsapp}
-            </LinkButton>
-          </div>
-        </Container>
-      </section>
+      <HeroWall artworks={heroPieces}>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent">
+          {copy.home.heroEyebrow}
+        </p>
+        <h1 className="mt-4 max-w-3xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl 2xl:text-[5.5rem]">
+          {copy.home.heroTitle}
+        </h1>
+        <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg 2xl:text-xl 2xl:leading-8">
+          {copy.home.heroSubtitle}
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <LinkButton href="/portfolio">{copy.cta.explore}</LinkButton>
+          <LinkButton
+            href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+            external
+            variant="outline"
+          >
+            {copy.cta.whatsapp}
+          </LinkButton>
+        </div>
+      </HeroWall>
 
       {/* Collections */}
       <section className="py-20 sm:py-28">
@@ -84,35 +82,37 @@ export default function HomePage() {
             subtitle={copy.home.collectionsSubtitle}
           />
           <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {collections.map((collection) => {
+            {collections.map((collection, i) => {
               const cover = artworks.find((a) => a.collection === collection.id);
               const blur = cover ? getBlurDataURL(cover.slug) : undefined;
               return (
-                <li key={collection.id}>
+                <Reveal as="li" key={collection.id} delay={staggerDelay(i)} className="h-full">
                   <Link
-                    href={`/portfolio?collection=${collection.id}`}
-                    className="group block overflow-hidden rounded-xl border border-line bg-surface"
+                    href={`/collections/${collection.id}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-ink/30"
                   >
                     {cover && (
-                      <div className="relative aspect-[16/10] overflow-hidden bg-line">
+                      <div className="flex h-48 items-center justify-center overflow-hidden bg-background p-5">
                         <Image
                           src={cover.image.src}
                           alt={cover.alt}
-                          fill
+                          width={cover.image.width}
+                          height={cover.image.height}
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          className="h-auto max-h-full w-auto max-w-full object-contain shadow-[0_10px_26px_-14px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />
                       </div>
                     )}
-                    <div className="p-5">
+                    <div className="flex flex-1 flex-col p-5">
                       <h3 className="font-display text-xl font-medium">{collection.name}</h3>
-                      <p className="mt-2 text-sm leading-6 text-muted">
+                      <p className="mt-1 text-sm italic text-muted">{collection.tagline}</p>
+                      <p className="mt-2 flex-1 text-sm leading-6 text-muted">
                         {collection.description}
                       </p>
                     </div>
                   </Link>
-                </li>
+                </Reveal>
               );
             })}
           </ul>
@@ -130,20 +130,25 @@ export default function HomePage() {
             />
             <Link
               href="/portfolio"
-              className="text-sm font-semibold text-accent underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-4 hover:underline"
             >
               {copy.cta.viewAll}
             </Link>
           </div>
-          <ul className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((artwork) => (
-              <li key={artwork.slug}>
-                <ArtworkCard artwork={artwork} />
-              </li>
-            ))}
-          </ul>
+          <ArtworkGrid artworks={featured} className="mt-10" />
         </Container>
       </section>
+
+      {showcasePiece && (
+        <WallPreviewShowcase
+          artwork={showcasePiece}
+          eyebrow={copy.home.previewEyebrow}
+          title={copy.home.previewTitle}
+          subtitle={copy.home.previewSubtitle}
+          steps={copy.home.previewSteps}
+          ctaLabel={copy.home.previewCta}
+        />
+      )}
 
       {/* Venues */}
       <section className="py-20 sm:py-28">
@@ -155,16 +160,16 @@ export default function HomePage() {
             align="center"
           />
           <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {venues.map((venue) => (
-              <li key={venue.id}>
+            {venues.map((venue, i) => (
+              <Reveal as="li" key={venue.id} delay={staggerDelay(i)} className="h-full">
                 <Link
-                  href={`/portfolio?venue=${venue.id}`}
+                  href={`/spaces/${venue.id}`}
                   className="block h-full rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
                 >
                   <h3 className="font-display text-lg font-medium">{venue.name}</h3>
                   <p className="mt-1.5 text-sm leading-6 text-muted">{venue.pitch}</p>
                 </Link>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </Container>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { absoluteUrl, mailtoLink, whatsappLink } from "@/config/site.config";
@@ -7,19 +6,30 @@ import { artworkInquiryMessage, copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
 import {
   cmToInches,
+  getAdjacentArtworks,
+  getArAssets,
   getArtworkBySlug,
   getArtworks,
   getBlurDataURL,
   getCollectionById,
+  getOrientationAspect,
   getSizeDimensions,
   getVenueById,
 } from "@/lib/content";
 import { breadcrumbJsonLd, visualArtworkJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
 import { Container } from "@/components/ui/container";
+import { FeatureBoundary } from "@/components/ui/feature-boundary";
 import { LinkButton } from "@/components/ui/link-button";
-import { ArtworkCard } from "@/components/ui/artwork-card";
+import { ArtworkGrid } from "@/components/ui/artwork-grid";
 import { Chip } from "@/components/ui/chip";
+import {
+  ArtworkExperience,
+  type SizeOption,
+} from "@/components/artwork/artwork-experience";
+import { sceneForVenue } from "@/components/artwork/room-scenes";
+import { defaultFinishFor } from "@/content/finishes";
+import { ArtworkPager } from "@/components/artwork/artwork-pager";
 
 export async function generateStaticParams() {
   return getArtworks().map((a) => ({ slug: a.slug }));
@@ -35,12 +45,15 @@ export async function generateMetadata({
     title: artwork.title,
     description: artwork.description,
     path: `/portfolio/${artwork.slug}`,
+    // Pre-composed share card (see scripts/generate-placeholders.mjs). It
+    // carries no brand name — og:site_name supplies that — so a rebrand never
+    // requires regenerating image assets.
     images: [
       {
-        url: absoluteUrl(artwork.image.src),
-        width: artwork.image.width,
-        height: artwork.image.height,
-        alt: artwork.alt,
+        url: absoluteUrl(`/og/${artwork.slug}.jpg`),
+        width: 1200,
+        height: 630,
+        alt: `${artwork.title} — ${artwork.alt}`,
       },
     ],
   });
@@ -58,6 +71,24 @@ export default async function ArtworkPage({
   const related = getArtworks({ collection: artwork.collection })
     .filter((a) => a.slug !== artwork.slug)
     .slice(0, 3);
+  const adjacent = getAdjacentArtworks(artwork.slug);
+
+  // Physical dimensions are resolved on the server so the size chart stays a
+  // server-only concern; the client only receives plain numbers.
+  const arAssets = getArAssets(artwork.slug);
+  const sizeOptions: SizeOption[] = artwork.sizes.map((sizeId) => {
+    const d = getSizeDimensions(sizeId, artwork.orientation);
+    const ar = arAssets?.[sizeId];
+    return {
+      id: sizeId,
+      label: d.label,
+      widthCm: d.widthCm,
+      heightCm: d.heightCm,
+      widthIn: cmToInches(d.widthCm),
+      heightIn: cmToInches(d.heightCm),
+      ...(ar ? { ar: { glb: ar.glb, usdz: ar.usdz } } : {}),
+    };
+  });
 
   const breadcrumbs = [
     { name: copy.nav.home, path: "/" },
@@ -65,19 +96,50 @@ export default async function ArtworkPage({
     { name: artwork.title, path: `/portfolio/${artwork.slug}` },
   ];
 
+  const headingBlock = (
+    <>
+      {collection && (
+        <Link
+          href={`/collections/${collection.id}`}
+          className="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
+        >
+          {collection.name}
+        </Link>
+      )}
+      <h1 className="mt-1 font-display text-3xl font-medium tracking-tight sm:text-4xl">
+        {artwork.title}
+      </h1>
+      {/* The badge sits on the plain surface, not a tinted accent ground:
+          accent on accent/10 measured 4.25:1, just under the 4.5:1 that small
+          text needs. */}
+      {artwork.customText && (
+        <p className="mt-3 inline-block rounded-full border border-accent/40 bg-surface px-3 py-1 text-xs font-semibold text-accent">
+          {copy.artwork.customizableBadge}
+        </p>
+      )}
+      <p className="mt-4 text-base leading-7 text-muted">{artwork.description}</p>
+      {artwork.customText && (
+        <p className="mt-3 text-sm leading-6 text-muted">{copy.artwork.customizableNote}</p>
+      )}
+    </>
+  );
+
   return (
     <>
       <JsonLd data={visualArtworkJsonLd(artwork)} />
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
 
-      <Container className="py-10 sm:py-14">
+      <Container className="py-6 sm:py-10">
         <nav aria-label={copy.a11y.breadcrumb}>
-          <ol className="flex flex-wrap items-center gap-2 text-sm text-muted">
+          <ol className="flex flex-wrap items-center gap-x-2 text-sm text-muted">
             {breadcrumbs.map((crumb, i) => (
               <li key={crumb.path} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden>/</span>}
                 {i < breadcrumbs.length - 1 ? (
-                  <Link href={crumb.path} className="hover:text-ink">
+                  <Link
+                    href={crumb.path}
+                    className="inline-flex min-h-11 items-center hover:text-ink"
+                  >
                     {crumb.name}
                   </Link>
                 ) : (
@@ -90,125 +152,110 @@ export default async function ArtworkPage({
           </ol>
         </nav>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
-          {/* Artwork image */}
-          <div
-            className={`relative overflow-hidden rounded-xl bg-line ${
-              artwork.orientation === "portrait"
-                ? "aspect-[4/5]"
-                : artwork.orientation === "landscape"
-                  ? "aspect-[4/3]"
-                  : "aspect-square"
-            }`}
-          >
-            <Image
-              src={artwork.image.src}
-              alt={artwork.alt}
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              fetchPriority="high"
-              loading="eager"
-              className="object-cover"
-              {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
-            />
-          </div>
+        <div className="mt-4">
+          {/* The heading block is shared with the boundary's fallback so a
+              failure inside the interactive panel cannot take the page's only
+              h1 down with it. */}
+          <FeatureBoundary label="artwork-experience" fallback={headingBlock}>
+            <ArtworkExperience
+              title={artwork.title}
+              imageSrc={artwork.image.src}
+              imageAlt={artwork.alt}
+              imageWidth={artwork.image.width}
+              imageHeight={artwork.image.height}
+              blurDataURL={blur}
+              sizes={sizeOptions}
+              defaultSizeId={artwork.defaultSize}
+              defaultSceneId={sceneForVenue(artwork.venues[0]).id}
+              defaultFinishId={defaultFinishFor(artwork.materials).id}
+              customisable={artwork.customText}
+              defaultText={artwork.title}
+              aspect={getOrientationAspect(artwork.orientation)}
+              slug={artwork.slug}
+              sizeNote={copy.artwork.sizesNote}
+            >
+              {headingBlock}
+            </ArtworkExperience>
+          </FeatureBoundary>
+        </div>
 
-          {/* Details */}
-          <div>
-            {collection && (
-              <Link
-                href={`/portfolio?collection=${collection.id}`}
-                className="text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
-              >
-                {collection.name}
-              </Link>
-            )}
-            <h1 className="mt-2 font-display text-3xl font-medium tracking-tight sm:text-4xl">
-              {artwork.title}
-            </h1>
-            {artwork.customText && (
-              <p className="mt-3 inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
-                {copy.artwork.customizableBadge}
-              </p>
-            )}
-            <p className="mt-4 text-base leading-7 text-muted">{artwork.description}</p>
-            {artwork.customText && (
-              <p className="mt-3 text-sm leading-6 text-muted">
-                {copy.artwork.customizableNote}
-              </p>
-            )}
-
-            <div className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.artwork.sizesTitle}
-              </h2>
-              <table className="mt-3 w-full text-sm">
-                <thead>
-                  <tr className="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
-                    <th scope="col" className="py-2 pr-4 font-semibold">Size</th>
-                    <th scope="col" className="py-2 pr-4 font-semibold">Centimeters</th>
-                    <th scope="col" className="py-2 font-semibold">Inches</th>
+        <div className="mt-14 grid gap-10 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-3">
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
+              {copy.artwork.sizesTitle}
+            </h2>
+            <table className="mt-3 w-full text-sm">
+              <thead>
+                <tr className="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
+                  <th scope="col" className="py-2 pr-3 font-semibold">Size</th>
+                  <th scope="col" className="py-2 pr-3 font-semibold">cm</th>
+                  <th scope="col" className="py-2 font-semibold">in</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sizeOptions.map((s) => (
+                  <tr key={s.id} className="border-b border-line">
+                    <th scope="row" className="py-2.5 pr-3 text-left font-medium">
+                      {s.label}
+                    </th>
+                    <td className="py-2.5 pr-3 text-muted">
+                      {s.widthCm} × {s.heightCm}
+                    </td>
+                    <td className="py-2.5 text-muted">
+                      {s.widthIn}″ × {s.heightIn}″
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {artwork.sizes.map((sizeId) => {
-                    const d = getSizeDimensions(sizeId, artwork.orientation);
-                    const isDefault = sizeId === artwork.defaultSize;
-                    return (
-                      <tr key={sizeId} className="border-b border-line">
-                        <th scope="row" className="py-2.5 pr-4 text-left font-medium">
-                          {d.label}
-                          {isDefault && (
-                            <span className="ml-2 text-xs font-normal text-accent">
-                              (shown)
-                            </span>
-                          )}
-                        </th>
-                        <td className="py-2.5 pr-4 text-muted">
-                          {d.widthCm} × {d.heightCm} cm
-                        </td>
-                        <td className="py-2.5 text-muted">
-                          {cmToInches(d.widthCm)}″ × {cmToInches(d.heightCm)}″
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-              <p className="mt-3 text-xs leading-5 text-muted">{copy.artwork.sizesNote}</p>
-            </div>
-
-            <div className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.artwork.materialsTitle}
-              </h2>
-              <ul className="mt-3 space-y-1.5 text-sm text-muted">
-                {artwork.materials.map((m) => (
-                  <li key={m}>{m}</li>
                 ))}
-              </ul>
-            </div>
+              </tbody>
+            </table>
+          </section>
 
-            <div className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.artwork.venuesTitle}
-              </h2>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {artwork.venues.map((venueId) => {
-                  const venue = getVenueById(venueId);
-                  if (!venue) return null;
-                  return (
-                    <li key={venueId}>
-                      <Chip href={`/portfolio?venue=${venueId}`}>{venue.name}</Chip>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
+              {copy.artwork.materialsTitle}
+            </h2>
+            <ul className="mt-3 space-y-1.5 text-sm text-muted">
+              {artwork.materials.map((m) => (
+                <li key={m}>{m}</li>
+              ))}
+            </ul>
 
-            <div className="mt-10 flex flex-wrap gap-3">
-              <LinkButton href={whatsappLink(artworkInquiryMessage(artwork.title))} external>
+            <h2 className="mt-8 text-sm font-semibold uppercase tracking-widest text-muted">
+              {copy.artwork.venuesTitle}
+            </h2>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {artwork.venues.map((venueId) => {
+                const venue = getVenueById(venueId);
+                if (!venue) return null;
+                return (
+                  <li key={venueId}>
+                    <Chip href={`/portfolio?venue=${venueId}`}>{venue.name}</Chip>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+
+          <section className="rounded-xl border border-line bg-surface p-6">
+            <h2 className="font-display text-xl font-medium">Interested in this piece?</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Tell us your wall dimensions and we&apos;ll come back with a mockup in
+              your space.
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
+              {/* Carries the piece through to the form so the visitor does not
+                  retype what they were already looking at. */}
+              <LinkButton
+                href={`/contact?artwork=${encodeURIComponent(artwork.slug)}`}
+              >
                 {copy.cta.inquireArtwork}
+              </LinkButton>
+              <LinkButton
+                href={whatsappLink(artworkInquiryMessage(artwork.title))}
+                external
+                variant="outline"
+              >
+                {copy.cta.whatsapp}
               </LinkButton>
               <LinkButton
                 href={mailtoLink(`Inquiry: ${artwork.title}`)}
@@ -218,22 +265,20 @@ export default async function ArtworkPage({
                 {copy.cta.email}
               </LinkButton>
             </div>
-          </div>
+          </section>
         </div>
 
         {related.length > 0 && (
-          <section className="mt-20">
+          <section className="mt-16 border-t border-line pt-10">
             <h2 className="font-display text-2xl font-medium tracking-tight">
               {copy.artwork.moreFromCollection}
             </h2>
-            <ul className="mt-6 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((a) => (
-                <li key={a.slug}>
-                  <ArtworkCard artwork={a} />
-                </li>
-              ))}
-            </ul>
+            <ArtworkGrid artworks={related} className="mt-6" showCollection={false} />
           </section>
+        )}
+
+        {adjacent && (
+          <ArtworkPager previous={adjacent.previous} next={adjacent.next} />
         )}
       </Container>
     </>

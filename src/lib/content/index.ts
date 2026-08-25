@@ -4,20 +4,30 @@ import artworksJson from "@/content/artworks.json";
 import collectionsJson from "@/content/collections.json";
 import servicesJson from "@/content/services.json";
 import caseStudiesJson from "@/content/case-studies.json";
+import materialsJson from "@/content/materials.json";
+import venuesJson from "@/content/venues.json";
 import blurJson from "@/content/blur.json";
-import { SIZE_CHART, VENUES } from "@/content/catalog";
+import arManifestJson from "@/content/ar-manifest.json";
+import {
+  ORIENTATION_ASPECT,
+  SIZE_TIERS,
+  resolveSize,
+} from "@/content/catalog";
 import {
   artworkSchema,
   caseStudySchema,
+  materialSchema,
+  venueSchema,
   collectionSchema,
   serviceSchema,
   type Artwork,
   type CaseStudy,
   type Collection,
+  type Material,
   type Orientation,
   type Service,
   type SizeId,
-  type SizeInfo,
+  type SizeTier,
   type VenueId,
   type VenueInfo,
 } from "@/lib/content/schema";
@@ -53,6 +63,8 @@ const artworks: Artwork[] = parseAll(artworkSchema, artworksJson, "artwork");
 const collections: Collection[] = parseAll(collectionSchema, collectionsJson, "collection");
 const services: Service[] = parseAll(serviceSchema, servicesJson, "service");
 const caseStudies: CaseStudy[] = parseAll(caseStudySchema, caseStudiesJson, "case study");
+const materials: Material[] = parseAll(materialSchema, materialsJson, "material");
+const venues: VenueInfo[] = parseAll(venueSchema, venuesJson, "venue");
 
 // Referential integrity: every artwork must point at a real collection.
 for (const a of artworks) {
@@ -79,9 +91,58 @@ export function getFeaturedArtworks(): Artwork[] {
   return artworks.filter((a) => a.featured);
 }
 
+/**
+ * Neighbours in catalog order, wrapping at the ends so browsing never
+ * dead-ends on the first or last piece.
+ */
+export function getAdjacentArtworks(slug: string): {
+  previous: Artwork;
+  next: Artwork;
+} | null {
+  const index = artworks.findIndex((a) => a.slug === slug);
+  if (index === -1 || artworks.length < 2) return null;
+  return {
+    previous: artworks[(index - 1 + artworks.length) % artworks.length],
+    next: artworks[(index + 1) % artworks.length],
+  };
+}
+
 /** Base64 blur placeholder for an artwork image, if generated. */
 export function getBlurDataURL(slug: string): string | undefined {
   return blurMap[slug];
+}
+
+/**
+ * AR assets for one artwork at one size, produced by
+ * `npm run generate:ar`. Returns undefined when assets have not been
+ * generated, so the UI can hide the AR affordance rather than offer a button
+ * that leads nowhere.
+ */
+export interface ArAsset {
+  glb: string;
+  usdz: string;
+  widthCm: number;
+  heightCm: number;
+  depthCm: number;
+  glbBytes: number;
+  usdzBytes: number;
+}
+
+interface ArManifestEntry {
+  frame: string;
+  sizes: Record<string, ArAsset>;
+}
+
+const arManifest = arManifestJson as Record<string, ArManifestEntry>;
+
+export function getArAssets(slug: string): Record<string, ArAsset> | undefined {
+  const entry = arManifest[slug];
+  if (!entry || Object.keys(entry.sizes).length === 0) return undefined;
+  return entry.sizes;
+}
+
+export function getArFrameName(slug: string): string | undefined {
+  return arManifest[slug]?.frame;
 }
 
 export function getCollections(): Collection[] {
@@ -100,34 +161,37 @@ export function getCaseStudies(): CaseStudy[] {
   return caseStudies;
 }
 
+export function getMaterials(): Material[] {
+  return materials;
+}
+
 export function getVenues(): VenueInfo[] {
-  return VENUES;
+  return venues;
 }
 
 export function getVenueById(id: string): VenueInfo | undefined {
-  return VENUES.find((v) => v.id === id);
+  return venues.find((v) => v.id === id);
 }
 
-export function getSizeChart(): SizeInfo[] {
-  return SIZE_CHART;
+export function getSizeTiers(): SizeTier[] {
+  return SIZE_TIERS;
 }
 
 /**
- * Physical dimensions of an artwork at a given size, respecting orientation
- * (the chart lists portrait width x height; landscape swaps them).
+ * Physical dimensions of an artwork at a given size tier. Derived from the
+ * orientation's aspect ratio so every size of one artwork shares the same
+ * proportions — see the note in content/catalog.ts.
  */
 export function getSizeDimensions(
   sizeId: SizeId,
   orientation: Orientation,
 ): { widthCm: number; heightCm: number; label: string } {
-  const size = SIZE_CHART.find((s) => s.id === sizeId);
-  if (!size) throw new Error(`Unknown size "${sizeId}"`);
-  const swap = orientation === "landscape" && size.heightCm > size.widthCm;
-  return {
-    label: size.label,
-    widthCm: swap ? size.heightCm : size.widthCm,
-    heightCm: swap ? size.widthCm : size.heightCm,
-  };
+  return resolveSize(sizeId, orientation);
+}
+
+/** width / height for an orientation, for laying out image containers. */
+export function getOrientationAspect(orientation: Orientation): number {
+  return ORIENTATION_ASPECT[orientation];
 }
 
 export function cmToInches(cm: number): number {

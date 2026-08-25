@@ -51,7 +51,11 @@ export const site = {
     line: "#E7DFD1",
     /** Deep brass — accents, meets AA on ivory for small text. */
     accent: "#8F6830",
-    /** Soft brass — decorative fills, large type only. */
+    /**
+     * Soft brass — decorative fills and selection highlight only. It does not
+     * reach 3:1 against the page background, so it must never carry text at
+     * any size; use `accent` for that.
+     */
     accentSoft: "#C8A971",
     /** Dusk blue — secondary accent. */
     sky: "#33506B",

@@ -17,11 +17,11 @@ export const VENUE_IDS = [
 export const venueIdSchema = z.enum(VENUE_IDS);
 export type VenueId = z.infer<typeof venueIdSchema>;
 
-export const SIZE_IDS = ["s", "m", "l", "xl", "square", "panorama"] as const;
+export const SIZE_IDS = ["s", "m", "l", "xl"] as const;
 export const sizeIdSchema = z.enum(SIZE_IDS);
 export type SizeId = z.infer<typeof sizeIdSchema>;
 
-export const orientationSchema = z.enum(["portrait", "landscape", "square"]);
+export const orientationSchema = z.enum(["portrait", "landscape", "square", "panorama"]);
 export type Orientation = z.infer<typeof orientationSchema>;
 
 export const imageSchema = z.object({
@@ -64,7 +64,14 @@ export type Artwork = z.infer<typeof artworkSchema>;
 export const collectionSchema = z.object({
   id: z.string(),
   name: z.string(),
+  /** One or two sentences, used on cards and as the meta description. */
   description: z.string(),
+  /** Short editorial line for the collection page hero. */
+  tagline: z.string(),
+  /** Long-form editorial copy for the collection page. */
+  story: z.string().min(80),
+  /** Which spaces the series suits, in the studio's own words. */
+  bestFor: z.string(),
 });
 export type Collection = z.infer<typeof collectionSchema>;
 
@@ -75,8 +82,23 @@ export const serviceSchema = z.object({
   description: z.string(),
   deliverables: z.array(z.string()).min(2),
   idealFor: z.array(venueIdSchema).min(1),
+  /** Artwork slug used as the visual for this service. */
+  featureArtwork: z.string(),
+  /** What a client actually gets back, and when. Builds trust before price. */
+  leadTime: z.string(),
 });
 export type Service = z.infer<typeof serviceSchema>;
+
+export const materialSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  /** Technical specification, stated plainly. */
+  spec: z.string(),
+  /** Why this material rather than another — the reasoning, not the sales pitch. */
+  why: z.string().min(40),
+  bestFor: z.string(),
+});
+export type Material = z.infer<typeof materialSchema>;
 
 export const caseStudySchema = z.object({
   slug: z.string(),
@@ -90,17 +112,33 @@ export const caseStudySchema = z.object({
 });
 export type CaseStudy = z.infer<typeof caseStudySchema>;
 
-export interface VenueInfo {
-  id: VenueId;
-  name: string;
-  /** Short pitch shown on venue cards/filters. */
-  pitch: string;
-}
+export const venueSchema = z.object({
+  id: venueIdSchema,
+  name: z.string(),
+  /** Short pitch shown on venue cards and filters. */
+  pitch: z.string(),
+  /** Page headline for the venue's own landing page. */
+  headline: z.string(),
+  /** Opening paragraph — why art in this kind of space is its own problem. */
+  intro: z.string().min(80),
+  /**
+   * What actually differs about specifying art here. This is the content a
+   * commercial buyer cannot get anywhere else, and the reason these pages
+   * exist rather than being filter links.
+   */
+  considerations: z
+    .array(z.object({ title: z.string(), text: z.string().min(40) }))
+    .min(2),
+  /** Room scene used for the scale preview on this page. */
+  scene: z.string(),
+});
+export type VenueInfo = z.infer<typeof venueSchema>;
 
-export interface SizeInfo {
+export interface SizeTier {
   id: SizeId;
   label: string;
-  widthCm: number;
-  heightCm: number;
-  orientations: Orientation[];
+  /** Long edge in centimetres for standard orientations. */
+  longEdgeCm: number;
+  /** Long edge for panoramic pieces, which need a larger scale to read. */
+  panoramaLongEdgeCm: number;
 }

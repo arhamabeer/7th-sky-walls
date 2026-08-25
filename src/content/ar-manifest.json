@@ -1,0 +1,986 @@
+{
+  "meridian-seven": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/meridian-seven/s.glb",
+        "usdz": "/ar/meridian-seven/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 28860,
+        "usdzBytes": 32523
+      },
+      "m": {
+        "glb": "/ar/meridian-seven/m.glb",
+        "usdz": "/ar/meridian-seven/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 28856,
+        "usdzBytes": 32523
+      },
+      "l": {
+        "glb": "/ar/meridian-seven/l.glb",
+        "usdz": "/ar/meridian-seven/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 28856,
+        "usdzBytes": 32523
+      },
+      "xl": {
+        "glb": "/ar/meridian-seven/xl.glb",
+        "usdz": "/ar/meridian-seven/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 28852,
+        "usdzBytes": 32523
+      }
+    }
+  },
+  "glass-horizon": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/glass-horizon/s.glb",
+        "usdz": "/ar/glass-horizon/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 23080,
+        "usdzBytes": 26747
+      },
+      "m": {
+        "glb": "/ar/glass-horizon/m.glb",
+        "usdz": "/ar/glass-horizon/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 23052,
+        "usdzBytes": 26747
+      },
+      "l": {
+        "glb": "/ar/glass-horizon/l.glb",
+        "usdz": "/ar/glass-horizon/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 23044,
+        "usdzBytes": 26747
+      },
+      "xl": {
+        "glb": "/ar/glass-horizon/xl.glb",
+        "usdz": "/ar/glass-horizon/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 23020,
+        "usdzBytes": 26747
+      }
+    }
+  },
+  "night-grid": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/night-grid/s.glb",
+        "usdz": "/ar/night-grid/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 35364,
+        "usdzBytes": 39032
+      },
+      "m": {
+        "glb": "/ar/night-grid/m.glb",
+        "usdz": "/ar/night-grid/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 35360,
+        "usdzBytes": 39032
+      },
+      "l": {
+        "glb": "/ar/night-grid/l.glb",
+        "usdz": "/ar/night-grid/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 35360,
+        "usdzBytes": 39032
+      },
+      "xl": {
+        "glb": "/ar/night-grid/xl.glb",
+        "usdz": "/ar/night-grid/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 35356,
+        "usdzBytes": 39032
+      }
+    }
+  },
+  "ascent": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/ascent/s.glb",
+        "usdz": "/ar/ascent/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 26524,
+        "usdzBytes": 30203
+      },
+      "m": {
+        "glb": "/ar/ascent/m.glb",
+        "usdz": "/ar/ascent/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 26524,
+        "usdzBytes": 30203
+      },
+      "l": {
+        "glb": "/ar/ascent/l.glb",
+        "usdz": "/ar/ascent/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 26524,
+        "usdzBytes": 30203
+      },
+      "xl": {
+        "glb": "/ar/ascent/xl.glb",
+        "usdz": "/ar/ascent/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 26520,
+        "usdzBytes": 30203
+      }
+    }
+  },
+  "sabr": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/sabr/s.glb",
+        "usdz": "/ar/sabr/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 33256,
+        "usdzBytes": 36947
+      },
+      "m": {
+        "glb": "/ar/sabr/m.glb",
+        "usdz": "/ar/sabr/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 33256,
+        "usdzBytes": 36947
+      },
+      "l": {
+        "glb": "/ar/sabr/l.glb",
+        "usdz": "/ar/sabr/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 33256,
+        "usdzBytes": 36947
+      },
+      "xl": {
+        "glb": "/ar/sabr/xl.glb",
+        "usdz": "/ar/sabr/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 33252,
+        "usdzBytes": 36947
+      }
+    }
+  },
+  "shukr": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/shukr/s.glb",
+        "usdz": "/ar/shukr/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 32604,
+        "usdzBytes": 36284
+      },
+      "m": {
+        "glb": "/ar/shukr/m.glb",
+        "usdz": "/ar/shukr/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 32600,
+        "usdzBytes": 36284
+      },
+      "l": {
+        "glb": "/ar/shukr/l.glb",
+        "usdz": "/ar/shukr/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 32600,
+        "usdzBytes": 36284
+      },
+      "xl": {
+        "glb": "/ar/shukr/xl.glb",
+        "usdz": "/ar/shukr/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 32596,
+        "usdzBytes": 36284
+      }
+    }
+  },
+  "bismillah-flow": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/bismillah-flow/s.glb",
+        "usdz": "/ar/bismillah-flow/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 22120,
+        "usdzBytes": 25787
+      },
+      "m": {
+        "glb": "/ar/bismillah-flow/m.glb",
+        "usdz": "/ar/bismillah-flow/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 22092,
+        "usdzBytes": 25787
+      },
+      "l": {
+        "glb": "/ar/bismillah-flow/l.glb",
+        "usdz": "/ar/bismillah-flow/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 22084,
+        "usdzBytes": 25787
+      },
+      "xl": {
+        "glb": "/ar/bismillah-flow/xl.glb",
+        "usdz": "/ar/bismillah-flow/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 22060,
+        "usdzBytes": 25787
+      }
+    }
+  },
+  "noor": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/noor/s.glb",
+        "usdz": "/ar/noor/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 27568,
+        "usdzBytes": 31258
+      },
+      "m": {
+        "glb": "/ar/noor/m.glb",
+        "usdz": "/ar/noor/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 27568,
+        "usdzBytes": 31258
+      },
+      "l": {
+        "glb": "/ar/noor/l.glb",
+        "usdz": "/ar/noor/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 27568,
+        "usdzBytes": 31258
+      },
+      "xl": {
+        "glb": "/ar/noor/xl.glb",
+        "usdz": "/ar/noor/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 27564,
+        "usdzBytes": 31258
+      }
+    }
+  },
+  "monsoon-leaves": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/monsoon-leaves/s.glb",
+        "usdz": "/ar/monsoon-leaves/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 32444,
+        "usdzBytes": 36100
+      },
+      "m": {
+        "glb": "/ar/monsoon-leaves/m.glb",
+        "usdz": "/ar/monsoon-leaves/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 32440,
+        "usdzBytes": 36100
+      },
+      "l": {
+        "glb": "/ar/monsoon-leaves/l.glb",
+        "usdz": "/ar/monsoon-leaves/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 32440,
+        "usdzBytes": 36100
+      },
+      "xl": {
+        "glb": "/ar/monsoon-leaves/xl.glb",
+        "usdz": "/ar/monsoon-leaves/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 32436,
+        "usdzBytes": 36100
+      }
+    }
+  },
+  "courtyard-fern": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/courtyard-fern/s.glb",
+        "usdz": "/ar/courtyard-fern/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 27684,
+        "usdzBytes": 31340
+      },
+      "m": {
+        "glb": "/ar/courtyard-fern/m.glb",
+        "usdz": "/ar/courtyard-fern/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 27680,
+        "usdzBytes": 31340
+      },
+      "l": {
+        "glb": "/ar/courtyard-fern/l.glb",
+        "usdz": "/ar/courtyard-fern/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 27680,
+        "usdzBytes": 31340
+      },
+      "xl": {
+        "glb": "/ar/courtyard-fern/xl.glb",
+        "usdz": "/ar/courtyard-fern/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 27676,
+        "usdzBytes": 31340
+      }
+    }
+  },
+  "wild-garden": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/wild-garden/s.glb",
+        "usdz": "/ar/wild-garden/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 32836,
+        "usdzBytes": 36509
+      },
+      "m": {
+        "glb": "/ar/wild-garden/m.glb",
+        "usdz": "/ar/wild-garden/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 32832,
+        "usdzBytes": 36509
+      },
+      "l": {
+        "glb": "/ar/wild-garden/l.glb",
+        "usdz": "/ar/wild-garden/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 32832,
+        "usdzBytes": 36509
+      },
+      "xl": {
+        "glb": "/ar/wild-garden/xl.glb",
+        "usdz": "/ar/wild-garden/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 32828,
+        "usdzBytes": 36509
+      }
+    }
+  },
+  "banyan-shade": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/banyan-shade/s.glb",
+        "usdz": "/ar/banyan-shade/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 20388,
+        "usdzBytes": 24057
+      },
+      "m": {
+        "glb": "/ar/banyan-shade/m.glb",
+        "usdz": "/ar/banyan-shade/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 20360,
+        "usdzBytes": 24057
+      },
+      "l": {
+        "glb": "/ar/banyan-shade/l.glb",
+        "usdz": "/ar/banyan-shade/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 20352,
+        "usdzBytes": 24057
+      },
+      "xl": {
+        "glb": "/ar/banyan-shade/xl.glb",
+        "usdz": "/ar/banyan-shade/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 20328,
+        "usdzBytes": 24057
+      }
+    }
+  },
+  "lahore-jaali": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/lahore-jaali/s.glb",
+        "usdz": "/ar/lahore-jaali/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 24584,
+        "usdzBytes": 28252
+      },
+      "m": {
+        "glb": "/ar/lahore-jaali/m.glb",
+        "usdz": "/ar/lahore-jaali/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 24580,
+        "usdzBytes": 28252
+      },
+      "l": {
+        "glb": "/ar/lahore-jaali/l.glb",
+        "usdz": "/ar/lahore-jaali/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 24580,
+        "usdzBytes": 28252
+      },
+      "xl": {
+        "glb": "/ar/lahore-jaali/xl.glb",
+        "usdz": "/ar/lahore-jaali/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 24576,
+        "usdzBytes": 28252
+      }
+    }
+  },
+  "old-city-doors": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/old-city-doors/s.glb",
+        "usdz": "/ar/old-city-doors/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 25400,
+        "usdzBytes": 29067
+      },
+      "m": {
+        "glb": "/ar/old-city-doors/m.glb",
+        "usdz": "/ar/old-city-doors/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 25400,
+        "usdzBytes": 29067
+      },
+      "l": {
+        "glb": "/ar/old-city-doors/l.glb",
+        "usdz": "/ar/old-city-doors/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 25400,
+        "usdzBytes": 29067
+      },
+      "xl": {
+        "glb": "/ar/old-city-doors/xl.glb",
+        "usdz": "/ar/old-city-doors/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 25396,
+        "usdzBytes": 29067
+      }
+    }
+  },
+  "minaret-dawn": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/minaret-dawn/s.glb",
+        "usdz": "/ar/minaret-dawn/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 20296,
+        "usdzBytes": 23962
+      },
+      "m": {
+        "glb": "/ar/minaret-dawn/m.glb",
+        "usdz": "/ar/minaret-dawn/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 20292,
+        "usdzBytes": 23962
+      },
+      "l": {
+        "glb": "/ar/minaret-dawn/l.glb",
+        "usdz": "/ar/minaret-dawn/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 20292,
+        "usdzBytes": 23962
+      },
+      "xl": {
+        "glb": "/ar/minaret-dawn/xl.glb",
+        "usdz": "/ar/minaret-dawn/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 20288,
+        "usdzBytes": 23962
+      }
+    }
+  },
+  "caravanserai": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/caravanserai/s.glb",
+        "usdz": "/ar/caravanserai/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 21552,
+        "usdzBytes": 25220
+      },
+      "m": {
+        "glb": "/ar/caravanserai/m.glb",
+        "usdz": "/ar/caravanserai/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 21524,
+        "usdzBytes": 25220
+      },
+      "l": {
+        "glb": "/ar/caravanserai/l.glb",
+        "usdz": "/ar/caravanserai/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 21516,
+        "usdzBytes": 25220
+      },
+      "xl": {
+        "glb": "/ar/caravanserai/xl.glb",
+        "usdz": "/ar/caravanserai/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 21492,
+        "usdzBytes": 25220
+      }
+    }
+  },
+  "dawn-over-clifton": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/dawn-over-clifton/s.glb",
+        "usdz": "/ar/dawn-over-clifton/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 23016,
+        "usdzBytes": 26666
+      },
+      "m": {
+        "glb": "/ar/dawn-over-clifton/m.glb",
+        "usdz": "/ar/dawn-over-clifton/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 23012,
+        "usdzBytes": 26666
+      },
+      "l": {
+        "glb": "/ar/dawn-over-clifton/l.glb",
+        "usdz": "/ar/dawn-over-clifton/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 23012,
+        "usdzBytes": 26666
+      },
+      "xl": {
+        "glb": "/ar/dawn-over-clifton/xl.glb",
+        "usdz": "/ar/dawn-over-clifton/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 23008,
+        "usdzBytes": 26666
+      }
+    }
+  },
+  "sea-glass": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/sea-glass/s.glb",
+        "usdz": "/ar/sea-glass/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 10904,
+        "usdzBytes": 14577
+      },
+      "m": {
+        "glb": "/ar/sea-glass/m.glb",
+        "usdz": "/ar/sea-glass/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 10900,
+        "usdzBytes": 14577
+      },
+      "l": {
+        "glb": "/ar/sea-glass/l.glb",
+        "usdz": "/ar/sea-glass/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 10900,
+        "usdzBytes": 14577
+      },
+      "xl": {
+        "glb": "/ar/sea-glass/xl.glb",
+        "usdz": "/ar/sea-glass/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 10896,
+        "usdzBytes": 14577
+      }
+    }
+  },
+  "amber-hour": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/amber-hour/s.glb",
+        "usdz": "/ar/amber-hour/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 29388,
+        "usdzBytes": 33057
+      },
+      "m": {
+        "glb": "/ar/amber-hour/m.glb",
+        "usdz": "/ar/amber-hour/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 29384,
+        "usdzBytes": 33057
+      },
+      "l": {
+        "glb": "/ar/amber-hour/l.glb",
+        "usdz": "/ar/amber-hour/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 29384,
+        "usdzBytes": 33057
+      },
+      "xl": {
+        "glb": "/ar/amber-hour/xl.glb",
+        "usdz": "/ar/amber-hour/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 29380,
+        "usdzBytes": 33057
+      }
+    }
+  },
+  "monsoon-blue": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/monsoon-blue/s.glb",
+        "usdz": "/ar/monsoon-blue/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 23336,
+        "usdzBytes": 27000
+      },
+      "m": {
+        "glb": "/ar/monsoon-blue/m.glb",
+        "usdz": "/ar/monsoon-blue/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 23332,
+        "usdzBytes": 27000
+      },
+      "l": {
+        "glb": "/ar/monsoon-blue/l.glb",
+        "usdz": "/ar/monsoon-blue/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 23332,
+        "usdzBytes": 27000
+      },
+      "xl": {
+        "glb": "/ar/monsoon-blue/xl.glb",
+        "usdz": "/ar/monsoon-blue/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 23328,
+        "usdzBytes": 27000
+      }
+    }
+  },
+  "begin-anyway": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/begin-anyway/s.glb",
+        "usdz": "/ar/begin-anyway/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 37104,
+        "usdzBytes": 40769
+      },
+      "m": {
+        "glb": "/ar/begin-anyway/m.glb",
+        "usdz": "/ar/begin-anyway/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 37100,
+        "usdzBytes": 40769
+      },
+      "l": {
+        "glb": "/ar/begin-anyway/l.glb",
+        "usdz": "/ar/begin-anyway/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 37100,
+        "usdzBytes": 40769
+      },
+      "xl": {
+        "glb": "/ar/begin-anyway/xl.glb",
+        "usdz": "/ar/begin-anyway/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 37096,
+        "usdzBytes": 40769
+      }
+    }
+  },
+  "deep-work": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/deep-work/s.glb",
+        "usdz": "/ar/deep-work/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 46888,
+        "usdzBytes": 50566
+      },
+      "m": {
+        "glb": "/ar/deep-work/m.glb",
+        "usdz": "/ar/deep-work/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 46888,
+        "usdzBytes": 50566
+      },
+      "l": {
+        "glb": "/ar/deep-work/l.glb",
+        "usdz": "/ar/deep-work/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 46888,
+        "usdzBytes": 50566
+      },
+      "xl": {
+        "glb": "/ar/deep-work/xl.glb",
+        "usdz": "/ar/deep-work/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 46884,
+        "usdzBytes": 50566
+      }
+    }
+  },
+  "learn-build-repeat": {
+    "frame": "hardwood",
+    "sizes": {
+      "s": {
+        "glb": "/ar/learn-build-repeat/s.glb",
+        "usdz": "/ar/learn-build-repeat/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 56568,
+        "usdzBytes": 60217
+      },
+      "m": {
+        "glb": "/ar/learn-build-repeat/m.glb",
+        "usdz": "/ar/learn-build-repeat/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 56564,
+        "usdzBytes": 60217
+      },
+      "l": {
+        "glb": "/ar/learn-build-repeat/l.glb",
+        "usdz": "/ar/learn-build-repeat/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 56564,
+        "usdzBytes": 60217
+      },
+      "xl": {
+        "glb": "/ar/learn-build-repeat/xl.glb",
+        "usdz": "/ar/learn-build-repeat/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 56560,
+        "usdzBytes": 60217
+      }
+    }
+  },
+  "the-long-game": {
+    "frame": "aluminium",
+    "sizes": {
+      "s": {
+        "glb": "/ar/the-long-game/s.glb",
+        "usdz": "/ar/the-long-game/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 46520,
+        "usdzBytes": 50187
+      },
+      "m": {
+        "glb": "/ar/the-long-game/m.glb",
+        "usdz": "/ar/the-long-game/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 46516,
+        "usdzBytes": 50187
+      },
+      "l": {
+        "glb": "/ar/the-long-game/l.glb",
+        "usdz": "/ar/the-long-game/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 46516,
+        "usdzBytes": 50187
+      },
+      "xl": {
+        "glb": "/ar/the-long-game/xl.glb",
+        "usdz": "/ar/the-long-game/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 46512,
+        "usdzBytes": 50187
+      }
+    }
+  }
+}

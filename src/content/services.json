@@ -10,7 +10,9 @@
       "Archival large-format production",
       "Choice of canvas, acrylic, aluminum or fine-art paper"
     ],
-    "idealFor": ["office", "hotel", "cafe", "restaurant"]
+    "idealFor": ["office", "hotel", "cafe", "restaurant"],
+    "featureArtwork": "meridian-seven",
+    "leadTime": "Concepts in 5 working days, installed within 3–4 weeks of approval."
   },
   {
     "slug": "murals-and-installations",
@@ -23,7 +25,9 @@
       "On-site painting or precision installation",
       "Protective finishes for high-traffic areas"
     ],
-    "idealFor": ["school", "university", "hotel", "restaurant"]
+    "idealFor": ["school", "university", "hotel", "restaurant"],
+    "featureArtwork": "banyan-shade",
+    "leadTime": "Survey within a week; most installations complete in 4–6 weeks."
   },
   {
     "slug": "corporate-branding-walls",
@@ -36,7 +40,9 @@
       "Culture, values and timeline walls",
       "Acoustic-friendly art panels"
     ],
-    "idealFor": ["office", "university"]
+    "idealFor": ["office", "university"],
+    "featureArtwork": "deep-work",
+    "leadTime": "Concepts in a week; fabrication and install typically 3–5 weeks."
   },
   {
     "slug": "calligraphy-and-typography",
@@ -49,7 +55,9 @@
       "Hand-embellished finishes available",
       "Faith-appropriate placement guidance"
     ],
-    "idealFor": ["office", "school", "university", "hotel"]
+    "idealFor": ["office", "school", "university", "hotel"],
+    "featureArtwork": "sabr",
+    "leadTime": "Proofs the same week; finished pieces in 2–3 weeks."
   },
   {
     "slug": "curation-and-installation",
@@ -62,6 +70,8 @@
       "Professional delivery and installation",
       "Post-installation care guide"
     ],
-    "idealFor": ["hotel", "office", "university", "restaurant"]
+    "idealFor": ["hotel", "office", "university", "restaurant"],
+    "featureArtwork": "caravanserai",
+    "leadTime": "Programming from your floor plan in 1–2 weeks; phased installs to suit your schedule."
   }
 ]

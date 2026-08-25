@@ -4,7 +4,9 @@ A portfolio-first web app for a commercial wall art studio, built around a
 real-time AR "try this art on your own wall" experience. No cart, no checkout —
 every path ends in an inquiry.
 
-Brand identity is fully configurable from a single file: `src/config/site.config.ts`.
+Brand identity is fully configurable from a single file:
+[`src/config/site.config.ts`](src/config/site.config.ts). Renaming the brand
+requires editing only that file.
 
 ## Getting started
 
@@ -13,18 +15,34 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:3000.
+Then open http://localhost:3000. Copy `.env.example` to `.env.local` if you
+want real email delivery; without it, inquiries are logged to the console and
+everything else works.
 
 ## Scripts
 
+### Building content and assets
+
 | Script | Purpose |
 | --- | --- |
-| `npm run dev` | Development server (Turbopack) |
-| `npm run build` | Production build with type checking |
-| `npm run start` | Serve the production build |
-| `npm run lint` | ESLint |
-| `npm run generate:placeholders` | Regenerate placeholder artwork images, blur placeholders and app icons |
-| `npm run generate:placeholders -- --blur-only` | Refresh blur placeholders only — use this once real artwork images are in place |
+| `npm run generate:placeholders` | Regenerate placeholder artwork, blur placeholders, social cards and app icons. Gives each image a content-addressed filename and rewrites `artworks.json`, because `next/image` keys its cache on a URL that would otherwise not change when a file is replaced. |
+| `npm run generate:placeholders -- --blur-only` | Ingest real artwork dropped at `public/artworks/<slug>.jpg`: hashes and renames it, prunes the file it replaces, and refreshes blur placeholders and social cards. Use this once real artwork is in place — the full command would overwrite it. |
+| `npm run generate:ar` | Build the GLB and USDZ for every artwork at every size, plus the manifest the app reads. |
+
+### Checking
+
+| Script | Purpose |
+| --- | --- |
+| `npm run verify` | Build, serve, check the hero arrangement, then audit 31 viewports across 16 pages. Refuses to audit a stale build. |
+| `npm run serve` | Serve the production build for the checks that need one. Frees the port first and refuses to serve anything but the build on disk. |
+| `npm run test:interaction` | 231 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
+| `npm run lighthouse` | SEO, best practices and accessibility gated at 90 across eleven routes. Needs a server running. |
+| `npm run lighthouse:detail <report>` | Read a saved report and show what is costing time. |
+| `npm run check:images` | Every artwork file matches its declared dimensions. |
+| `npm run check:ar` | Every AR asset encodes its advertised size and is Quick Look shaped. |
+| `npm run check:analytics` | Analytics load where they work and, just as importantly, not where they do not. |
+| `npm run audit:responsive` | The viewport audit on its own, against a running server. |
+| `npm run shots` | Full-page screenshots for review. `--selector` captures one element; `--click` presses a control first. |
 
 ## Project structure
 
@@ -32,41 +50,52 @@ Then open http://localhost:3000.
 src/
   app/                     Routes (App Router)
     page.tsx               Home
-    portfolio/             Portfolio index + [slug] artwork detail
+    portfolio/             Index with filters + [slug] artwork detail
+    collections/           Index + [id] series pages
     services/  about/  contact/
+    actions/               Server actions
     sitemap.ts  robots.ts  manifest.ts  opengraph-image.tsx
   components/
-    layout/                Header, footer, mobile nav
-    ui/                    Shared primitives (container, buttons, chips, cards)
-    seo/                   JSON-LD script renderer
+    analytics/  ar/  artwork/  home/  inquiry/  layout/  motion/  seo/  ui/
   config/
     site.config.ts         SINGLE SOURCE OF BRAND TRUTH
     fonts.ts               Typeface pairing
-  content/
-    artworks.json  collections.json  services.json  case-studies.json
-    catalog.ts             Size chart + venue definitions
-    copy.ts                All UI copy
-    blur.json              Generated blur placeholders
+  content/                 Structured content, validated at build time
   lib/
-    content/               Validated content access layer
-    seo/                   JSON-LD builders + metadata helpers
+    content/  inquiry/  seo/
+  types/                   model-viewer element declaration
 scripts/
-  generate-placeholders.mjs
+  ar/                      AR asset builders and validators
+  generate-*.mjs           Asset generation
+  verify.mjs               One-command build, serve and audit
+  *-tests.mjs, check-*.mjs Verification harnesses
 docs/
-  PLAN.md                  Phase-wise development plan and verified constraints
-  CONTENT.md               How to add artworks, services and rebrand
+  PLAN.md                  Phases, decisions and the constraints behind them
+  CONTENT.md               Adding artworks, editing copy, rebranding
+  LAUNCH.md                Pre-launch checklist
+  AR-DEVICE-QA.md          What only a real phone can confirm
+  QUESTIONS.md             Decisions waiting on the owner
 ```
-
-## Documentation
-
-- [Development plan](docs/PLAN.md) — phases, stack decisions, and the verified
-  platform constraints behind the AR strategy
-- [Content guide](docs/CONTENT.md) — adding artworks, editing copy, rebranding
 
 ## Conventions
 
+These are enforced by the checks above, not just aspirations.
+
 - Brand strings never appear outside `site.config.ts`
-- Animation is transform/opacity only and honors `prefers-reduced-motion`
-- 3D and AR bundles load on interaction, never at page load
-- Navigation and filters are real anchors so they stay crawlable
+- Content is validated at build time; invalid content fails the build rather
+  than rendering a broken page
+- Every size of an artwork shares one aspect ratio, so nothing is ever cropped
+  to fit — and the AR models match the printed proportions
+- Animation is transform/opacity only and honours `prefers-reduced-motion`;
+  content visibility never depends on JavaScript
+- 3D, AR and the camera overlay load on interaction, never at page load
+- Navigation and filters are real anchors, so they stay crawlable
 - Touch targets are at least 44px; every image has meaningful alt text
+- Zero console errors in production
+
+## Current state
+
+Phases 1 through 8 are built. SEO, best practices and accessibility score 100
+on every route. Outstanding before launch: real business details, real
+artwork, email credentials, and AR device testing on an iPhone and an Android
+handset — see [LAUNCH.md](docs/LAUNCH.md).

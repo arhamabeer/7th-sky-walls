@@ -96,71 +96,214 @@ Deployed, browsable, SEO-complete five-page site on a premium base design.
   branded OG image
 - Placeholder artwork generation script with blur-placeholder output
 
-### Phase 2 — Immersive portfolio and artwork pages
+### Phase 2 — Immersive portfolio and artwork pages — COMPLETE
 
-- Venue and collection filtering with staggered viewport reveals
-- Card-to-lightbox morphing transitions, scroll progress, cinematic
-  artwork-to-artwork transitions
-- Artwork detail: adaptive gallery (desktop thumbnail rail, mobile swipe),
-  true-scale size comparison against a human/sofa silhouette
-- Per-artwork generated OG images
-- Motion infrastructure: GSAP ScrollTrigger with `matchMedia`, Lenis on desktop
+Done:
 
-### Phase 3 — AR try-on baseline (tier 1) and 3D asset pipeline
+- Venue and collection filtering with staggered viewport reveals, filters as
+  real crawlable links that combine rather than replace each other
+- Scroll progress indicator; desktop-only smooth scrolling
+- Fullscreen artwork viewer with scroll lock, Escape, and focus return
+- **True-scale room preview** with venue-specific scenes (lounge, office
+  reception, café, dining room, hotel lobby, classroom), each carrying real
+  furniture heights as scale anchors, defaulting to the artwork's primary
+  venue and updating live with the selected size
+- Aspect-consistent size model so an artwork never changes proportion between
+  sizes — a prerequisite for correct AR models in Phase 3
+- Per-artwork social share cards, composed at build time
+- Previous/next navigation between pieces, wrapping within the collection
+- Editorial grid: uniform row heights so captions align across differing
+  proportions, panoramic works spanning two columns so a 5:2 canvas gets width
+  to read rather than shrinking to a sliver, and every piece matted to its box
+  rather than cropped to fill it
+- Collection landing pages, plus a collections index
+- Verification harnesses: 31-viewport responsive audit, 231-check interaction
+  test suite, image dimension guard
 
-- `npm run generate:ar`: artwork image → parametric framed-canvas GLB
-  (glTF-Transform, meters, single merged mesh, ≤2048px JPEG textures) →
-  USDZ (three USDZExporter via Puppeteer, `quickLookCompatible`, vertical plane
-  anchoring, baked rotation)
-- `<model-viewer>` client-only with `poster` + `reveal="interaction"`,
-  `ar-modes="webxr scene-viewer quick-look"`, `ar-placement="wall"`,
-  `ar-scale="fixed"`, static `ios-src`
-- Capability detection and AR launcher UI that never dead-ends
-- AR launch and failure instrumentation
-- Real-device QA on iPhone and Android
+**Enhancements adopted during the phase** (approved standing instruction to
+improve the app as opportunities appear):
 
-### Phase 4 — Inquiry engine and contact
+1. Venue-specific room scenes rather than a single generic living room —
+   directly serves the B2B audience and has no equivalent at any competitor
+   studied.
+2. Automated responsive auditing across 31 device profiles, run against the
+   production build with a guard that refuses to audit a stale one.
+3. Automated interaction testing, including a reduced-motion context, because
+   a backgrounded browser throttles animation and makes manual checking
+   unreliable.
+4. Build-time social cards instead of runtime rendering — deterministic, free
+   at request time, and brand-neutral so a rebrand needs no asset changes.
 
-- Inquiry form (venue type, city, wall size, timeline, optional wall photo)
-  with React Hook Form + Zod, Resend delivery, honeypot and rate limiting
-- WhatsApp deep links with prefilled context from artwork and service pages
-- Vercel Analytics + GA4 with the artwork view → AR launch → inquiry funnel
+### Phase 3 — AR try-on baseline (tier 1) and 3D asset pipeline — COMPLETE except device QA
 
-### Phase 5 — Signature pages: home, services, about
+Done:
 
-- Home: scroll-linked bento hero gallery, venue verticals, featured
-  collections carousel, AR showcase story, social proof
-- Services: sticky scroll-reveal storytelling, process transparency, per-service
-  CTAs
-- About: founder story, materials and craft, case studies, testimonials
-- Parallax via fixed image layers, never `background-attachment: fixed`
+- `npm run generate:ar` produces one GLB and one USDZ per artwork per size —
+  96 pairs, 5.7 MB — plus a manifest the app reads. Per-size because neither
+  Scene Viewer nor Quick Look can rescale at launch.
+- `<model-viewer>` loaded only on request, with `ar-placement="wall"`,
+  `ar-scale="fixed"` and a pre-built `ios-src`.
+- Capability detection resolving to WebXR, Quick Look, Scene Viewer or an
+  honest explanation — never a dead button.
+- AR launch, status and failure instrumentation.
+- `npm run check:ar` validates all 96 pairs against the advertised dimensions
+  and Quick Look's structural requirements.
 
-### Phase 6 — Artwork customizer (on-screen)
+Outstanding: real-device QA on an iPhone and an Android handset. See
+[AR device testing checklist](AR-DEVICE-QA.md) — orientation, flush mounting,
+measured true scale and scale lock cannot be confirmed without a phone.
 
-- Size, frame and color variant picker with live rendered preview and
-  true-scale comparison
-- Text-art module: custom text, font style and colors with live canvas render
-- Configuration serialized into the inquiry and a shareable URL
-- Customized preview image attachable to an inquiry
+**Findings that changed the design**, each caught before shipping:
 
-### Phase 7 — AR tiers 2 and 3
+1. three.js's USDZExporter silently drops meshes carrying a material array,
+   producing an archive with no geometry. A frame modelled as a second
+   material would have shipped an empty AR experience to every iPhone. The
+   frame is composited into the texture instead; one mesh, one material.
+2. Scene Viewer and model-viewer's WebXR path rest a model's -Z extent against
+   the wall without pitching it, so the back of the frame is authored at z = 0
+   rather than centred.
+3. Quick Look re-orients vertically-anchored content so local +Y becomes the
+   wall normal. The USDZ bakes Rx(-90°) to cancel it; without that the artwork
+   hangs facing into the wall while still opening normally.
+4. The USD is written directly rather than through three.js, whose exporter
+   re-encodes every texture to PNG — well over 100 MB across this catalogue.
+   It is written against the exporter's exact output structure so the only
+   deliberate difference is JPEG encoding.
 
-- Tier 2 (Android Chrome / Samsung Internet): custom WebXR session, hit-tests
-  filtered to vertical surfaces, correctly oriented reticle, in-AR artwork and
-  size switching via DOM overlay, blank-wall coaching UI
-- Tier 3 (universal): camera-overlay preview — gyro-stabilized live mode plus a
-  photo mode, A4-paper calibration, dimensions always labeled on the overlay
-- Unified tier detection routing each device to its best available experience
+### Phase 4 — Inquiry engine and contact — COMPLETE
 
-### Phase 8 — Hardening, content swap, launch
+- Inquiry form on a server action, working without JavaScript, validated on
+  both sides, with a honeypot and per-address rate limiting that still points
+  at WhatsApp when it refuses
+- Resend delivery with a logged fallback, and `assertDeliveryConfigured()` so
+  launch fails loudly rather than silently logging leads
+- Artwork pages carry the piece into the form; WhatsApp deep links carry
+  prefilled context
+- Vercel Analytics and Speed Insights on Vercel only, GA4 only when a
+  measurement id is set, AR funnel events instrumented
+
+### Phase 5 — Signature pages: home, services, about — COMPLETE
+
+- Home: a gallery-wall hero built from catalogue data, a wall-preview
+  demonstration using the real scale component, collections, featured works,
+  venue verticals and an inquiry band
+- Services: alternating full-width panels, each with a representative piece,
+  deliverables, typical timing and venue fit; four-step process band
+- About: studio story, values, a materials section with real specifications
+  and reasoning, and case studies marked as illustrative until real ones exist
+- Parallax applied imperatively, transform only, desktop only — never
+  `background-attachment: fixed`, which breaks on iOS Safari
+
+### Phase 6 — Artwork customizer (on-screen) — COMPLETE
+
+- Four frame finishes, drawn in CSS at the same proportion the AR texture
+  composites, so preview and model agree
+- Text-art configurator with live DOM preview: three voices, four inks, three
+  grounds, type auto-sized to fit, unreadable ink/ground combinations flagged
+- Configuration carried to the inquiry as readable query parameters and read
+  back as a sentence
+
+Known limit: AR models carry each artwork's default finish only. Generating a
+model per finish would quadruple the asset matrix; the on-screen preview covers
+finish choice instead.
+
+### Phase 7 — AR tiers 2 and 3 — TIER 3 COMPLETE
+
+Tier 3 (universal camera preview) is done: live overlay with drag positioning,
+a freeze control, A4/Letter calibration for true scale, and honest labelling
+that this is not tracked AR. Reachable from the same panel as real AR, so a
+failed handoff always has somewhere to go.
+
+Tier 2 was specified as a custom WebXR session. Research since established
+that model-viewer's own WebXR path already performs wall placement with fixed
+scale on Android Chrome and Samsung Internet, which is what tier 2 existed to
+provide — so it is already shipped through tier 1. A custom session would add
+only in-AR size switching and a bespoke reticle. That is now an enhancement to
+consider after device testing, not a gap.
+
+### Phase 8 — Hardening, content swap, launch — IN PROGRESS
+
+Done:
+
+- Lighthouse runner gating SEO, best practices and accessibility at 90 across
+  eleven routes. All three now score **100** on every route.
+- Two real contrast defects and one heading-order defect fixed, found by the
+  audit rather than by eye.
+- Performance work driven by measurement: dropped the display font's
+  optical-size axis, stopped preloading the configurator's typeface, made the
+  smooth-scroll library a dynamic import so phones stop downloading it, and
+  removed the animation library entirely in favour of CSS.
+- **Error boundaries at three levels.** There were none, so any runtime error
+  in a client island replaced the page with Next's own "Application error"
+  screen — the wrong failure mode on a site whose signature feature is
+  client-side. `error.tsx` retries the segment, `global-error.tsx` covers the
+  root layout and sets the brand itself, and `FeatureBoundary` contains a
+  failure to one panel so a lost preview does not cost the inquiry. All three
+  were triggered deliberately to confirm they work; the method is recorded in
+  the launch checklist.
+- **Keyboard access, properly tested.** Lighthouse scores accessibility 100 and
+  never presses Tab. Behind that score, both modal overlays declared
+  `aria-modal="true"` with nothing keeping focus inside them, and form fields
+  had suppressed the site's focus outline in favour of a 1.73:1 halo. Both are
+  fixed and both are now covered by tests that were confirmed to fail without
+  the fix.
+- A branded not-found page, because a dead end on a portfolio is a lost
+  inquiry. The audit checks the HTTP status of every route, with this one
+  declared as expecting 404.
+- [Launch checklist](LAUNCH.md) covering the automated gates, the content and
+  environment work, and post-deploy verification.
+
+Remaining: real content and credentials, device testing, go-live.
+
+Full list:
 
 - Real artwork and brand content ingestion, AR model regeneration
-- Lighthouse: 90+ SEO and Best Practices; performance tuned on a throttled
-  mid-range Android profile
-- Accessibility pass; keyboard navigation and focus states
+- ~~**Content-hashed artwork filenames.**~~ Done. Every artwork is served from
+  `/artworks/<slug>.<hash>.jpg`, where the hash is of the image bytes, and the
+  generator rewrites `artworks.json` and prunes the old revision. Replacing an
+  image in place used to leave its URL unchanged, so browser and CDN caches
+  kept serving the previous pixels — observed during Phase 2, where a stale
+  cached variant rendered at the old aspect ratio. `next/image` rejects a query
+  string on a local source (HTTP 400), so the cache key had to be the filename.
+  The authoring workflow is unchanged: drop `<slug>.jpg` and the script does
+  the renaming.
+- ~~Lighthouse: 90+ SEO and Best Practices~~ — 100 on both across eleven
+  routes. Performance is 76–97 on the throttled mobile profile, with the
+  remaining cost being the artwork imagery itself.
+- ~~Accessibility pass; keyboard navigation and focus states~~ — done, see
+  above.
 - Web-resolution USDZ only (iOS 26's Quick Look share sheet exposes the raw
   file); print-resolution masters stay private
-- Domain go-live, content authoring guide, error monitoring
+- Domain go-live, content authoring guide, error monitoring. The boundaries log
+  with the error digest, which is what correlates a report to the server log;
+  choosing a reporting service is a decision for the studio (queued in
+  [QUESTIONS.md](QUESTIONS.md)).
+
+## Built beyond the original plan
+
+Both were in the post-launch backlog and both were brought forward, because
+they are what the competitor research identified as uncontested ground.
+
+### Venue landing pages (`/spaces`, `/spaces/<venue>`)
+
+Venues were filter values; they are now pages. Each covers what actually
+changes about specifying art in that kind of space — downlights and glare in
+offices, seating heights and phone cameras in cafés, contact damage and fire
+rating in schools — alongside the pieces we would put forward first, the
+services that apply, the materials that suit, and a scale preview set in that
+room.
+
+Every studio in this space offers venue categories; every one fills them with
+a product grid. The considerations are the difference, and they are what a
+procurement conversation turns on.
+
+### Gallery wall planner (`/planner`)
+
+Answers the question that follows "which piece" for anyone furnishing a space
+rather than a room. Real wall dimensions in, arrangement out, checked against
+the wall — so the answer is either "it fits" or a specific statement of by how
+much it does not. Hanging conventions are stated rather than assumed, and the
+arrangement travels to the inquiry written out in full.
 
 ## Post-launch backlog
 
@@ -168,9 +311,11 @@ Out of scope now; the architecture leaves room for each.
 
 - Admin panel for self-managed artwork uploads
 - Customized artwork in AR (server-side USDZ generation)
-- Urdu localization (`next-intl`, `dir="rtl"`, Noto Nastaliq Urdu)
+- Urdu localization (`next-intl`, `dir="rtl"`, Noto Nastaliq Urdu) — the
+  configurator would need a Nastaliq face and RTL handling in its preview
 - Paid iOS in-page AR via an App Clip-injected WebXR provider, if drag-on-wall
   AR on iPhone becomes a hard requirement
-- Venue and style SEO guides
-- Multi-piece gallery-wall planner
+- Long-form venue and style guides for search
 - Printable true-size templates
+- In-AR size switching via a custom WebXR session, if device testing shows
+  model-viewer's own path is not enough

@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { mailtoLink, site, telLink, whatsappLink } from "@/config/site.config";
-import { copy } from "@/content/copy";
+import { artworkInquiryMessage, copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { getArtworkBySlug, getVenues } from "@/lib/content";
+import { describeConfig } from "@/lib/inquiry/describe-config";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
+import { InquiryForm } from "@/components/inquiry/inquiry-form";
 
 export const metadata: Metadata = pageMetadata({
   title: copy.contact.title,
@@ -11,7 +14,21 @@ export const metadata: Metadata = pageMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
+  const venues = getVenues().map((v) => ({ id: v.id, name: v.name }));
+
+  // An inquiry started from an artwork page arrives with the piece named, so
+  // the visitor does not retype what they were already looking at.
+  const params = await searchParams;
+  const slug = typeof params.artwork === "string" ? params.artwork : undefined;
+  const artwork = slug ? getArtworkBySlug(slug) : undefined;
+
+  // Choices made in the configurator arrive as query parameters and are read
+  // back as a sentence, so the studio receives a brief rather than a URL.
+  const configuration = artwork ? describeConfig(params, artwork) : null;
+  // The wall planner sends its arrangement as a written sentence.
+  const plan = typeof params.plan === "string" ? params.plan.slice(0, 600) : null;
+
   return (
     <>
       <section className="border-b border-line py-14 sm:py-20">
@@ -25,72 +42,107 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <section className="py-14 sm:py-20">
+      <section className="py-12 sm:py-16">
         <Container>
-          <h2 className="sr-only">{copy.contact.channelsTitle}</h2>
-          <ul className="grid gap-5 md:grid-cols-3">
-            <li className="flex flex-col rounded-xl border border-line bg-surface p-6">
-              <h3 className="font-display text-xl font-medium">
-                {copy.contact.whatsappCard.title}
-              </h3>
-              <p className="mt-2 flex-1 text-sm leading-6 text-muted">
-                {copy.contact.whatsappCard.text}
-              </p>
-              <LinkButton
-                href={whatsappLink(copy.contact.inquiryDefaultMessage)}
-                external
-                className="mt-5"
-              >
-                {copy.cta.whatsapp}
-              </LinkButton>
-            </li>
-            <li className="flex flex-col rounded-xl border border-line bg-surface p-6">
-              <h3 className="font-display text-xl font-medium">
-                {copy.contact.emailCard.title}
-              </h3>
-              <p className="mt-2 flex-1 text-sm leading-6 text-muted">
-                {copy.contact.emailCard.text}
-              </p>
-              <LinkButton href={mailtoLink()} external variant="outline" className="mt-5">
-                {site.contact.email}
-              </LinkButton>
-            </li>
-            <li className="flex flex-col rounded-xl border border-line bg-surface p-6">
-              <h3 className="font-display text-xl font-medium">
-                {copy.contact.phoneCard.title}
-              </h3>
-              <p className="mt-2 flex-1 text-sm leading-6 text-muted">
-                {copy.contact.phoneCard.text}
-              </p>
-              <LinkButton href={telLink()} external variant="outline" className="mt-5">
-                {site.contact.phone}
-              </LinkButton>
-            </li>
-          </ul>
-
-          <div className="mt-12 grid gap-8 rounded-xl border border-line bg-surface p-6 sm:grid-cols-2 sm:p-8">
+          <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.contact.visitTitle}
+              <h2 className="font-display text-2xl font-medium tracking-tight">
+                {artwork ? `About ${artwork.title}` : copy.contact.formTitle}
               </h2>
-              <address className="mt-3 text-sm not-italic leading-7 text-muted">
-                {site.contact.address.street}
-                <br />
-                {site.contact.address.city}, {site.contact.address.region}{" "}
-                {site.contact.address.postalCode}
-              </address>
+              <p className="mt-2 max-w-lg text-sm leading-6 text-muted">
+                {artwork ? copy.contact.formSubtitleArtwork : copy.contact.formSubtitle}
+              </p>
+              <div className="mt-8">
+                <InquiryForm
+                  venues={venues}
+                  artworkSlug={artwork?.slug}
+                  artworkTitle={artwork?.title}
+                  configuration={configuration ?? plan ?? undefined}
+                  whatsappMessage={
+                    artwork
+                      ? artworkInquiryMessage(artwork.title)
+                      : copy.contact.inquiryDefaultMessage
+                  }
+                />
+              </div>
             </div>
-            <div>
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-                {copy.contact.hoursTitle}
+
+            <div className="space-y-4">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
+                {copy.contact.channelsTitle}
               </h2>
-              <ul className="mt-3 text-sm leading-7 text-muted">
-                {site.contact.hours.map((h) => (
-                  <li key={h.opens}>
-                    {h.days[0]} – {h.days[h.days.length - 1]}: {h.opens} – {h.closes}
-                  </li>
-                ))}
-              </ul>
+
+              <div className="rounded-xl border border-line bg-surface p-5">
+                <h3 className="font-display text-lg font-medium">
+                  {copy.contact.whatsappCard.title}
+                </h3>
+                <p className="mt-1.5 text-sm leading-6 text-muted">
+                  {copy.contact.whatsappCard.text}
+                </p>
+                <LinkButton
+                  href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+                  external
+                  className="mt-4 w-full"
+                >
+                  {copy.cta.whatsapp}
+                </LinkButton>
+              </div>
+
+              <div className="rounded-xl border border-line bg-surface p-5">
+                <h3 className="font-display text-lg font-medium">
+                  {copy.contact.emailCard.title}
+                </h3>
+                <p className="mt-1.5 text-sm leading-6 text-muted">
+                  {copy.contact.emailCard.text}
+                </p>
+                <LinkButton
+                  href={mailtoLink()}
+                  external
+                  variant="outline"
+                  className="mt-4 w-full break-all"
+                >
+                  {site.contact.email}
+                </LinkButton>
+              </div>
+
+              <div className="rounded-xl border border-line bg-surface p-5">
+                <h3 className="font-display text-lg font-medium">
+                  {copy.contact.phoneCard.title}
+                </h3>
+                <p className="mt-1.5 text-sm leading-6 text-muted">
+                  {copy.contact.phoneCard.text}
+                </p>
+                <LinkButton
+                  href={telLink()}
+                  external
+                  variant="outline"
+                  className="mt-4 w-full"
+                >
+                  {site.contact.phone}
+                </LinkButton>
+              </div>
+
+              <div className="rounded-xl border border-line bg-surface p-5">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-muted">
+                  {copy.contact.visitTitle}
+                </h3>
+                <address className="mt-2 text-sm not-italic leading-7 text-muted">
+                  {site.contact.address.street}
+                  <br />
+                  {site.contact.address.city}, {site.contact.address.region}{" "}
+                  {site.contact.address.postalCode}
+                </address>
+                <h3 className="mt-4 text-xs font-semibold uppercase tracking-widest text-muted">
+                  {copy.contact.hoursTitle}
+                </h3>
+                <ul className="mt-2 text-sm leading-7 text-muted">
+                  {site.contact.hours.map((h) => (
+                    <li key={h.opens}>
+                      {h.days[0]} – {h.days[h.days.length - 1]}: {h.opens} – {h.closes}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </Container>

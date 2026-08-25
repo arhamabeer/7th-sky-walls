@@ -1,0 +1,30 @@
+[
+  {
+    "id": "archival-canvas",
+    "name": "Archival matte canvas",
+    "spec": "370 gsm cotton-poly blend, matte finish",
+    "why": "The default for large pieces. Matte kills glare from downlights and windows, which is what makes canvas readable in a lobby where a glossy print would be a mirror. Stretched over kiln-dried bars that will not warp in humidity.",
+    "bestFor": "Offices, hotels, restaurants"
+  },
+  {
+    "id": "fine-art-paper",
+    "name": "Fine-art paper",
+    "spec": "310 gsm cotton rag, acid-free",
+    "why": "For work where the surface texture matters — calligraphy, typography, anything with fine linework. Framed behind glazing, so it belongs where hands stay off it.",
+    "bestFor": "Reception walls, boardrooms, quiet rooms"
+  },
+  {
+    "id": "dibond",
+    "name": "Aluminium composite",
+    "spec": "3 mm panel, direct UV print, satin seal",
+    "why": "Rigid, light and effectively immune to humidity. The right answer for corridors, stairwells and anywhere a canvas would eventually be knocked.",
+    "bestFor": "Schools, universities, high-traffic corridors"
+  },
+  {
+    "id": "wall-covering",
+    "name": "Printed wall covering",
+    "spec": "Class B fire-rated, wipe-clean, low-VOC",
+    "why": "For full-wall and mural work. Fire rating and cleanability are usually the two questions a facilities manager asks first, so the answer is on the spec sheet rather than in a follow-up.",
+    "bestFor": "Atriums, dining rooms, corridors, feature walls"
+  }
+]

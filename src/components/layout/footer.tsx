@@ -17,7 +17,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 2xl:max-w-[84rem] 2xl:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
           <div className="flex items-center gap-2.5">
             <Image src={site.assets.mark} alt="" width={26} height={26} />
@@ -30,10 +30,19 @@ export function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
             {copy.nav.portfolio}
           </h2>
-          <ul className="mt-4 space-y-2.5">
-            {NAV_LINKS.filter((l) => l.href !== "/").map((link) => (
+          <ul className="mt-2">
+            {[
+              { href: "/portfolio", label: copy.nav.portfolio },
+              { href: "/collections", label: copy.collections.title },
+              { href: "/spaces", label: copy.spaces.title },
+              { href: "/planner", label: copy.planner.title },
+              ...NAV_LINKS.filter((l) => l.href !== "/" && l.href !== "/portfolio"),
+            ].map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-ink hover:text-accent">
+                <Link
+                  href={link.href}
+                  className="inline-flex min-h-11 items-center text-sm text-ink hover:text-accent"
+                >
                   {link.label}
                 </Link>
               </li>
@@ -45,12 +54,12 @@ export function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
             {copy.nav.services}
           </h2>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-2">
             {services.slice(0, 4).map((service) => (
               <li key={service.slug}>
                 <Link
                   href={`/services#${service.slug}`}
-                  className="text-sm text-ink hover:text-accent"
+                  className="inline-flex min-h-11 items-center text-sm text-ink hover:text-accent"
                 >
                   {service.name}
                 </Link>
@@ -63,35 +72,41 @@ export function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted">
             {copy.nav.contact}
           </h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-2 text-sm">
             <li>
-              <a href={whatsappLink(copy.contact.inquiryDefaultMessage)} className="hover:text-accent">
+              <a
+                href={whatsappLink(copy.contact.inquiryDefaultMessage)}
+                className="inline-flex min-h-11 items-center hover:text-accent"
+              >
                 {copy.cta.whatsapp}
               </a>
             </li>
             <li>
-              <a href={mailtoLink()} className="hover:text-accent">
+              <a
+                href={mailtoLink()}
+                className="inline-flex min-h-11 items-center break-all hover:text-accent"
+              >
                 {site.contact.email}
               </a>
             </li>
             <li>
-              <a href={telLink()} className="hover:text-accent">
+              <a href={telLink()} className="inline-flex min-h-11 items-center hover:text-accent">
                 {site.contact.phone}
               </a>
             </li>
-            <li className="text-muted">
+            <li className="pt-2 text-muted">
               {site.contact.address.city}, {site.contact.address.country}
             </li>
           </ul>
           {socials.length > 0 && (
-            <ul className="mt-4 flex gap-4">
+            <ul className="mt-3 flex flex-wrap gap-x-4">
               {socials.map(([key, url]) => (
                 <li key={key}>
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-muted hover:text-accent"
+                    className="inline-flex min-h-11 items-center text-sm font-medium text-muted hover:text-accent"
                   >
                     {SOCIAL_LABELS[key] ?? key}
                   </a>
@@ -103,7 +118,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-xs text-muted sm:px-6">
+        <p className="mx-auto max-w-6xl px-4 py-5 text-xs 2xl:max-w-[84rem] 2xl:px-10 text-muted sm:px-6">
           © {new Date().getFullYear()} {site.legalName}. {copy.footer.rights}
         </p>
       </div>

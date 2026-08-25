@@ -1,13 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import type { CSSProperties } from "react";
 import "./globals.css";
 import { site } from "@/config/site.config";
+import { brandVars } from "@/config/brand-vars";
 import { fontVariables } from "@/config/fonts";
 import { copy } from "@/content/copy";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { JsonLd } from "@/components/seo/jsonld-script";
 import { localBusinessJsonLd, webSiteJsonLd } from "@/lib/seo/jsonld";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { SiteAnalytics } from "@/components/analytics/analytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -32,21 +35,16 @@ export const viewport: Viewport = {
   themeColor: site.colors.background,
 };
 
-/** Brand palette from site.config, exposed to CSS as custom properties. */
-const brandVars = {
-  "--brand-background": site.colors.background,
-  "--brand-surface": site.colors.surface,
-  "--brand-ink": site.colors.ink,
-  "--brand-muted": site.colors.muted,
-  "--brand-line": site.colors.line,
-  "--brand-accent": site.colors.accent,
-  "--brand-accent-soft": site.colors.accentSoft,
-  "--brand-sky": site.colors.sky,
-} as CSSProperties;
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang={site.locale} className={`${fontVariables} h-full antialiased`} style={brandVars}>
+      <head>
+        {/* Without scripts the IntersectionObserver never runs, so reveal
+            targets would stay hidden. Force them visible instead. */}
+        <noscript>
+          <style>{`.reveal[data-reveal="pending"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="flex min-h-full flex-col">
         <JsonLd data={localBusinessJsonLd()} />
         <JsonLd data={webSiteJsonLd()} />
@@ -56,11 +54,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           {copy.a11y.skipToContent}
         </a>
+        <SmoothScroll />
         <Header />
+        <ScrollProgress />
         <main id="content" className="flex-1">
           {children}
         </main>
         <Footer />
+        <SiteAnalytics />
       </body>
     </html>
   );
