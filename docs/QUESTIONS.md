@@ -1,36 +1,73 @@
 # Queued questions
 
-Items needing a decision from the project owner. Raised while working
-autonomously; nothing here is blocking — a sensible default was chosen and is
-noted for each.
+Decisions needing the project owner. Raised while working autonomously —
+nothing here blocked progress, because a sensible default was chosen and is
+noted for each. Reviewing these is the fastest way to move the build toward
+launch.
 
 ## Open
 
-### 1. GitHub remote
-Deferred by owner. No remote configured yet. Local phase branches are being
-committed (`main`, `phase-1-foundation`, `phase-2-portfolio`). Needs either a
-repo URL or `gh` CLI installed and authenticated before anything can be pushed.
+### 1. Real business details
+`src/config/site.config.ts` still has TODO markers on the canonical domain,
+legal name, street address, geo coordinates, phone, WhatsApp number, inquiry
+email, social URLs and founding year.
 
-### 2. Real business details still placeholder
-`src/config/site.config.ts` has TODO markers on: canonical domain, street
-address, geo coordinates, phone, WhatsApp number, inquiry email, social URLs,
-founding year, legal entity name.
-**Default in use:** placeholders (`7th-sky-walls.vercel.app`,
-`hello@example.com`, `+92 300 0000000`). These appear in canonical URLs,
-JSON-LD and the sitemap, so they should be replaced before launch.
+**In use:** `7th-sky-walls.vercel.app`, `hello@example.com`,
+`+92 300 0000000`, a Karachi placeholder address.
+**Why it matters:** these appear in canonical URLs, JSON-LD and the sitemap, so
+a placeholder domain tells search engines the wrong address for every page.
 
-### 3. Frame styles for the configurator
-Phase 6 needs a real list of frame options. Currently the artwork data lists
-free-text materials.
-**Default in use:** three frame treatments inferred from the material strings
-(floating hardwood, slim aluminum, unframed/rolled).
+### 2. GitHub remote
+Deferred by you. Local branches `main`, `phase-1-foundation` and
+`phase-2-portfolio` hold all work; nothing has been pushed. Needs a repo URL,
+or `gh` CLI installed and authenticated.
 
-### 4. Calligraphy typefaces for custom text
-Phase 6's text-art module needs licensed fonts for customer-supplied text,
-including Urdu/Arabic script support if calligraphy pieces will accept it.
-**Default in use:** none chosen yet; the module will ship with a shortlist of
-open-licensed options for approval.
+### 3. Email delivery credentials
+Without `RESEND_API_KEY` and `INQUIRY_FROM_EMAIL`, a submitted inquiry is
+written to the server log and the form still reports success.
+`assertDeliveryConfigured()` exists so a health check can fail loudly instead.
+The sending domain also needs verifying with Resend.
+
+### 4. Calligraphy typefaces, including Urdu
+The text configurator offers three Latin faces. If calligraphy pieces should
+accept Urdu or Arabic wording, that needs a Nastaliq face (Noto Nastaliq Urdu
+is the obvious candidate) and right-to-left handling in the preview.
+
+**In use:** Latin only — Fraunces, Cormorant Garamond, Manrope.
+
+### 5. Frame finishes
+Four are offered: floating hardwood, slim aluminium, gallery wrap, matte
+black. Are these the finishes actually produced, and are the descriptions
+accurate?
+
+**Related limit:** AR models carry each artwork's default finish only.
+Generating one per finish would quadruple the asset matrix. If seeing a
+specific frame in AR matters, say so and it can be scoped.
+
+### 6. Standard size chart
+Four tiers derived from a long edge: 60, 80, 120, 160 cm (panoramic pieces use
+120, 150, 200, 250). Every size of a piece shares one aspect ratio, so nothing
+is cropped to fit — but that also means these are the only sizes without
+moving to made-to-measure.
+
+### 7. Materials and lead times
+`materials.json` states 370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium
+composite and Class B fire-rated wall covering. The services carry typical
+timings — concepts in five working days, installs in three to six weeks. Both
+are stated publicly and should match what the studio can actually deliver.
+
+### 8. Case studies
+Three placeholder projects are on the About and space pages, each visibly
+marked as illustrative. They should be replaced with real work, or removed.
 
 ## Resolved
 
-_(none yet)_
+- **Tier 2 AR (custom WebXR session).** Research established that
+  model-viewer's own WebXR path already does wall placement at fixed scale on
+  Android Chrome and Samsung Internet — which is what tier 2 existed to
+  provide. A custom session would add only in-AR size switching. Reclassified
+  as a post-device-testing enhancement rather than a gap.
+- **GSAP.** Planned for scroll work, never needed. Reveals are CSS with an
+  IntersectionObserver trigger, parallax is a small imperative hook, and the
+  progress bar is a CSS scroll-driven animation. The animation library was
+  removed entirely, which measurably improved mobile performance.
