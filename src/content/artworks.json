@@ -877,5 +877,158 @@
     ],
     "year": 2026,
     "featured": false
+  },
+  {
+    "slug": "hexagon-set",
+    "title": "Hexagon Set",
+    "collection": "mirror-acrylic",
+    "description": "Twelve silver-mirror hexagons, hung as a honeycomb rather than a grid so the set reads as one shape from across the room. The arrangement is yours — plan it on the wall planner before anything is cut.",
+    "alt": "Twelve silver mirror acrylic hexagons arranged as a honeycomb on a wall",
+    "venues": [
+      "office",
+      "cafe",
+      "restaurant",
+      "hotel"
+    ],
+    "styles": [
+      "geometric",
+      "modular",
+      "mirror"
+    ],
+    "orientation": "landscape",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/hexagon-set.8d63f843.png",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": false,
+    "materials": [
+      "Mirror acrylic",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": true
+  },
+  {
+    "slug": "ring-set",
+    "title": "Ring Set",
+    "collection": "mirror-acrylic",
+    "description": "Nine gold-mirror discs at staggered spacing. On a charcoal wall the gold reads warm from a distance and picks up the room's light close up, which is what a painted disc cannot do.",
+    "alt": "Nine gold mirror acrylic discs arranged across a dark wall",
+    "venues": [
+      "restaurant",
+      "hotel",
+      "cafe"
+    ],
+    "styles": [
+      "geometric",
+      "modular",
+      "mirror"
+    ],
+    "orientation": "landscape",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/ring-set.de33e3d0.png",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": false,
+    "materials": [
+      "Mirror acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "facet-border",
+    "title": "Facet Border",
+    "collection": "mirror-acrylic",
+    "description": "Sixteen black-mirror triangles running the length of a wall as a border rather than a panel. Sized for a corridor, where a piece is read while walking past.",
+    "alt": "Sixteen black mirror acrylic triangles running along a wide wall as a border",
+    "venues": [
+      "hotel",
+      "office",
+      "university"
+    ],
+    "styles": [
+      "geometric",
+      "modular",
+      "mirror"
+    ],
+    "orientation": "panorama",
+    "wallTone": "accent",
+    "image": {
+      "src": "/artworks/facet-border.856b19db.png",
+      "width": 2500,
+      "height": 1000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": false,
+    "materials": [
+      "Mirror acrylic",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "name-in-gold",
+    "title": "Name in Gold",
+    "collection": "mirror-acrylic",
+    "description": "A single word cut in gold mirror with a thin rule beneath it — most often ordered as a family name, a company name, or Arabic wording set in Naskh. Your own words, in the same hand.",
+    "alt": "A name cut in gold mirror acrylic with a thin gold rule beneath it",
+    "venues": [
+      "office",
+      "hotel",
+      "restaurant"
+    ],
+    "styles": [
+      "calligraphy",
+      "mirror",
+      "typography"
+    ],
+    "orientation": "square",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/name-in-gold.7b385e54.png",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
+    "customText": true,
+    "materials": [
+      "Mirror acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": true
   }
 ]

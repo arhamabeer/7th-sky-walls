@@ -7,6 +7,13 @@
     "bestFor": "Reception walls, boardrooms, hotels"
   },
   {
+    "id": "mirror-acrylic",
+    "name": "Mirror acrylic",
+    "spec": "3 mm mirror acrylic in gold, silver or black, flame-polished edge",
+    "why": "A mirror face reflects the room rather than holding a colour of its own, which is why a set of it changes character between a window wall and a corridor. Lighter and far safer than glass mirror — it will not shatter, so it belongs where glass is not allowed, and it takes a polished edge that reads as a finished object rather than a cut sheet. Wipe with a soft cloth only; a gritty cloth is the one thing that marks it.",
+    "bestFor": "Reception walls, restaurants, hotels, salons"
+  },
+  {
     "id": "pvc-foam",
     "name": "PVC foam board",
     "spec": "19 mm expanded PVC, sprayed satin, sealed edge",

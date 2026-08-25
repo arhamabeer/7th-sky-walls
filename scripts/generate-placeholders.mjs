@@ -129,6 +129,9 @@ const PALETTES = {
     shadow: "#000000",
     line: ["#4E9BF5", "#7ACB43", "#F0468C", "#F2C10D", "#22C7B4", "#9B72F0"],
     lineSide: ["#2A5E9E", "#4A8226", "#9C2359", "#A17C07", "#127F73", "#5F44A3"],
+    // Gold mirror on charcoal: the premium finish this market asks for by name.
+    mirror: ["#7A5C1C", "#F7E9B0", "#C9A445"],
+    mirrorEdge: "#4A3610",
   },
   light: {
     face: "#16130F",
@@ -139,6 +142,9 @@ const PALETTES = {
     shadow: "#000000",
     line: ["#2F7BE8", "#5FAE2E", "#E0357F", "#E0A800", "#17B3A3", "#7C4DE0"],
     lineSide: ["#1B4C93", "#3B7020", "#8E1F50", "#8F6A00", "#0C6E64", "#4B2C94"],
+    // Silver mirror, which needs a darker base than gold to read on a pale wall.
+    mirror: ["#7E858E", "#FFFFFF", "#BFC5CC"],
+    mirrorEdge: "#565C64",
   },
   accent: {
     face: "#16130F",
@@ -148,6 +154,9 @@ const PALETTES = {
     shadow: "#000000",
     line: ["#16130F", "#7A2E12", "#1B4C93", "#3B7020", "#8E1F50", "#0C6E64"],
     lineSide: ["#000000", "#3F1708", "#0E2A52", "#1F3D12", "#4C0F2A", "#053A34"],
+    // Black mirror, graphic against a colour wall.
+    mirror: ["#0C0B09", "#5E5A52", "#26231E"],
+    mirrorEdge: "#000000",
   },
 };
 
@@ -173,6 +182,19 @@ const HEROES = {
 const BULB_WORDS = ["Innovation", "Goals", "Success", "Research", "Growth", "Teamwork"];
 const VALUE_WORDS = ["Curious", "Honest", "Together", "Precise", "Bold", "Useful"];
 
+/**
+ * Modular sets, by slug: the shape and how many tiles.
+ *
+ * Counts are the ones this market sells in — six to twenty-two components that
+ * the buyer arranges — which is also why the wall planner matters for them.
+ */
+const MIRROR_SETS = {
+  "hexagon-set": { shape: "hexagon", count: 12 },
+  "ring-set": { shape: "circle", count: 9 },
+  // A band, not a block: this one runs the length of a corridor wall.
+  "facet-border": { shape: "triangle", count: 16, rows: 2 },
+};
+
 /** Which pieces carry the noughts-and-crosses motif. */
 const MOTIF_SLUGS = new Set(["outside-the-box"]);
 
@@ -195,6 +217,12 @@ const GENERATORS = {
   "values-boards": (r, w, h, p) => art_.valuesBoard(r, w, h, p, { words: VALUE_WORDS }),
   "sacred-lines": (r, w, h, p, art) => art_.raisedScript(r, w, h, p, { word: art.title }),
   "brand-walls": (r, w, h, p, art) => art_.brandWall(r, w, h, p, { title: art.title }),
+  "mirror-acrylic": (r, w, h, p, art) => {
+    const set = MIRROR_SETS[art.slug];
+    return set
+      ? art_.mirrorSet(r, w, h, p, set)
+      : art_.mirrorScript(r, w, h, p, { word: art.title });
+  },
 };
 
 /** Transparent canvas: the wall belongs to the room, not to the image. */

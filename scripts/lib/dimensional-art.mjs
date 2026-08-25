@@ -645,3 +645,160 @@ export function brandWall(r, w, h, p, { title }) {
   );
   return s;
 }
+
+/* ------------------------------------------------------------------------- */
+/* 7. Modular mirror-acrylic sets                                             */
+/* ------------------------------------------------------------------------- */
+
+/**
+ * A mirror-acrylic set: many small pieces arranged as one composition.
+ *
+ * This is how the Pakistani acrylic market actually sells — sets of six to
+ * twenty-two components rather than one statement panel, in mirror silver, gold
+ * or black. The catalogue had no mirror finish at all and no modular pieces, so
+ * the two most common things a buyer here is shopping for were both missing.
+ *
+ * Mirror is drawn as a gradient rather than a flat colour, because that is what
+ * makes acrylic read as reflective instead of painted: a bright band across the
+ * face, a darker edge, and a highlight that shifts per tile so the set does not
+ * look like a printed pattern.
+ */
+
+/** A reflective face, as an SVG gradient definition plus the id to fill with. */
+function mirrorFill(id, palette, angle) {
+  const [a, b, c] = palette.mirror;
+  return {
+    def:
+      `<linearGradient id="${id}" gradientTransform="rotate(${angle.toFixed(0)} 0.5 0.5)">` +
+      `<stop offset="0%" stop-color="${a}"/>` +
+      `<stop offset="42%" stop-color="${b}"/>` +
+      `<stop offset="58%" stop-color="${c}"/>` +
+      `<stop offset="100%" stop-color="${a}"/>` +
+      `</linearGradient>`,
+    ref: `url(#${id})`,
+  };
+}
+
+/** Regular polygon path, flat-topped for hexagons. */
+function polygonPath(cx, cy, radius, sides, rotation = 0) {
+  const points = Array.from({ length: sides }, (_, i) => {
+    const angle = rotation + (i * 2 * Math.PI) / sides;
+    return `${(cx + radius * Math.cos(angle)).toFixed(1)} ${(cy + radius * Math.sin(angle)).toFixed(1)}`;
+  });
+  return `M ${points.join(" L ")} z`;
+}
+
+/**
+ * @param {object} options
+ * @param {"hexagon"|"circle"|"triangle"} options.shape
+ * @param {number} options.count  Tiles in the set, as the product is sold.
+ * @param {number} [options.rows]  Force a row count. A border along a corridor
+ *   is a band, and the scorer below would otherwise choose the block shape that
+ *   best fits the canvas — correct in general, wrong for a border.
+ */
+export function mirrorSet(r, w, h, p, { shape, count, rows: forcedRows }) {
+  const { stepX, stepY, shadowOffset } = depthFor(w);
+  const tiles = clamp(count, 6, 22);
+
+  /**
+   * Choose the grid, rather than deriving it from a square root.
+   *
+   * `ceil(sqrt(tiles * aspect))` put nine discs in rows of 4, 4 and 1 — a hole
+   * in the corner that reads as a missing piece — and spread a fifteen-tile
+   * border across three rows, which is not a border. Every column count is
+   * scored instead: how close the resulting block is to the canvas proportions,
+   * plus a penalty for a ragged last row, because an incomplete row is what
+   * makes a hung set look unfinished.
+   */
+  const { columns, rows } = (() => {
+    if (forcedRows) {
+      return { columns: Math.ceil(tiles / forcedRows), rows: forcedRows };
+    }
+    const target = w / h;
+    let best = { columns: tiles, rows: 1, score: Infinity };
+    for (let cols = 1; cols <= tiles; cols += 1) {
+      const rowCount = Math.ceil(tiles / cols);
+      const remainder = tiles % cols;
+      const ragged = remainder === 0 ? 0 : (cols - remainder) / cols;
+      const blockAspect = cols / rowCount;
+      const score = Math.abs(Math.log(blockAspect / target)) + ragged * 0.9;
+      if (score < best.score) best = { columns: cols, rows: rowCount, score };
+    }
+    return best;
+  })();
+  const cellW = (w * 0.82) / columns;
+  const cellH = (h * 0.78) / rows;
+  const radius = Math.min(cellW, cellH) * 0.5;
+  const originX = (w - cellW * columns) / 2 + cellW / 2;
+  const originY = (h - cellH * rows) / 2 + cellH / 2;
+
+  const defs = [];
+  let body = "";
+
+  for (let i = 0; i < tiles; i += 1) {
+    const col = i % columns;
+    const row = Math.floor(i / columns);
+    // Offset every other row by half a cell — the honeycomb.
+    const cx = originX + col * cellW + (row % 2 ? cellW * 0.5 : 0);
+    const cy = originY + row * cellH * 0.9;
+    if (cx + radius > w || cy + radius > h) continue;
+
+    const id = `m${i}`;
+    // Rotate each tile's highlight so the set catches light unevenly, the way a
+    // wall of mirrors does.
+    const { def, ref } = mirrorFill(id, p, between(r, 0, 180));
+    defs.push(def);
+
+    const d =
+      shape === "circle"
+        ? circlePath(cx, cy, radius * 0.9)
+        : polygonPath(cx, cy, radius * 0.95, shape === "triangle" ? 3 : 6, shape === "triangle" ? -Math.PI / 2 : 0);
+
+    // Shadow first, then the edge, then the reflective face.
+    body +=
+      `<path d="${d}" transform="translate(${shadowOffset.toFixed(1)} ${shadowOffset.toFixed(1)})" fill="${p.shadow}" opacity="0.3"/>` +
+      `<path d="${d}" transform="translate(${(stepX * 3).toFixed(1)} ${(stepY * 3).toFixed(1)})" fill="${p.mirrorEdge}"/>` +
+      `<path d="${d}" fill="${ref}" stroke="${p.mirrorEdge}" stroke-width="${(radius * 0.045).toFixed(1)}"/>`;
+  }
+
+  return `<defs>${defs.join("")}</defs>${body}`;
+}
+
+/**
+ * A single word or name in mirror acrylic, the treatment Islamic calligraphy is
+ * almost always ordered in here — gold mirror on a dark or light wall.
+ *
+ * Kept separate from raisedScript because the material is the point: a gold
+ * mirror face is not a colour swap, it is a gradient with a bright band and a
+ * cut edge, and it is what a customer asking for "golden acrylic" means.
+ */
+export function mirrorScript(r, w, h, p, { word }) {
+  const { stepX, stepY, shadowOffset } = depthFor(w);
+  const face = FACES.script;
+  const text = String(word).trim() || "Bismillah";
+  const cx = w / 2;
+
+  const size = Math.min((w * 0.76) / textWidth(text, 1, face), h * 0.34);
+  const baseline = h * 0.5 + size * capOf(face) * 0.3;
+  const { def, ref } = mirrorFill("mtext", p, 100);
+
+  const layer = (dx, dy, fill, opacity) =>
+    `<text x="${(cx + dx).toFixed(1)}" y="${(baseline + dy).toFixed(1)}" ` +
+    `font-family="${face.family}" font-size="${size.toFixed(1)}" font-weight="${face.weight}" ` +
+    `font-style="${face.style}" text-anchor="middle" fill="${fill}"` +
+    `${opacity !== 1 ? ` opacity="${opacity}"` : ""}>${xml(text)}</text>`;
+
+  let body = layer(shadowOffset, shadowOffset, p.shadow, 0.32);
+  for (let i = 5; i >= 1; i -= 1) body += layer(stepX * i, stepY * i, p.mirrorEdge, 1);
+  body += layer(0, 0, ref, 1);
+
+  // A thin mirror rule beneath, the way these are usually mounted.
+  const half = (textWidth(text, size, face) / 2) * 0.9;
+  const ruleY = baseline + size * 0.3;
+  const ruleH = Math.max(2, size * 0.035);
+  body +=
+    `<rect x="${(cx - half).toFixed(1)}" y="${(ruleY + shadowOffset).toFixed(1)}" width="${(half * 2).toFixed(1)}" height="${ruleH.toFixed(1)}" fill="${p.shadow}" opacity="0.28"/>` +
+    `<rect x="${(cx - half).toFixed(1)}" y="${ruleY.toFixed(1)}" width="${(half * 2).toFixed(1)}" height="${ruleH.toFixed(1)}" fill="${ref}"/>`;
+
+  return `<defs>${def}</defs>${body}`;
+}
