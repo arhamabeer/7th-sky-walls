@@ -152,6 +152,9 @@ const PROBE = () => {
         // Skip visually-hidden utilities like the skip link.
         const s = getComputedStyle(el);
         if (s.position === "absolute" && r.height <= 2) return false;
+        // Skip anything positioned outside the document — off-screen elements
+        // such as a spam honeypot are not tappable, so their size is moot.
+        if (r.right < 0 || r.bottom < 0 || r.left > vw) return false;
         return r.height < 44 || r.width < 24;
       })
       .slice(0, 8)

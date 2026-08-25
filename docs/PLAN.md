@@ -134,18 +134,41 @@ improve the app as opportunities appear):
 4. Build-time social cards instead of runtime rendering — deterministic, free
    at request time, and brand-neutral so a rebrand needs no asset changes.
 
-### Phase 3 — AR try-on baseline (tier 1) and 3D asset pipeline
+### Phase 3 — AR try-on baseline (tier 1) and 3D asset pipeline — COMPLETE except device QA
 
-- `npm run generate:ar`: artwork image → parametric framed-canvas GLB
-  (glTF-Transform, meters, single merged mesh, ≤2048px JPEG textures) →
-  USDZ (three USDZExporter via Puppeteer, `quickLookCompatible`, vertical plane
-  anchoring, baked rotation)
-- `<model-viewer>` client-only with `poster` + `reveal="interaction"`,
-  `ar-modes="webxr scene-viewer quick-look"`, `ar-placement="wall"`,
-  `ar-scale="fixed"`, static `ios-src`
-- Capability detection and AR launcher UI that never dead-ends
-- AR launch and failure instrumentation
-- Real-device QA on iPhone and Android
+Done:
+
+- `npm run generate:ar` produces one GLB and one USDZ per artwork per size —
+  96 pairs, 5.7 MB — plus a manifest the app reads. Per-size because neither
+  Scene Viewer nor Quick Look can rescale at launch.
+- `<model-viewer>` loaded only on request, with `ar-placement="wall"`,
+  `ar-scale="fixed"` and a pre-built `ios-src`.
+- Capability detection resolving to WebXR, Quick Look, Scene Viewer or an
+  honest explanation — never a dead button.
+- AR launch, status and failure instrumentation.
+- `npm run check:ar` validates all 96 pairs against the advertised dimensions
+  and Quick Look's structural requirements.
+
+Outstanding: real-device QA on an iPhone and an Android handset. See
+[AR device testing checklist](AR-DEVICE-QA.md) — orientation, flush mounting,
+measured true scale and scale lock cannot be confirmed without a phone.
+
+**Findings that changed the design**, each caught before shipping:
+
+1. three.js's USDZExporter silently drops meshes carrying a material array,
+   producing an archive with no geometry. A frame modelled as a second
+   material would have shipped an empty AR experience to every iPhone. The
+   frame is composited into the texture instead; one mesh, one material.
+2. Scene Viewer and model-viewer's WebXR path rest a model's -Z extent against
+   the wall without pitching it, so the back of the frame is authored at z = 0
+   rather than centred.
+3. Quick Look re-orients vertically-anchored content so local +Y becomes the
+   wall normal. The USDZ bakes Rx(-90°) to cancel it; without that the artwork
+   hangs facing into the wall while still opening normally.
+4. The USD is written directly rather than through three.js, whose exporter
+   re-encodes every texture to PNG — well over 100 MB across this catalogue.
+   It is written against the exporter's exact output structure so the only
+   deliberate difference is JPEG encoding.
 
 ### Phase 4 — Inquiry engine and contact
 

@@ -399,6 +399,174 @@ async function testGridReveals(page, vp) {
   );
 }
 
+async function testInquiryForm(page, vp) {
+  /**
+   * Each context submits from its own apparent address. The server rate-limits
+   * inquiries per IP, so without this the suite trips its own limiter after a
+   * couple of runs and reports a false failure — while a genuine limiter
+   * regression would hide behind the same symptom.
+   */
+  await page.setExtraHTTPHeaders({
+    "x-forwarded-for": `203.0.113.${Math.floor(Math.random() * 200) + 10}`,
+  });
+  await page.goto(`${BASE}/contact`, { waitUntil: "networkidle" });
+
+  const form = page.locator("main form").first();
+  record(vp.name, "inquiry form is present", (await form.count()) > 0);
+  if ((await form.count()) === 0) return;
+
+  // Every field must be labelled — this is the only path to a sale.
+  const labelling = await page.evaluate(() => {
+    const controls = [...document.querySelectorAll("main form input, main form select, main form textarea")];
+    const visible = controls.filter((c) => c.offsetParent !== null);
+    const unlabelled = visible.filter((c) => {
+      if (c.getAttribute("aria-label")) return false;
+      const id = c.getAttribute("id");
+      return !id || !document.querySelector(`label[for="${CSS.escape(id)}"]`);
+    });
+    return {
+      total: visible.length,
+      unlabelled: unlabelled.map((c) => c.getAttribute("name") ?? c.tagName),
+      /**
+       * The honeypot is positioned off-screen rather than display:none, since
+       * that is harder for a bot to detect. "Hidden from people" therefore
+       * means: outside the viewport, not focusable, and not announced.
+       */
+      honeypot: (() => {
+        const hp = document.querySelector('main form input[name="website"]');
+        if (!hp) return { present: false };
+        const rect = hp.getBoundingClientRect();
+        return {
+          present: true,
+          offScreen: rect.right < 0 || rect.bottom < 0 || rect.left > window.innerWidth,
+          notFocusable: hp.tabIndex === -1,
+          notAnnounced: Boolean(hp.closest("[aria-hidden='true']")),
+        };
+      })(),
+    };
+  });
+  record(
+    vp.name,
+    "every visible form control is labelled",
+    labelling.unlabelled.length === 0,
+    labelling.unlabelled.join(", "),
+  );
+  const hp = labelling.honeypot;
+  record(
+    vp.name,
+    "honeypot is present, off-screen, unfocusable and unannounced",
+    Boolean(hp.present && hp.offScreen && hp.notFocusable && hp.notAnnounced),
+    JSON.stringify(hp),
+  );
+
+  // Server-side validation must reject an empty submission and say why.
+  await page.locator('main form button[type="submit"]').click();
+  await page.waitForTimeout(1500);
+  const afterEmpty = await page.evaluate(() => ({
+    alert: document.querySelector("main form [role=alert]")?.textContent?.trim() ?? "",
+    invalid: document.querySelectorAll('main form [aria-invalid="true"]').length,
+  }));
+  record(
+    vp.name,
+    "empty submission is rejected with an explanation",
+    afterEmpty.alert.length > 0,
+    afterEmpty.alert.slice(0, 60),
+  );
+  record(
+    vp.name,
+    "invalid fields are marked for assistive tech",
+    afterEmpty.invalid > 0,
+    `${afterEmpty.invalid} marked`,
+  );
+
+  // A complete submission must be accepted and acknowledged with a reference.
+  await page.fill('main form input[name="name"]', "Ayesha Khan");
+  await page.fill('main form input[name="email"]', "ayesha@example.com");
+  await page.fill('main form input[name="city"]', "Karachi");
+  await page.selectOption('main form select[name="venue"]', "office");
+  await page.fill(
+    'main form textarea[name="message"]',
+    "We are fitting out a new reception and want a large piece for the wall behind the desk.",
+  );
+  await page.locator('main form button[type="submit"]').click();
+  await page.waitForTimeout(2500);
+
+  const afterValid = await page.evaluate(() => {
+    const status = document.querySelector("main [role=status]");
+    return {
+      text: status?.textContent?.trim() ?? "",
+      formGone: document.querySelectorAll("main form").length === 0,
+    };
+  });
+  record(
+    vp.name,
+    "a complete inquiry is accepted",
+    /thank you/i.test(afterValid.text),
+    afterValid.text.slice(0, 60),
+  );
+  record(
+    vp.name,
+    "acknowledgement includes a reference",
+    /INQ-/.test(afterValid.text),
+    afterValid.text.slice(0, 80),
+  );
+  record(
+    vp.name,
+    "WhatsApp remains offered after submitting",
+    await page.evaluate(() =>
+      Boolean(document.querySelector('main a[href*="wa.me"]')),
+    ),
+  );
+}
+
+/**
+ * Repeated submissions from one address must be refused, and refused in a way
+ * that still points somewhere useful. Runs once rather than per viewport,
+ * since it deliberately exhausts a bucket.
+ */
+async function testRateLimit(browser) {
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    extraHTTPHeaders: { "x-forwarded-for": `198.51.100.${Math.floor(Math.random() * 200) + 10}` },
+  });
+  const page = await context.newPage();
+
+  let limitedAt = 0;
+  for (let attempt = 1; attempt <= 7 && !limitedAt; attempt++) {
+    await page.goto(`${BASE}/contact`, { waitUntil: "networkidle" });
+    await page.fill('main form input[name="name"]', `Repeat Sender ${attempt}`);
+    await page.fill('main form input[name="email"]', `repeat${attempt}@example.com`);
+    await page.fill('main form input[name="city"]', "Lahore");
+    await page.selectOption('main form select[name="venue"]', "cafe");
+    await page.fill(
+      'main form textarea[name="message"]',
+      "Checking that repeated submissions from one address are refused.",
+    );
+    await page.locator('main form button[type="submit"]').click();
+    await page.waitForTimeout(1200);
+    const text = await page.evaluate(
+      () => document.querySelector("main [role=alert]")?.textContent ?? "",
+    );
+    if (/try again in about/i.test(text)) limitedAt = attempt;
+  }
+
+  record(
+    "rate-limit",
+    "repeated inquiries from one address are eventually refused",
+    limitedAt > 0 && limitedAt <= 7,
+    limitedAt ? `refused on attempt ${limitedAt}` : "never refused after 7 attempts",
+  );
+  record(
+    "rate-limit",
+    "the refusal still points to another channel",
+    await page.evaluate(() =>
+      /whatsapp/i.test(document.querySelector("main [role=alert]")?.textContent ?? ""),
+    ),
+  );
+
+  await context.close();
+}
+
 async function testMobileNav(page, vp) {
   if (vp.width >= 768) return;
   await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
@@ -500,6 +668,7 @@ async function main() {
     await testArPanel(page, vp);
     await testPortfolioFiltering(page, vp);
     await testGridReveals(page, vp);
+    await testInquiryForm(page, vp);
     await testMobileNav(page, vp);
 
     record(vp.name, "no console errors during interaction", errors.length === 0, errors.slice(0, 2).join(" | "));
@@ -507,6 +676,7 @@ async function main() {
   }
 
   await testReducedMotion(browser);
+  await testRateLimit(browser);
   await browser.close();
 
   const failed = results.filter((r) => !r.pass);

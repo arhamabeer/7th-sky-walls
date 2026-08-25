@@ -96,6 +96,9 @@ export const copy = {
   contact: {
     title: "Contact",
     subtitle: "Tell us about your space. We reply within one working day.",
+    formTitle: "Tell us about your wall",
+    formSubtitle:
+      "The more you can share about the space, the more useful our first reply will be — we'd rather send ideas than questions.",
     channelsTitle: "Reach us directly",
     whatsappCard: { title: "WhatsApp", text: "Fastest response — send us a photo of your wall." },
     emailCard: { title: "Email", text: "Best for detailed briefs and documents." },
