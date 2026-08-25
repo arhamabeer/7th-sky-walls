@@ -399,6 +399,39 @@ async function testArPanel(page, vp) {
   record(vp.name, "a pre-built USDZ is supplied for iOS", Boolean(attrs.iosSrc));
 
   /**
+   * The pre-built model must be a frameless plane, not a panel.
+   *
+   * These are cut letters with the wall showing between them, so the honest
+   * model has no substrate: an alpha-masked plane puts the letters on the
+   * visitor's real wall and leaves the wall visible. A non-zero depth here means
+   * the box geometry came back and AR is showing a rectangular panel carrying a
+   * picture of the piece.
+   *
+   * Width and height are checked by `npm run check:ar` across all 112 pairs;
+   * this is the shape assertion, which that validator deliberately does not make.
+   */
+  await page
+    .waitForFunction(() => document.querySelector("model-viewer")?.loaded === true, null, {
+      timeout: 15000,
+    })
+    .catch(() => {});
+  const shape = await page.evaluate(() => {
+    const mv = document.querySelector("model-viewer");
+    const d = mv?.getDimensions?.();
+    return {
+      prebuilt: (mv?.getAttribute("src") ?? "").startsWith("/ar/"),
+      depth: d ? Number(d.z.toFixed(4)) : null,
+      width: d ? Number(d.x.toFixed(3)) : null,
+    };
+  });
+  record(
+    vp.name,
+    "the pre-built AR model is a frameless plane, not a panel",
+    shape.prebuilt && shape.depth === 0,
+    `src prebuilt=${shape.prebuilt} depth=${shape.depth}`,
+  );
+
+  /**
    * model-viewer's own progress bar has to stay out of the panel. It hides
    * itself by adding a class when loading completes, and that never fired here
    * — the element upgrades lazily and gets its `src` as a property afterwards,

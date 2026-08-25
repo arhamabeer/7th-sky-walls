@@ -25,7 +25,9 @@ and one Android handset.
 ## iPhone — Safari
 
 1. Open an artwork page, choose **Large**, open the **On your wall** tab.
-2. The 3D view should show the piece on a panel in its specified wall tone.
+2. The 3D view should show the piece as cut letters with the wall visible
+   between them — no panel, no rectangle. That is the GLB, and it is what
+   Android AR uses too.
 
    **Expected, and the first thing to judge.** The model is currently a panel
    carrying the artwork, not the cut letters alone. For this product the honest
