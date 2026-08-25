@@ -6,6 +6,7 @@ import { site } from "@/config/site.config";
 import { brandVars } from "@/config/brand-vars";
 import { fontVariables } from "@/config/fonts";
 import { copy } from "@/content/copy";
+import { reportError } from "@/lib/report-error";
 
 /**
  * Last-resort error boundary, for a failure in the root layout itself.
@@ -25,6 +26,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("Root layout error", error.digest ?? "", error);
+    reportError("root-layout", error);
   }, [error]);
 
   return (

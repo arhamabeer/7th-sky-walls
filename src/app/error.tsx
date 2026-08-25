@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { copy } from "@/content/copy";
+import { reportError } from "@/lib/report-error";
 import { whatsappLink } from "@/config/site.config";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export default function Error({
     // Reaches the browser console in development and whatever error reporter is
     // wired up in production. The digest is what correlates it to the server log.
     console.error("Route error", error.digest ?? "", error);
+    reportError("route", error);
   }, [error]);
 
   return (

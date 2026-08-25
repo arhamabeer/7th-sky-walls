@@ -60,7 +60,30 @@ export async function submitInquiry(
   const reference = `INQ-${Date.now().toString(36).toUpperCase().slice(-6)}`;
 
   try {
-    await deliverInquiry(input, reference);
+    const { delivered } = await deliverInquiry(input, reference);
+
+    /**
+     * Never report success for an inquiry that was only written to a log.
+     *
+     * Without RESEND_API_KEY and INQUIRY_FROM_EMAIL, `deliverInquiry` records
+     * the submission to the server log and returns `delivered: false`. That
+     * result used to be discarded, so the form told the visitor it had been
+     * sent — the worst possible failure for the one action this whole site
+     * exists to produce. A form that silently swallows an inquiry is worse than
+     * no form, because the visitor stops trying.
+     *
+     * Development still reports success: the log is how the form is tested, and
+     * a developer can see it. Anywhere else, say plainly that it did not send
+     * and point at the two channels that work without any configuration.
+     */
+    if (!delivered && process.env.NODE_ENV === "production") {
+      return {
+        status: "error",
+        message:
+          "Sorry — our inquiry email is not connected yet, so that did not reach us. Please send it on WhatsApp or by email instead and we will reply the same way.",
+      };
+    }
+
     return { status: "ok", reference };
   } catch {
     return {
