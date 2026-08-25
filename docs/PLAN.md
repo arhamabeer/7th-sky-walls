@@ -432,6 +432,21 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The paper-rectangle bug, sixth and last instance — 2026-08-26
+
+The artwork page's own hero image — the largest, most-looked-at image on the
+site — had `box-shadow` written directly onto the `<img>`. It is a transparent
+PNG of cut letters sitting on a painted wall, so the shadow traced the image's
+rectangle and put a faint paper edge around the product.
+
+It survived four earlier rounds of fixing exactly this defect elsewhere because
+the audit check only ever inspected an image's **wrapper**. A shadow on the
+element itself was invisible to it. The check now looks at both, and on the image
+itself there is no defensible reading — the element's box is precisely the
+rectangle the shadow would trace, and the alpha is the whole point of the
+artwork. Reinstating the bug produces 16 errors across the desktop matrix, which
+is how that was confirmed rather than assumed.
+
 ### The inquiry never dies at the last step — 2026-08-26
 
 Two defects on the only path to a sale on the site, one of them long-standing.

@@ -225,11 +225,28 @@ const PROBE = () => {
    * opposite of the product. Shadows belong on the image as a drop-shadow
    * filter, where they follow the alpha.
    *
-   * This is a check rather than three component tests because the same mistake
-   * has now appeared three times in different places — the gallery tiles, the
-   * camera overlay, and the wall planner — and each time it looked deliberate
-   * until someone saw it on a wall.
+   * This is a check rather than a handful of component tests because the same
+   * mistake has now appeared six times in different places — the gallery tiles,
+   * the camera overlay, the wall planner, the room-scale preview, and finally on
+   * the artwork page's own hero image — and each time it looked deliberate until
+   * someone saw it on a wall.
+   *
+   * That last one is why this also inspects the image element itself and not only
+   * its wrapper. The first version of this check looked at parents alone, so a
+   * box-shadow written directly onto the `<img>` was invisible to it — and that
+   * was where the bug had been hiding in the most prominent place on the site,
+   * surviving four rounds of fixing the same defect elsewhere.
    */
+  const shadowed = (el) => {
+    const cs = getComputedStyle(el);
+    // Box-shadow only. A ring is a box-shadow in Tailwind, so both spellings are
+    // covered, and a hairline border is not the bug: the gallery tile is
+    // deliberately a bordered card.
+    return cs.boxShadow !== "none" && cs.boxShadow !== "";
+  };
+  const describe = (el) =>
+    `${el.tagName}.${(el.getAttribute("class") ?? "").slice(0, 44)}`;
+
   const papered = imgs
     .filter((i) => {
       const src = i.currentSrc || i.src || "";
@@ -238,31 +255,33 @@ const PROBE = () => {
       const decoded = decodeURIComponent(src);
       return decoded.includes("/artworks/") || decoded.startsWith("data:image/png");
     })
-    .map((i) => {
+    .flatMap((i) => {
+      const found = [];
+
+      // On the image itself there is no defensible reading: the element's box is
+      // exactly the rectangle the shadow would trace, and the alpha is the whole
+      // point of the artwork.
+      if (shadowed(i)) found.push(describe(i));
+
       const parent = i.parentElement;
-      if (!parent) return null;
-      const cs = getComputedStyle(parent);
-      // Box-shadow only. A ring is a box-shadow in Tailwind, so both spellings
-      // are covered, and a hairline border is not the bug: the gallery tile is
-      // deliberately a bordered card.
-      if (cs.boxShadow === "none" || cs.boxShadow === "") return null;
-      // And only when the wrapper is transparent. That is the distinction that
-      // separates the bug from the intent: a wrapper painting a wall colour is
-      // standing in for a wall, so a shadow belongs to that swatch — which is
-      // what the home hero's tiles are. A transparent wrapper has no surface for
-      // a shadow to belong to, so the shadow can only be outlining the image's
-      // rectangle, and that is what reads as paper.
-      if (cs.backgroundColor !== "rgba(0, 0, 0, 0)" && cs.backgroundColor !== "transparent") {
-        return null;
+      if (parent && shadowed(parent)) {
+        // On a wrapper it depends on whether the wrapper is a surface. One
+        // painting a wall colour is standing in for a wall, so a shadow belongs
+        // to that swatch — which is what the home hero's tiles are. A transparent
+        // wrapper has nothing for a shadow to sit on, so the shadow can only be
+        // outlining the image's rectangle, and that is what reads as paper.
+        const bg = getComputedStyle(parent).backgroundColor;
+        if (bg === "rgba(0, 0, 0, 0)" || bg === "transparent") found.push(describe(parent));
       }
-      return `${parent.tagName}.${(parent.getAttribute("class") ?? "").slice(0, 44)}`;
+      return found;
     })
     .filter(Boolean);
   if (papered.length) {
     issues.push({
       severity: "error",
       kind: "artwork-in-a-box",
-      detail: "artwork image wrapped in a shadowed box, which outlines its rectangle instead of the letters",
+      detail:
+        "box-shadow on an artwork image or its wrapper, which outlines the image's rectangle instead of the letters",
       offenders: [...new Set(papered)].slice(0, 4),
     });
   }
