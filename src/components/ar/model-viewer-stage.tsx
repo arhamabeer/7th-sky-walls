@@ -123,7 +123,11 @@ export function ModelViewerStage({
       min-camera-orbit="-40deg 60deg auto"
       max-camera-orbit="40deg 100deg auto"
       interaction-prompt="none"
-      className={cn("h-full w-full bg-surface", className)}
+      // Transparent, not bg-surface. An opaque background here paints over the
+      // wall colour the container sets, which made a pale configured piece —
+      // bone ink on an ink wall — render as near-white on white. The poster
+      // colour is already transparent for the same reason.
+      className={cn("h-full w-full bg-transparent", className)}
       style={{ ["--poster-color" as string]: "transparent" }}
     />
   );
