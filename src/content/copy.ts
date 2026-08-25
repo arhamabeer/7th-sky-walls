@@ -85,8 +85,20 @@ export const copy = {
     moreFromCollection: "More from this collection",
   },
   services: {
+    eyebrow: "What we do",
     title: "Services",
-    subtitle: "From a single statement piece to a full building's art program — one team, end to end.",
+    subtitle:
+      "From a single statement piece to a full building's art program — designed, produced and installed by one accountable team.",
+    deliverablesTitle: "What you get",
+    idealForTitle: "Best suited to",
+    leadTimeLabel: "Typical timing",
+    exampleLabel: "Example:",
+    processEyebrow: "The process",
+    processSubtitle:
+      "The same four steps whether it's one piece or ninety. You see the work in your own space before anything is produced.",
+    ctaTitle: "Tell us about the space",
+    ctaSubtitle:
+      "Send us the room, the wall and roughly what you're after. We reply within one working day with directions and honest timing.",
     processTitle: "How we work",
     process: [
       { step: "Consult", text: "We visit or video-call, measure your walls and understand the mood you're after." },

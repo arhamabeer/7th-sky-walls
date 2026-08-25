@@ -82,6 +82,10 @@ export const serviceSchema = z.object({
   description: z.string(),
   deliverables: z.array(z.string()).min(2),
   idealFor: z.array(venueIdSchema).min(1),
+  /** Artwork slug used as the visual for this service. */
+  featureArtwork: z.string(),
+  /** What a client actually gets back, and when. Builds trust before price. */
+  leadTime: z.string(),
 });
 export type Service = z.infer<typeof serviceSchema>;
 
