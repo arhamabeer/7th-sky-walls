@@ -98,7 +98,7 @@ export function HeroWall({
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(130%_80%_at_60%_-10%,rgba(255,255,255,0.9),transparent_60%)]"
       />
 
-      <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 pb-16 pt-10 sm:px-6 lg:min-h-[86svh] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-10 lg:py-20">
+      <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 pb-16 pt-10 sm:px-6 lg:min-h-[86svh] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-10 lg:py-20 2xl:max-w-[84rem] 2xl:gap-16 2xl:px-10">
         {/* Copy */}
         <div className="order-2 lg:order-1">{children}</div>
 

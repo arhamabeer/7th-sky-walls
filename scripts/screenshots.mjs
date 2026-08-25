@@ -39,11 +39,21 @@ const PAGE_ARGS = argv.slice(2);
 
 const OUT = path.resolve(import.meta.dirname, "..", ".shots");
 
+/** Representative of each screen class the site has to look right on. */
 const VIEWPORTS = {
+  "monitor-4k": { width: 2560, height: 1440, touch: false },
+  "monitor-1080": { width: 1920, height: 1080, touch: false },
   desktop: { width: 1440, height: 900, touch: false },
+  "laptop-large": { width: 1536, height: 864, touch: false },
   laptop: { width: 1280, height: 800, touch: false },
+  "laptop-small": { width: 1152, height: 720, touch: false },
+  "tablet-landscape": { width: 1194, height: 834, touch: true },
   tablet: { width: 834, height: 1194, touch: true },
+  "tablet-small": { width: 744, height: 1133, touch: true },
+  "mobile-large": { width: 440, height: 956, touch: true },
   mobile: { width: 393, height: 852, touch: true },
+  "mobile-small": { width: 320, height: 658, touch: true },
+  "mobile-landscape": { width: 852, height: 393, touch: true },
 };
 
 const PAGES = {

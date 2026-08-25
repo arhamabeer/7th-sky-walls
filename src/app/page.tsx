@@ -55,10 +55,10 @@ export default function HomePage() {
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent">
           {copy.home.heroEyebrow}
         </p>
-        <h1 className="mt-4 max-w-3xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+        <h1 className="mt-4 max-w-3xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl 2xl:text-[5.5rem]">
           {copy.home.heroTitle}
         </h1>
-        <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg">
+        <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg 2xl:text-xl 2xl:leading-8">
           {copy.home.heroSubtitle}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">

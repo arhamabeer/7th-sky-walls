@@ -17,7 +17,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 2xl:max-w-[84rem] 2xl:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
           <div className="flex items-center gap-2.5">
             <Image src={site.assets.mark} alt="" width={26} height={26} />
@@ -116,7 +116,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-xs text-muted sm:px-6">
+        <p className="mx-auto max-w-6xl px-4 py-5 text-xs 2xl:max-w-[84rem] 2xl:px-10 text-muted sm:px-6">
           © {new Date().getFullYear()} {site.legalName}. {copy.footer.rights}
         </p>
       </div>
