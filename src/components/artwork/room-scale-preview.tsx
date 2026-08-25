@@ -197,7 +197,7 @@ export function RoomScalePreview({
 
         {/* The artwork, at true relative scale */}
         <div
-          className="absolute shadow-[0_12px_30px_-14px_rgba(0,0,0,0.55)] ring-1 ring-black/10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+          className="absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
           style={{
             width: `${art.widthPct}%`,
             height: `${art.heightPct}%`,
@@ -210,7 +210,11 @@ export function RoomScalePreview({
             alt=""
             fill
             sizes="(min-width: 1024px) 40vw, 80vw"
-            className="object-contain"
+            // drop-shadow, not a shadow on the wrapper: these are transparent
+            // PNGs of cut letters, and a shadowed rectangle around one reads as
+            // paper on the wall. Fourth place this same mistake appeared, which
+            // is why the responsive audit now checks for it everywhere.
+            className="object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.42)]"
             {...(blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {})}
           />
         </div>
