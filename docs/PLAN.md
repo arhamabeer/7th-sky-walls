@@ -221,7 +221,24 @@ provide — so it is already shipped through tier 1. A custom session would add
 only in-AR size switching and a bespoke reticle. That is now an enhancement to
 consider after device testing, not a gap.
 
-### Phase 8 — Hardening, content swap, launch
+### Phase 8 — Hardening, content swap, launch — IN PROGRESS
+
+Done:
+
+- Lighthouse runner gating SEO, best practices and accessibility at 90 across
+  seven routes. All three now score **100** on every route.
+- Two real contrast defects and one heading-order defect fixed, found by the
+  audit rather than by eye.
+- Performance work driven by measurement: dropped the display font's
+  optical-size axis, stopped preloading the configurator's typeface, made the
+  smooth-scroll library a dynamic import so phones stop downloading it, and
+  removed the animation library entirely in favour of CSS.
+- [Launch checklist](LAUNCH.md) covering the automated gates, the content and
+  environment work, and post-deploy verification.
+
+Remaining: real content and credentials, device testing, go-live.
+
+Full list:
 
 - Real artwork and brand content ingestion, AR model regeneration
 - **Content-hashed artwork filenames.** Replacing an image in place leaves its
