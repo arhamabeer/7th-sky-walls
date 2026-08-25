@@ -278,14 +278,96 @@ async function testArPanel(page, vp) {
     );
     return { text: panel?.textContent ?? "", buttons };
   });
+  // Either a real AR launch, or the camera fallback, or a plain explanation —
+  // but never a panel with no way forward.
   const offersLaunch = fallback.buttons.some((b) => /place on my wall/i.test(b));
-  const explains = /cannot place|needs a phone|not available/i.test(fallback.text);
+  const offersCamera = fallback.buttons.some((b) => /preview with your camera/i.test(b));
+  const explains = /needs a phone or tablet/i.test(fallback.text);
   record(
     vp.name,
-    "AR panel either offers a working launch or explains why it cannot",
-    offersLaunch !== explains,
-    offersLaunch ? "launch offered" : explains ? "explained" : "neither — dead end",
+    "AR panel always offers a way forward",
+    offersLaunch || offersCamera || explains,
+    offersLaunch
+      ? "AR launch offered"
+      : offersCamera
+        ? "camera fallback offered"
+        : explains
+          ? "explained"
+          : "nothing — dead end",
   );
+
+  // The camera preview is the universal fallback and must be reachable from
+  // this panel whatever tier the device landed on.
+  const cameraEntry = await page.evaluate(() => {
+    const panel = document.querySelector("[role=tabpanel]");
+    return [...(panel?.querySelectorAll("button") ?? [])]
+      .map((b) => b.textContent.trim())
+      .filter((t) => /camera/i.test(t));
+  });
+  record(
+    vp.name,
+    "camera preview is reachable from the AR panel",
+    cameraEntry.length > 0,
+    cameraEntry.join(" | "),
+  );
+
+  if (cameraEntry.length) {
+    await page.locator("[role=tabpanel] button", { hasText: /camera/i }).first().click();
+    // The overlay is a lazily-loaded chunk, so wait on it appearing rather
+    // than on a timeout tuned to a warm cache.
+    await page
+      .waitForFunction(
+        () =>
+          [...document.querySelectorAll("[role=dialog]")].some((d) =>
+            /camera/i.test(d.getAttribute("aria-label") ?? ""),
+          ),
+        undefined,
+        { timeout: 15000 },
+      )
+      .catch(() => {});
+    const overlay = await page.evaluate(() => {
+      const dialogs = [...document.querySelectorAll('[role=dialog][aria-modal="true"]')];
+      const camera = dialogs.find((d) => /camera/i.test(d.getAttribute("aria-label") ?? ""));
+      return {
+        open: Boolean(camera),
+        scrollLocked: document.documentElement.style.overflow === "hidden",
+        // It must say plainly that this is not tracked AR before asking for
+        // the camera, rather than implying capability it does not have.
+        honest: /not stay pinned|preview rather than true AR/i.test(camera?.textContent ?? ""),
+        hasStart: [...(camera?.querySelectorAll("button") ?? [])].some((b) =>
+          /start the camera/i.test(b.textContent ?? ""),
+        ),
+      };
+    });
+    record(vp.name, "camera preview opens as a modal", overlay.open);
+    record(vp.name, "camera preview locks page scroll", overlay.scrollLocked);
+    record(
+      vp.name,
+      "camera preview is honest about not being tracked AR",
+      overlay.honest,
+    );
+    record(vp.name, "camera preview waits for a tap before requesting access", overlay.hasStart);
+
+    await page.keyboard.press("Escape");
+    await page
+      .waitForFunction(
+        () =>
+          ![...document.querySelectorAll("[role=dialog]")].some((d) =>
+            /camera/i.test(d.getAttribute("aria-label") ?? ""),
+          ),
+        undefined,
+        { timeout: 8000 },
+      )
+      .catch(() => {});
+    const closed = await page.evaluate(() => ({
+      gone: ![...document.querySelectorAll("[role=dialog]")].some((d) =>
+        /camera/i.test(d.getAttribute("aria-label") ?? ""),
+      ),
+      scrollRestored: document.documentElement.style.overflow !== "hidden",
+    }));
+    record(vp.name, "Escape closes the camera preview", closed.gone);
+    record(vp.name, "page scroll is restored after the camera preview", closed.scrollRestored);
+  }
 
   // Switching size must repoint the model, never leave the previous one up.
   await page.locator("main button", { hasText: /^Small/ }).first().click();
@@ -786,13 +868,28 @@ async function main() {
       if (m.type() === "error") errors.push(m.text().slice(0, 160));
     });
 
-    await testArtworkPage(page, vp);
-    await testArPanel(page, vp);
-    await testTextConfigurator(page, vp);
-    await testPortfolioFiltering(page, vp);
-    await testGridReveals(page, vp);
-    await testInquiryForm(page, vp);
-    await testMobileNav(page, vp);
+    /**
+     * Each group is isolated. A thrown locator timeout in one group used to
+     * abort the whole run and discard every result collected before it, which
+     * hid what actually passed and made the real failure harder to find.
+     */
+    const groups = [
+      ["artwork page", testArtworkPage],
+      ["AR panel", testArPanel],
+      ["text configurator", testTextConfigurator],
+      ["portfolio filtering", testPortfolioFiltering],
+      ["grid reveals", testGridReveals],
+      ["inquiry form", testInquiryForm],
+      ["mobile navigation", testMobileNav],
+    ];
+
+    for (const [name, run] of groups) {
+      try {
+        await run(page, vp);
+      } catch (err) {
+        record(vp.name, `${name} group completed without throwing`, false, String(err).slice(0, 120));
+      }
+    }
 
     record(vp.name, "no console errors during interaction", errors.length === 0, errors.slice(0, 2).join(" | "));
     await context.close();

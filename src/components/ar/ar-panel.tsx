@@ -25,6 +25,26 @@ const ModelViewerStage = dynamic(
   },
 );
 
+/**
+ * The universal fallback, loaded only when someone opens it. The loading
+ * state matters: the chunk is fetched on tap, and without it a slow
+ * connection looks like a button that did nothing.
+ */
+const CameraPreview = dynamic(
+  () => import("@/components/ar/camera-preview").then((m) => m.CameraPreview),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        role="status"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-ink text-sm text-background"
+      >
+        Opening the camera preview…
+      </div>
+    ),
+  },
+);
+
 /** What to tell the visitor before they commit to launching AR. */
 const TIER_COPY: Record<
   ArCapability["tier"],
@@ -71,6 +91,7 @@ export function ArPanel({
   const [capability, setCapability] = useState<ArCapability | null>(null);
   const [status, setStatus] = useState<ArStatus | null>(null);
   const [launchError, setLaunchError] = useState<string | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
   const viewerRef = useRef<ModelViewerElement | null>(null);
 
   useEffect(() => {
@@ -165,11 +186,26 @@ export function ArPanel({
             cannot be resized, so what you see is what arrives.
           </p>
         </>
+      ) : capability.tier === "overlay" ? (
+        <>
+          <button
+            type="button"
+            onClick={() => setCameraOpen(true)}
+            className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-6 text-sm font-semibold text-background transition-opacity hover:opacity-85 sm:w-auto"
+          >
+            Preview with your camera
+          </button>
+          <p className="mt-2 text-xs leading-5 text-muted">
+            This device has no AR runtime, so the piece will not stay pinned to
+            the wall — but you can still hold it up against the room, and
+            calibrate against a sheet of paper to see its true size.
+          </p>
+        </>
       ) : (
         <p className="mt-3 text-sm leading-6 text-muted">
-          {capability.tier === "overlay"
-            ? "This device cannot place the piece in AR, but you can still judge the size using the scale preview above."
-            : "AR needs a phone or tablet. Open this page on your phone to place the piece on your own wall."}
+          AR needs a phone or tablet with a camera. Open this page on your phone
+          to place the piece on your own wall — the scale preview above answers
+          the size question either way.
         </p>
       )}
 
@@ -185,6 +221,34 @@ export function ArPanel({
         >
           {launchError}
         </p>
+      )}
+
+      {/* Offered from the same UI whichever tier the device landed on, so a
+          failed handoff always has somewhere to go. */}
+      {(capability?.handsOff || capability?.tier === "overlay" || launchError) && (
+        <p className="mt-3 text-xs leading-5 text-muted">
+          <button
+            type="button"
+            onClick={() => setCameraOpen(true)}
+            className="inline-flex min-h-11 items-center font-semibold text-accent underline underline-offset-4"
+          >
+            {capability?.tier === "overlay"
+              ? "How the camera preview works"
+              : "Or preview it with your camera instead"}
+          </button>
+        </p>
+      )}
+
+      {cameraOpen && (
+        <CameraPreview
+          imageSrc={poster}
+          imageAlt={alt}
+          title={title}
+          widthCm={widthCm}
+          heightCm={heightCm}
+          onClose={() => setCameraOpen(false)}
+          onAnalytics={onAnalytics}
+        />
       )}
     </div>
   );
