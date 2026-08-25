@@ -112,7 +112,7 @@ export const copy = {
     servicesTitle: "How we usually work here",
     materialsTitle: "Materials that suit this space",
     materialsSubtitle:
-      "The surface matters as much as the image. These are the four we work in, and where each belongs.",
+      "The surface matters as much as the image. These are the ones we work in, and where each belongs.",
     materialsLink: "Read why we use each one",
     ctaTitle: "Tell us about the space",
     ctaSubtitle:
@@ -143,6 +143,77 @@ export const copy = {
     customizableBadge: "Customizable text",
     customizableNote: "This piece can be personalized — your own words, typography and colors.",
     moreFromCollection: "More from this collection",
+    templateLink: "Print it at true size",
+    templateLinkNote:
+      "A one-page specification to forward, or the piece itself tiled at full size to tape to the wall.",
+  },
+  /**
+   * The printable templates. Kept here with everything else rather than beside
+   * the components, because these strings end up on paper in a client's hands
+   * and are the most likely of any on the site to be reworded by the studio.
+   */
+  template: {
+    title: "Print it at true size",
+    subtitle:
+      "Every sheet carries a 10 cm bar. Measure it before anything goes on a wall — that bar is the only way to know the printer did not quietly scale the page.",
+    whatToPrint: "What to print",
+    paper: "Paper",
+    print: "Print",
+    sheet: "sheet",
+    sheets: "sheets",
+    modes: {
+      spec: {
+        label: "Specification",
+        blurb:
+          "One page with the piece, its exact dimensions, the material and its fire behaviour, and an elevation drawn against a standard doorway. The page to forward for sign-off.",
+      },
+      corners: {
+        label: "Corner marks",
+        blurb:
+          "Four sheets, one per corner, at true size. Tape them up to mark the real footprint on the real wall — a true right angle and the dimensions printed beside the mark.",
+      },
+      full: {
+        label: "Full template",
+        blurb:
+          "The whole piece at true size, tiled. Exact, and the reason the sheet count is on the button: trim on the dashed edges and butt the sheets together.",
+      },
+    },
+    dialogTitle: "Set the print dialog to",
+    scaleLabel: "Scale 100%.",
+    marginsLabel: "Margins: none.",
+    marginsNote: "The sheet sets its own 10 mm border.",
+    backgroundsLabel: "Background graphics: on.",
+    backgroundsNote:
+      "Otherwise pale lettering prints on a white page as nothing at all.",
+    paperLabel: "Paper:",
+    specIsPortrait: "A specification is always portrait.",
+    pdfNote:
+      "Choosing “Save as PDF” instead gives you the same thing as a file to send on.",
+    rulerCaption: "10 cm — if not, reprint at 100%",
+    previewNote:
+      "On this screen only the first page is previewed, at phone size — its text is full size on paper.",
+    specHeading: "Specification",
+    orderTitle: "To order",
+    orderNote:
+      "Send a photograph of the wall and its width. You get a mockup of this piece in that space, and a reply, within one working day.",
+    elevationCaption: "To scale, against a standard doorway.",
+    centreLineLabel: "Centre line",
+    cornerHowTo: [
+      "Check the 10 cm bar with a ruler before anything goes on the wall.",
+      "Mark the wall's centre line at 1.50 m, then measure half the width each way from it.",
+      "Tape each sheet so its printed lines sit on those marks. The line is the edge of the piece.",
+      "Stand back before you commit — that is the point of the exercise.",
+    ],
+    trimNote: "trim on the dashed edges and butt the sheets together",
+    rows: {
+      size: "Size",
+      finished: "Finished size",
+      mounting: "Mounting",
+      material: "Material",
+      hungAt: "Hung at",
+      suitedTo: "Suited to",
+    },
+    fireLabel: "Fire behaviour.",
   },
   services: {
     eyebrow: "What we do",
@@ -179,7 +250,7 @@ export const copy = {
     materialsEyebrow: "Materials",
     materialsTitle: "What we print on, and why",
     materialsSubtitle:
-      "Commercial walls are not living-room walls. These are the four surfaces we work in, with the reasoning rather than the sales pitch — including the fire rating and cleanability a facilities manager will ask about first.",
+      "Commercial walls are not living-room walls. These are the surfaces we work in, with the reasoning rather than the sales pitch — including the fire rating and cleanability a facilities manager will ask about first.",
     caseStudiesEyebrow: "Recent work",
     placeholderNote:
       "Illustrative example — real project stories and photography are being prepared.",

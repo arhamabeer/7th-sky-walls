@@ -226,7 +226,9 @@ consider after device testing, not a gap.
 Done:
 
 - Lighthouse runner gating SEO, best practices and accessibility at 90 across
-  eleven routes. All three now score **100** on every route.
+  twelve routes. All three score **100** on every route except the print
+  template, whose two shortfalls are deliberate and recorded in
+  [LAUNCH.md](LAUNCH.md).
 - Two real contrast defects and one heading-order defect fixed, found by the
   audit rather than by eye.
 - Performance work driven by measurement: dropped the display font's
@@ -430,6 +432,83 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### Printable true-size templates — DONE, 2026-08-26
+
+Brought forward from the backlog, because the gap it fills is the one the whole
+site is built around. True-to-size is the quality bar; AR delivers it in the page
+on Android alone. An iPhone gets a handoff that still shows a panel, and the
+desktop where a specifier actually works gets no AR at all. Paper has neither
+constraint, and taping a template to the wall is what installers do anyway.
+
+Route: `/portfolio/<slug>/template`, with `mode`, `size` and `paper` in the
+query so every configuration is a URL somebody can forward to whoever owns the
+printer. Every control is a link; the only client JavaScript is the print button.
+
+Three modes, ordered by what they cost in paper:
+
+- **Specification, one page.** The piece on its own wall tone, exact dimensions in
+  centimetres and inches, the material with its spec and fire behaviour, the
+  mounting, an elevation drawn against a standard 90 × 200cm doorway with the
+  1.50m centre line marked, and the ordering process. The artefact a buyer
+  forwards to whoever signs off, and the default because it costs one sheet.
+- **Corner marks, four pages.** One corner of the piece per sheet at true size,
+  with 10mm ticks, the edge lengths printed beside the mark, a key diagram, and
+  the how-to on the first sheet.
+- **Full template, 8 to 63 pages.** The piece tiled at true size as a grey
+  silhouette, with dashed trim edges only where a neighbour continues, and a
+  row/column/sheet label in a strip outside the trimmed area.
+
+The technique that makes it work: every measurement inside a sheet is a
+percentage of the sheet, never a length. On screen the sheet is a box with the
+paper's aspect ratio at whatever width fits; in print it is the paper's real size
+in millimetres. The composition is identical because nothing inside knows which
+it is in. Sizing in millimetres and scaling the preview would need a scale factor,
+and CSS cannot divide a length by a length — so that factor would have to come
+from JavaScript and a resize listener.
+
+Decisions worth keeping:
+
+- **Sheet orientation is measured, not assumed.** Rotating a sheet does not change
+  its area, so the saving is all in remainder packing — and the intuition is
+  backwards. A 200 × 80cm panorama is 33 A4 sheets in portrait and 40 in
+  landscape. `tileLayout` computes both and takes the smaller.
+- **Every sheet carries a 100mm bar,** not just the first. Sheets get reprinted
+  singly, and "fit to page" is one click away in every print dialog and shrinks
+  the page by about 6% — 7cm on a 120cm piece.
+- **The label strip is subtracted before the tiling is computed,** in the geometry
+  module, so a label can never end up inside the region that gets trimmed off.
+- **The silhouette, not the real colours.** A piece lettered in bone for a dark
+  wall would print as nothing on white paper, so every piece prints as the same
+  grey mask — which also costs a fraction of the toner.
+
+Four bugs the gates caught that inspection had not:
+
+1. `container-type: inline-size` on the sheet with `cqw` type on the same
+   element. An element cannot query its own container, so the cqw resolved
+   against the viewport instead — 1% of 1440px rather than 1% of a 210mm sheet,
+   making every measurement 1.8x too large. Moving the `font-size` to a
+   descendant fixed it.
+2. A percentage height on the elevation SVG, whose parent was content-sized. The
+   percentage was ignored, the SVG took its viewBox's intrinsic height, and on a
+   near-square piece that pushed the block 40mm off the page. Now `em`, which is
+   tied to a fixed physical type size.
+3. The calibration bar's percentage width sat on a child of a shrink-to-fit
+   wrapper, so it resolved against a width derived from its own content. Moved to
+   the flex item, whose containing block is the printable area.
+4. Two `h1` elements on the spec page, and a 70%-opacity sheet count on the mode
+   chips that failed contrast.
+
+`npm run check:print` measures it in print media — sheet and PDF page boxes in
+millimetres, the bar at exactly 100mm, nothing clipped, one PDF page per sheet,
+and a pixel count proving the tiled sheets are not blank. That last threshold is
+2%, chosen from measurement: with the artwork made invisible the rules and labels
+alone cover 0.47%, and the real cases cover 7.0% and 26.6%.
+
+Not done, and worth doing if paper cost ever matters: **skip interior sheets that
+contain no ink.** A tiled portrait piece has genuinely blank sheets top and
+bottom, and analysing the artwork's alpha per tile at build time could drop them.
+It complicates the sheet numbering, so it is not free.
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.
@@ -440,6 +519,5 @@ Out of scope now; the architecture leaves room for each.
 - Paid iOS in-page AR via an App Clip-injected WebXR provider, if drag-on-wall
   AR on iPhone becomes a hard requirement
 - Long-form venue and style guides for search
-- Printable true-size templates
 - In-AR size switching via a custom WebXR session, if device testing shows
   model-viewer's own path is not enough

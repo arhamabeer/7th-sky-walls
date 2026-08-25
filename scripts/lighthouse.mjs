@@ -29,6 +29,16 @@ const ROUTES = [
   { path: "/spaces", name: "spaces" },
   { path: "/spaces/office", name: "space" },
   { path: "/planner", name: "planner" },
+  {
+    path: "/portfolio/sabr/template",
+    name: "template",
+    // The only thing costing this route SEO points is is-crawlable, and it is
+    // noindex on purpose: a print template duplicates the artwork page's content
+    // and is a poor answer to any search that could surface it. Accessibility and
+    // best practices are still gated, which is what actually matters here.
+    ungated: ["seo"],
+    ungatedWhy: "noindex by design — see the route's generateMetadata",
+  },
   { path: "/services", name: "services" },
   { path: "/about", name: "about" },
   { path: "/contact", name: "contact" },
@@ -74,6 +84,14 @@ for (const route of ROUTES) {
   rows.push({ route: route.name, ...scores });
 
   for (const [category, minimum] of Object.entries(GATED)) {
+    // Named out loud rather than quietly skipped: an exemption nobody sees is
+    // indistinguishable from a gate that stopped working.
+    if (route.ungated?.includes(category)) {
+      console.log(
+        `SKIP ${route.name} ${category} = ${scores[category]} — ${route.ungatedWhy}`,
+      );
+      continue;
+    }
     if ((scores[category] ?? 0) < minimum) {
       failures++;
       const failed = Object.values(lhr.audits)

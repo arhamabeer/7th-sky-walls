@@ -1,5 +1,9 @@
 "use client";
 
+import Link from "next/link";
+// Aliased: `copy` is already the local name for the current tier's strings.
+import { copy as uiCopy } from "@/content/copy";
+
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ArStatus, ModelViewerElement } from "@/types/model-viewer";
@@ -78,6 +82,7 @@ export function ArPanel({
   customImage,
   customGlb,
   stageBackground,
+  templateHref,
   onAnalytics,
 }: {
   glb: string;
@@ -111,6 +116,16 @@ export function ArPanel({
    * wall tone.
    */
   stageBackground?: string;
+  /**
+   * The printable template for this piece at this size.
+   *
+   * Offered from every tier rather than only the degraded ones. AR answers the
+   * size question best where it works, but it works in the page on Android
+   * alone: an iPhone gets a handoff that still shows a panel, and a desktop gets
+   * no AR at all. Paper answers it everywhere and is what an installer would
+   * reach for regardless.
+   */
+  templateHref?: string;
   alt: string;
   title: string;
   sizeLabel: string;
@@ -389,6 +404,18 @@ export function ArPanel({
               ? "How the camera preview works"
               : "Or preview it with your camera instead"}
           </button>
+        </p>
+      )}
+
+      {templateHref && (
+        <p className="mt-3 text-xs leading-5 text-muted">
+          <Link
+            href={templateHref}
+            className="inline-flex min-h-11 items-center font-semibold text-accent underline underline-offset-4"
+          >
+            {uiCopy.template.title}
+          </Link>{" "}
+          — tape it to the wall and stand back. No phone required.
         </p>
       )}
 

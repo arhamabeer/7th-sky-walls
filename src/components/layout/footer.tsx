@@ -16,7 +16,7 @@ export function Footer() {
   const socials = Object.entries(site.social).filter(([, url]) => Boolean(url));
 
   return (
-    <footer className="border-t border-line bg-surface">
+    <footer data-site-chrome className="border-t border-line bg-surface">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 2xl:max-w-[84rem] 2xl:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
           <div className="flex items-center gap-2.5">
