@@ -244,7 +244,15 @@ export default async function ArtworkPage({
             </p>
             <div className="mt-5 flex flex-col gap-3">
               {/* Carries the piece through to the form so the visitor does not
-                  retype what they were already looking at. */}
+                  retype what they were already looking at.
+
+                  Deliberately without a size. This block is server-rendered on
+                  a static page and cannot know which size is selected, and
+                  sending the default would be worse than sending none — a
+                  visitor who switched to extra large would have "large" put in
+                  their mouth. The size-aware route is the pair of buttons
+                  beside the size chooser above, which is where a decision
+                  about size is actually made. */}
               <LinkButton
                 href={`/contact?artwork=${encodeURIComponent(artwork.slug)}`}
               >

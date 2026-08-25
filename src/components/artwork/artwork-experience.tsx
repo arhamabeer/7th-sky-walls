@@ -12,6 +12,8 @@ import {
 } from "@/components/artwork/text-art-configurator";
 import { LinkButton } from "@/components/ui/link-button";
 import { useFocusTrap } from "@/components/ui/use-focus-trap";
+import { whatsappLink } from "@/config/site.config";
+import { artworkInquiryMessage, copy } from "@/content/copy";
 import { cn } from "@/lib/utils";
 
 export interface SizeOption {
@@ -418,6 +420,28 @@ export function ArtworkExperience({
             </button>
           )}
           <p className="mt-2 text-xs leading-5 text-muted">{sizeNote}</p>
+
+          {/* The action belongs here, next to the size chooser. This is the
+              point where a visitor has decided what they want, and the only
+              inquiry route used to be a card further down the page that did
+              not carry the size they had just picked — so they had to say it
+              again. Both links carry the chosen size, and the configuration
+              too if they have set one. */}
+          <div className="mt-6 flex flex-wrap gap-3 border-t border-line pt-6">
+            <LinkButton href={customInquiryHref}>{copy.cta.inquireArtwork}</LinkButton>
+            <LinkButton
+              href={whatsappLink(
+                artworkInquiryMessage(
+                  title,
+                  `${size.label} (${size.widthCm} × ${size.heightCm} cm)`,
+                ),
+              )}
+              external
+              variant="outline"
+            >
+              {copy.cta.whatsapp}
+            </LinkButton>
+          </div>
         </div>
       </div>
 

@@ -230,9 +230,16 @@ export const copy = {
   },
 } as const;
 
-/** Prefilled WhatsApp message for a specific artwork inquiry. */
-export function artworkInquiryMessage(artworkTitle: string): string {
-  return `Hello ${site.name} — I'm interested in "${artworkTitle}". Could you share options and pricing for my space?`;
+/**
+ * Prefilled WhatsApp message for a specific artwork inquiry.
+ *
+ * The size is included when the visitor has chosen one, so the first reply can
+ * be about their wall rather than a question they have already answered on the
+ * page.
+ */
+export function artworkInquiryMessage(artworkTitle: string, size?: string): string {
+  const piece = size ? `"${artworkTitle}" at ${size}` : `"${artworkTitle}"`;
+  return `Hello ${site.name} — I'm interested in ${piece}. Could you share options and pricing for my space?`;
 }
 
 /** Prefilled WhatsApp message for a specific service inquiry. */
