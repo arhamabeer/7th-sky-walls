@@ -81,3 +81,13 @@ either way — the boundaries are already the place it hooks into.
   IntersectionObserver trigger, parallax is a small imperative hook, and the
   progress bar is a CSS scroll-driven animation. The animation library was
   removed entirely, which measurably improved mobile performance.
+- **A modern `browserslist` to shed legacy JavaScript.** Lighthouse flags the
+  framework chunk under "legacy JavaScript" and "avoid serving legacy
+  JavaScript to modern browsers", which suggests declaring modern targets would
+  shrink it. Tried it — Chrome/Edge/Firefox 100+, Safari and iOS Safari 15.4+,
+  Samsung Internet 19+ — and the production chunks went from 2073 KB to 2092
+  KB. Next.js 16 already compiles for modern targets, so the declaration bought
+  nothing and would only have narrowed the browsers the project claims to
+  support. Reverted. The flagged bytes are the React and Next runtime, which is
+  the floor for an App Router site; the audit also confirmed no AR, planner or
+  camera code reaches a page that does not use it.
