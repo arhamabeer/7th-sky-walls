@@ -172,7 +172,7 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 20vw, 40vw"
-                className="object-cover"
+                className="object-contain"
                 {...(piece.blurDataURL
                   ? { placeholder: "blur" as const, blurDataURL: piece.blurDataURL }
                   : {})}
@@ -295,7 +295,7 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
                       alt=""
                       fill
                       sizes="48px"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                   <span className="min-w-0 flex-1 text-sm font-medium">

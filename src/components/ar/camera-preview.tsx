@@ -265,7 +265,7 @@ export function CameraPreview({
                 alt={imageAlt}
                 fill
                 sizes="80vw"
-                className="pointer-events-none object-cover"
+                className="pointer-events-none object-contain"
               />
             </div>
 
