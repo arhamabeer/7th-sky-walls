@@ -37,6 +37,19 @@ rather than rendering a broken page.
 npm run generate:placeholders -- --blur-only
 ```
 
+   This also gives the image a content-addressed filename — it renames
+   `<slug>.jpg` to `<slug>.<hash>.jpg`, removes the old revision, and rewrites
+   `image.src` in `artworks.json` to match. Write the plain `<slug>.jpg` name
+   in the JSON and let the script fill in the hash; committing the change it
+   makes is part of the edit.
+
+   The hash exists because `next/image` keys its cache on the request URL.
+   Replacing a file in place leaves the URL unchanged, so the optimizer and
+   every browser that has already loaded the page keep serving the old pixels
+   — which is how a replaced artwork ended up rendering at its previous aspect
+   ratio during development. A query string cannot be used instead:
+   `next/image` rejects one on a local source with HTTP 400.
+
 4. Run `npm run build`. The artwork gets its own static page, sitemap entry,
    `VisualArtwork` structured data, and OpenGraph card automatically.
 
@@ -87,8 +100,22 @@ npm run generate:placeholders
 
 ## Replacing placeholder artwork with real photography
 
-Drop real files at the same `public/artworks/<slug>.jpg` paths, update the
-`image.width` and `image.height` values to the real pixel dimensions, then run
-`npm run generate:placeholders -- --blur-only`. Do not run the script without
-that flag once real images are in place — it would overwrite them with
-generated placeholders.
+Drop real files at `public/artworks/<slug>.jpg` — the plain name, alongside the
+hashed placeholders already there — update the `image.width` and `image.height`
+values to the real pixel dimensions, then run:
+
+```bash
+npm run generate:placeholders -- --blur-only
+npm run generate:ar
+npm run check:images && npm run check:ar
+```
+
+The first command picks up each dropped file, gives it a hashed name, deletes
+the placeholder it replaces, refreshes the blur map and the OpenGraph card, and
+rewrites `artworks.json`. The second rebuilds the AR models, which bake the
+artwork as a texture and are otherwise still showing the placeholder. The
+checks confirm the declared dimensions match the files and that all 96 AR pairs
+still encode their advertised sizes.
+
+Do not run `generate:placeholders` without `--blur-only` once real images are
+in place — it regenerates the placeholder art and would overwrite them.

@@ -15,7 +15,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/meridian-seven.jpg",
+      "src": "/artworks/meridian-seven.d61ab204.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -52,7 +52,7 @@
     ],
     "orientation": "panorama",
     "image": {
-      "src": "/artworks/glass-horizon.jpg",
+      "src": "/artworks/glass-horizon.efe791f6.jpg",
       "width": 2000,
       "height": 800
     },
@@ -88,7 +88,7 @@
     ],
     "orientation": "square",
     "image": {
-      "src": "/artworks/night-grid.jpg",
+      "src": "/artworks/night-grid.181a55de.jpg",
       "width": 1800,
       "height": 1800
     },
@@ -124,7 +124,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/ascent.jpg",
+      "src": "/artworks/ascent.4ea4d66e.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -161,7 +161,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/sabr.jpg",
+      "src": "/artworks/sabr.9a60cb9d.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -197,7 +197,7 @@
     ],
     "orientation": "square",
     "image": {
-      "src": "/artworks/shukr.jpg",
+      "src": "/artworks/shukr.44df93e4.jpg",
       "width": 1800,
       "height": 1800
     },
@@ -234,7 +234,7 @@
     ],
     "orientation": "panorama",
     "image": {
-      "src": "/artworks/bismillah-flow.jpg",
+      "src": "/artworks/bismillah-flow.1f31dd80.jpg",
       "width": 2000,
       "height": 800
     },
@@ -270,7 +270,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/noor.jpg",
+      "src": "/artworks/noor.8f927b18.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -307,7 +307,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/monsoon-leaves.jpg",
+      "src": "/artworks/monsoon-leaves.83b7491a.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -343,7 +343,7 @@
     ],
     "orientation": "landscape",
     "image": {
-      "src": "/artworks/courtyard-fern.jpg",
+      "src": "/artworks/courtyard-fern.e2299967.jpg",
       "width": 2000,
       "height": 1500
     },
@@ -380,7 +380,7 @@
     ],
     "orientation": "square",
     "image": {
-      "src": "/artworks/wild-garden.jpg",
+      "src": "/artworks/wild-garden.f1b37230.jpg",
       "width": 1800,
       "height": 1800
     },
@@ -416,7 +416,7 @@
     ],
     "orientation": "panorama",
     "image": {
-      "src": "/artworks/banyan-shade.jpg",
+      "src": "/artworks/banyan-shade.9b8f0d1b.jpg",
       "width": 2000,
       "height": 800
     },
@@ -452,7 +452,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/lahore-jaali.jpg",
+      "src": "/artworks/lahore-jaali.37c6a69d.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -488,7 +488,7 @@
     ],
     "orientation": "landscape",
     "image": {
-      "src": "/artworks/old-city-doors.jpg",
+      "src": "/artworks/old-city-doors.19c665bc.jpg",
       "width": 2000,
       "height": 1500
     },
@@ -524,7 +524,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/minaret-dawn.jpg",
+      "src": "/artworks/minaret-dawn.5ba04d4d.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -561,7 +561,7 @@
     ],
     "orientation": "panorama",
     "image": {
-      "src": "/artworks/caravanserai.jpg",
+      "src": "/artworks/caravanserai.df983da9.jpg",
       "width": 2000,
       "height": 800
     },
@@ -598,7 +598,7 @@
     ],
     "orientation": "landscape",
     "image": {
-      "src": "/artworks/dawn-over-clifton.jpg",
+      "src": "/artworks/dawn-over-clifton.20ea88f6.jpg",
       "width": 2000,
       "height": 1500
     },
@@ -633,7 +633,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/sea-glass.jpg",
+      "src": "/artworks/sea-glass.89b12b69.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -668,7 +668,7 @@
     ],
     "orientation": "square",
     "image": {
-      "src": "/artworks/amber-hour.jpg",
+      "src": "/artworks/amber-hour.bb4a305b.jpg",
       "width": 1800,
       "height": 1800
     },
@@ -704,7 +704,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/monsoon-blue.jpg",
+      "src": "/artworks/monsoon-blue.68f88428.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -740,7 +740,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/begin-anyway.jpg",
+      "src": "/artworks/begin-anyway.fa23347a.jpg",
       "width": 1500,
       "height": 2000
     },
@@ -776,7 +776,7 @@
     ],
     "orientation": "landscape",
     "image": {
-      "src": "/artworks/deep-work.jpg",
+      "src": "/artworks/deep-work.0c23e0e3.jpg",
       "width": 2000,
       "height": 1500
     },
@@ -812,7 +812,7 @@
     ],
     "orientation": "square",
     "image": {
-      "src": "/artworks/learn-build-repeat.jpg",
+      "src": "/artworks/learn-build-repeat.1a32c007.jpg",
       "width": 1800,
       "height": 1800
     },
@@ -848,7 +848,7 @@
     ],
     "orientation": "portrait",
     "image": {
-      "src": "/artworks/the-long-game.jpg",
+      "src": "/artworks/the-long-game.dbafc5fb.jpg",
       "width": 1500,
       "height": 2000
     },

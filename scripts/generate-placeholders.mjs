@@ -6,11 +6,20 @@
  * placeholder map (src/content/blur.json), and PNG app icons from the
  * brand mark. Re-run any time: `node scripts/generate-placeholders.mjs`.
  *
- * These images are stand-ins until real artwork photography lands — the
- * swap is: drop real files at the same /public/artworks/<slug>.jpg paths
- * and re-run this script with --blur-only to refresh blur placeholders.
+ * These images are stand-ins until real artwork photography lands. To swap in
+ * real work, drop files at /public/artworks/<slug>.jpg and re-run with
+ * --blur-only; the script picks them up, gives each a content-addressed
+ * filename, and rewrites artworks.json to match.
+ *
+ * Filenames carry a hash of the image bytes because next/image keys its cache
+ * on the request URL, and replacing a file in place leaves that URL unchanged
+ * — so the optimizer and every browser that has been to the site keep serving
+ * the previous pixels. That produced a letterboxed viewer after the sizes
+ * migration. A query string is not an option: next/image rejects one on a
+ * local source with HTTP 400, so the cache key has to be the filename.
  */
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, unlink, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -18,7 +27,42 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT_DIR = path.join(ROOT, "public", "artworks");
 const BRAND_DIR = path.join(ROOT, "public", "brand");
 const OG_DIR = path.join(ROOT, "public", "og");
+const ARTWORKS_JSON = path.join(ROOT, "src", "content", "artworks.json");
 const BLUR_ONLY = process.argv.includes("--blur-only");
+
+/** Eight hex characters of SHA-256 — ample for distinguishing image revisions. */
+const contentHash = (buffer) => createHash("sha256").update(buffer).digest("hex").slice(0, 8);
+
+/**
+ * Resolve the master file for an artwork, tolerating both shapes: a plain
+ * `<slug>.jpg` that someone has just dropped in, and the hashed filename this
+ * script emits. The plain name wins, so dropping a replacement is enough to
+ * have it picked up.
+ */
+async function readMaster(slug, currentSrc) {
+  const plain = path.join(OUT_DIR, `${slug}.jpg`);
+  try {
+    return { buffer: await readFile(plain), from: plain };
+  } catch {
+    /* no freshly dropped file — fall through to the recorded one */
+  }
+  const recorded = path.join(ROOT, "public", currentSrc.replace(/^\//, ""));
+  return { buffer: await readFile(recorded), from: recorded };
+}
+
+/**
+ * Delete every other revision of this artwork, so the directory holds exactly
+ * one file per piece and a stale hash cannot be served or committed.
+ */
+async function pruneOldRevisions(slug, keepFilename) {
+  const entries = await readdir(OUT_DIR).catch(() => []);
+  const pattern = new RegExp(`^${slug}(\\.[0-9a-f]{8})?\\.jpg$`);
+  for (const name of entries) {
+    if (name !== keepFilename && pattern.test(name)) {
+      await unlink(path.join(OUT_DIR, name)).catch(() => {});
+    }
+  }
+}
 
 /** Escape text for inclusion in SVG markup. */
 const xml = (s) =>
@@ -267,10 +311,14 @@ async function main() {
   await mkdir(OG_DIR, { recursive: true });
 
   const blur = {};
+  let renamed = 0;
   for (const art of artworks) {
     const { width: w, height: h } = art.image;
-    const file = path.join(ROOT, "public", art.image.src.replace(/^\//, ""));
-    if (!BLUR_ONLY) {
+
+    let buffer;
+    if (BLUR_ONLY) {
+      ({ buffer } = await readMaster(art.slug, art.image.src));
+    } else {
       const p = PALETTES[art.collection] ?? PALETTES["chromatic-drift"];
       // Panoramic canvases get a horizontal treatment regardless of
       // collection — the standard generators assume a taller canvas.
@@ -279,9 +327,23 @@ async function main() {
           ? panoramicDrift
           : (GENERATORS[art.collection] ?? chromaticDrift);
       const svg = svgHeader(w, h, p.bg) + gen(rng(art.slug), w, h, p, art.title) + "</svg>";
-      await sharp(Buffer.from(svg)).jpeg({ quality: 80, mozjpeg: true }).toFile(file);
+      buffer = await sharp(Buffer.from(svg)).jpeg({ quality: 80, mozjpeg: true }).toBuffer();
     }
-    const tiny = await sharp(file).resize(20).jpeg({ quality: 40 }).toBuffer();
+
+    // The filename follows the bytes, so an unchanged image keeps its URL (and
+    // its caches) while a changed one gets a new URL nothing has cached.
+    const filename = `${art.slug}.${contentHash(buffer)}.jpg`;
+    const file = path.join(OUT_DIR, filename);
+    await writeFile(file, buffer);
+    await pruneOldRevisions(art.slug, filename);
+
+    const src = `/artworks/${filename}`;
+    if (art.image.src !== src) {
+      art.image.src = src;
+      renamed += 1;
+    }
+
+    const tiny = await sharp(buffer).resize(20).jpeg({ quality: 40 }).toBuffer();
     blur[art.slug] = `data:image/jpeg;base64,${tiny.toString("base64")}`;
 
     await buildOgCard(
@@ -298,6 +360,14 @@ async function main() {
     path.join(ROOT, "src", "content", "blur.json"),
     JSON.stringify(blur, null, 2) + "\n",
   );
+
+  // artworks.json is the source of truth for every consumer, so the new URLs
+  // have to land there rather than in a side manifest the content layer would
+  // need to reconcile.
+  if (renamed > 0) {
+    await writeFile(ARTWORKS_JSON, JSON.stringify(artworks, null, 2) + "\n");
+    console.log(`updated artworks.json: ${renamed} image URL(s) re-hashed`);
+  }
 
   // App icons from the brand mark.
   const mark = path.join(BRAND_DIR, "mark.svg");

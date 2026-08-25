@@ -241,11 +241,15 @@ Remaining: real content and credentials, device testing, go-live.
 Full list:
 
 - Real artwork and brand content ingestion, AR model regeneration
-- **Content-hashed artwork filenames.** Replacing an image in place leaves its
-  URL unchanged, so browser and CDN caches keep serving the previous pixels —
-  observed during Phase 2, where a stale cached variant rendered at the old
-  aspect ratio. `next/image` rejects a query string on a local source (HTTP
-  400), so cache busting has to go in the filename.
+- ~~**Content-hashed artwork filenames.**~~ Done. Every artwork is served from
+  `/artworks/<slug>.<hash>.jpg`, where the hash is of the image bytes, and the
+  generator rewrites `artworks.json` and prunes the old revision. Replacing an
+  image in place used to leave its URL unchanged, so browser and CDN caches
+  kept serving the previous pixels — observed during Phase 2, where a stale
+  cached variant rendered at the old aspect ratio. `next/image` rejects a query
+  string on a local source (HTTP 400), so the cache key had to be the filename.
+  The authoring workflow is unchanged: drop `<slug>.jpg` and the script does
+  the renaming.
 - Lighthouse: 90+ SEO and Best Practices; performance tuned on a throttled
   mid-range Android profile
 - Accessibility pass; keyboard navigation and focus states
