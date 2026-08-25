@@ -9,6 +9,7 @@ import {
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
 import { Container } from "@/components/ui/container";
+import { FeatureBoundary } from "@/components/ui/feature-boundary";
 import {
   WallPlanner,
   type PlannerArtwork,
@@ -61,7 +62,9 @@ export default function PlannerPage() {
 
       <section className="py-12 sm:py-16">
         <Container>
-          <WallPlanner artworks={artworks} />
+          <FeatureBoundary label="wall-planner">
+            <WallPlanner artworks={artworks} />
+          </FeatureBoundary>
         </Container>
       </section>
 

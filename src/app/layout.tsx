@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import type { CSSProperties } from "react";
 import "./globals.css";
 import { site } from "@/config/site.config";
+import { brandVars } from "@/config/brand-vars";
 import { fontVariables } from "@/config/fonts";
 import { copy } from "@/content/copy";
 import { Header } from "@/components/layout/header";
@@ -34,18 +34,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: site.colors.background,
 };
-
-/** Brand palette from site.config, exposed to CSS as custom properties. */
-const brandVars = {
-  "--brand-background": site.colors.background,
-  "--brand-surface": site.colors.surface,
-  "--brand-ink": site.colors.ink,
-  "--brand-muted": site.colors.muted,
-  "--brand-line": site.colors.line,
-  "--brand-accent": site.colors.accent,
-  "--brand-accent-soft": site.colors.accentSoft,
-  "--brand-sky": site.colors.sky,
-} as CSSProperties;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -58,6 +58,20 @@ export const copy = {
     ctaTitle: "Have a wall in mind?",
     ctaSubtitle: "Tell us about your space — we'll respond with ideas within one working day.",
   },
+  error: {
+    eyebrow: "Something broke",
+    title: "That didn't load.",
+    body:
+      "The fault is ours, not yours. Reloading usually fixes it — and if it doesn't, tell us what you were trying to see and we'll send it to you directly.",
+    retry: "Try again",
+    /** Shown when one interactive panel fails but the page around it is intact. */
+    feature: {
+      title: "This preview couldn't start",
+      body:
+        "Everything else on this page still works, including the inquiry — and we can send you a mockup of this piece on a photo of your wall instead.",
+      retry: "Reload the preview",
+    },
+  },
   notFound: {
     eyebrow: "Nothing here",
     title: "That page has moved, or never existed.",

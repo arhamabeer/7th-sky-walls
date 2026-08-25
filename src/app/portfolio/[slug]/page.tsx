@@ -19,6 +19,7 @@ import {
 import { breadcrumbJsonLd, visualArtworkJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
 import { Container } from "@/components/ui/container";
+import { FeatureBoundary } from "@/components/ui/feature-boundary";
 import { LinkButton } from "@/components/ui/link-button";
 import { ArtworkGrid } from "@/components/ui/artwork-grid";
 import { Chip } from "@/components/ui/chip";
@@ -95,6 +96,34 @@ export default async function ArtworkPage({
     { name: artwork.title, path: `/portfolio/${artwork.slug}` },
   ];
 
+  const headingBlock = (
+    <>
+      {collection && (
+        <Link
+          href={`/collections/${collection.id}`}
+          className="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
+        >
+          {collection.name}
+        </Link>
+      )}
+      <h1 className="mt-1 font-display text-3xl font-medium tracking-tight sm:text-4xl">
+        {artwork.title}
+      </h1>
+      {/* The badge sits on the plain surface, not a tinted accent ground:
+          accent on accent/10 measured 4.25:1, just under the 4.5:1 that small
+          text needs. */}
+      {artwork.customText && (
+        <p className="mt-3 inline-block rounded-full border border-accent/40 bg-surface px-3 py-1 text-xs font-semibold text-accent">
+          {copy.artwork.customizableBadge}
+        </p>
+      )}
+      <p className="mt-4 text-base leading-7 text-muted">{artwork.description}</p>
+      {artwork.customText && (
+        <p className="mt-3 text-sm leading-6 text-muted">{copy.artwork.customizableNote}</p>
+      )}
+    </>
+  );
+
   return (
     <>
       <JsonLd data={visualArtworkJsonLd(artwork)} />
@@ -124,49 +153,30 @@ export default async function ArtworkPage({
         </nav>
 
         <div className="mt-4">
-          <ArtworkExperience
-            title={artwork.title}
-            imageSrc={artwork.image.src}
-            imageAlt={artwork.alt}
-            imageWidth={artwork.image.width}
-            imageHeight={artwork.image.height}
-            blurDataURL={blur}
-            sizes={sizeOptions}
-            defaultSizeId={artwork.defaultSize}
-            defaultSceneId={sceneForVenue(artwork.venues[0]).id}
-            defaultFinishId={defaultFinishFor(artwork.materials).id}
-            customisable={artwork.customText}
-            defaultText={artwork.title}
-            aspect={getOrientationAspect(artwork.orientation)}
-            slug={artwork.slug}
-            sizeNote={copy.artwork.sizesNote}
-          >
-            {collection && (
-              <Link
-                href={`/collections/${collection.id}`}
-                className="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-[0.2em] text-accent hover:underline"
-              >
-                {collection.name}
-              </Link>
-            )}
-            <h1 className="mt-1 font-display text-3xl font-medium tracking-tight sm:text-4xl">
-              {artwork.title}
-            </h1>
-            {/* The badge sits on the plain surface, not a tinted accent
-                ground: accent on accent/10 measured 4.25:1, just under the
-                4.5:1 that small text needs. */}
-            {artwork.customText && (
-              <p className="mt-3 inline-block rounded-full border border-accent/40 bg-surface px-3 py-1 text-xs font-semibold text-accent">
-                {copy.artwork.customizableBadge}
-              </p>
-            )}
-            <p className="mt-4 text-base leading-7 text-muted">{artwork.description}</p>
-            {artwork.customText && (
-              <p className="mt-3 text-sm leading-6 text-muted">
-                {copy.artwork.customizableNote}
-              </p>
-            )}
-          </ArtworkExperience>
+          {/* The heading block is shared with the boundary's fallback so a
+              failure inside the interactive panel cannot take the page's only
+              h1 down with it. */}
+          <FeatureBoundary label="artwork-experience" fallback={headingBlock}>
+            <ArtworkExperience
+              title={artwork.title}
+              imageSrc={artwork.image.src}
+              imageAlt={artwork.alt}
+              imageWidth={artwork.image.width}
+              imageHeight={artwork.image.height}
+              blurDataURL={blur}
+              sizes={sizeOptions}
+              defaultSizeId={artwork.defaultSize}
+              defaultSceneId={sceneForVenue(artwork.venues[0]).id}
+              defaultFinishId={defaultFinishFor(artwork.materials).id}
+              customisable={artwork.customText}
+              defaultText={artwork.title}
+              aspect={getOrientationAspect(artwork.orientation)}
+              slug={artwork.slug}
+              sizeNote={copy.artwork.sizesNote}
+            >
+              {headingBlock}
+            </ArtworkExperience>
+          </FeatureBoundary>
         </div>
 
         <div className="mt-14 grid gap-10 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-3">
