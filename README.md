@@ -40,7 +40,7 @@ everything else works.
 | --- | --- |
 | `npm run verify` | Build, serve, check the hero arrangement, then audit 31 viewports across 16 pages. Refuses to audit a stale build. |
 | `npm run serve` | Serve the production build for the checks that need one. Frees the port first and refuses to serve anything but the build on disk. |
-| `npm run test:interaction` | 234 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
+| `npm run test:interaction` | 259 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
 | `npm run lighthouse` | SEO, best practices and accessibility gated at 90 across eleven routes. Needs a server running. |
 | `npm run lighthouse:detail <report>` | Read a saved report and show what is costing time. |
 | `npm run check:images` | Every artwork file matches its declared dimensions. |
@@ -102,7 +102,17 @@ These are enforced by the checks above, not just aspirations.
 
 ## Current state
 
-Phases 1 through 8 are built. SEO, best practices and accessibility score 100
-on every route. Outstanding before launch: real business details, real
-artwork, email credentials, and AR device testing on an iPhone and an Android
-handset — see [LAUNCH.md](docs/LAUNCH.md).
+Phases 1 through 9 are built and deployed. Twenty-eight pieces across seven
+collections; 112 AR asset pairs. SEO, best practices and accessibility score 100
+on every one of eleven routes.
+
+A configured piece carries the customer's wording all the way into AR: the
+browser shapes the text, draws it to a canvas, and authors a GLB from it, which
+is what makes Urdu in Nastaliq possible at all — there is no working
+server-side shaper for it. iOS still receives the pre-built USDZ, because Quick
+Look's handling of cutout alpha is unverified without a device.
+
+Outstanding before launch: the materials list needs confirming (it was rewritten
+from research after the product category changed), real business details, real
+installation photography, email credentials, and AR device testing on an iPhone
+— see [LAUNCH.md](docs/LAUNCH.md) and [QUESTIONS.md](docs/QUESTIONS.md).
