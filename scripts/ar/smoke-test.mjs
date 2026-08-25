@@ -18,7 +18,7 @@ const widthCm = 90;
 const heightCm = 120;
 
 const texture = await buildArTexture({
-  sourcePath: path.join(ROOT, "public", "artworks", "meridian-seven.jpg"),
+  sourcePath: path.join(ROOT, "public", "artworks", "idea-bulb.png"),
   maxEdge: 1024,
   frame,
   aspect: widthCm / heightCm,

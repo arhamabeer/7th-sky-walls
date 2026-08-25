@@ -28,7 +28,7 @@ import {
   type SizeOption,
 } from "@/components/artwork/artwork-experience";
 import { sceneForVenue } from "@/components/artwork/room-scenes";
-import { defaultFinishFor } from "@/content/finishes";
+import { defaultMountFor } from "@/content/finishes";
 import { ArtworkPager } from "@/components/artwork/artwork-pager";
 
 export async function generateStaticParams() {
@@ -160,6 +160,7 @@ export default async function ArtworkPage({
             <ArtworkExperience
               title={artwork.title}
               imageSrc={artwork.image.src}
+              wallTone={artwork.wallTone}
               imageAlt={artwork.alt}
               imageWidth={artwork.image.width}
               imageHeight={artwork.image.height}
@@ -167,7 +168,7 @@ export default async function ArtworkPage({
               sizes={sizeOptions}
               defaultSizeId={artwork.defaultSize}
               defaultSceneId={sceneForVenue(artwork.venues[0]).id}
-              defaultFinishId={defaultFinishFor(artwork.materials).id}
+              defaultFinishId={defaultMountFor(artwork.materials).id}
               customisable={artwork.customText}
               defaultText={artwork.title}
               aspect={getOrientationAspect(artwork.orientation)}

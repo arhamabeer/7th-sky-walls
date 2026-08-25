@@ -41,7 +41,7 @@ const SWAP = {
 const ROUTES = [
   "/",
   "/portfolio",
-  "/portfolio/meridian-seven",
+  "/portfolio/idea-bulb",
   "/collections",
   "/spaces",
   "/spaces/office",

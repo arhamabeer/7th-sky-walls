@@ -42,6 +42,15 @@ export const artworkSchema = z.object({
   venues: z.array(venueIdSchema).min(1),
   styles: z.array(z.string()).min(1),
   orientation: orientationSchema,
+  /**
+   * The wall this piece is specified for.
+   *
+   * Required, not optional. Cut lettering is specified with its wall: pale
+   * letters on a pale wall are invisible, and that is a fact about the
+   * installation rather than a fault in the piece. Every preview paints this
+   * tone behind the artwork so what is shown is what would be installed.
+   */
+  wallTone: z.enum(["dark", "light", "accent"]),
   image: imageSchema,
   sizes: z.array(sizeIdSchema).min(1),
   defaultSize: sizeIdSchema,

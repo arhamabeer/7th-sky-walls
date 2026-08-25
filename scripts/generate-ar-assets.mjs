@@ -8,8 +8,8 @@
  * to stop the user doing it either. A single model scaled at runtime would
  * only be correct in the in-page viewer and wrong in both handoff paths.
  *
- * The texture is built once per artwork and shared across its sizes: the frame
- * border is proportional, so the same image is correct at every size.
+ * The texture is built once per artwork and shared across its sizes: the wall
+ * margin is proportional, so the same image is correct at every size.
  *
  * Usage:
  *   node scripts/generate-ar-assets.mjs            # whole catalogue
@@ -17,7 +17,7 @@
  */
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { buildArTexture, frameStyleFor } from "./ar/build-texture.mjs";
+import { buildArTexture, wallToneFor } from "./ar/build-texture.mjs";
 import { buildGlb } from "./ar/build-glb.mjs";
 import { buildUsdz } from "./ar/build-usdz.mjs";
 
@@ -80,20 +80,20 @@ async function main() {
   let totalBytes = 0;
 
   for (const art of targets) {
-    const frame = frameStyleFor(art.materials);
+    const wall = wallToneFor(art.wallTone);
     const aspect = ORIENTATION_ASPECT[art.orientation];
 
     const texture = await buildArTexture({
       sourcePath: path.join(ROOT, "public", art.image.src.replace(/^\//, "")),
       maxEdge: TEXTURE_MAX_EDGE,
-      frame,
+      wall,
       aspect,
     });
 
     const dir = path.join(AR_DIR, art.slug);
     await mkdir(dir, { recursive: true });
 
-    const entry = { frame: frame.name, sizes: {} };
+    const entry = { wall: wall.name, sizes: {} };
 
     for (const tier of SIZE_TIERS) {
       if (!art.sizes.includes(tier.id)) continue;
@@ -134,7 +134,7 @@ async function main() {
 
     manifest[art.slug] = entry;
     console.log(
-      `ok ${art.slug} (${frame.name}, ${Object.keys(entry.sizes).length} sizes)`,
+      `ok ${art.slug} (${wall.name}, ${Object.keys(entry.sizes).length} sizes)`,
     );
   }
 

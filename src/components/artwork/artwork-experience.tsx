@@ -12,6 +12,7 @@ import {
 } from "@/components/artwork/text-art-configurator";
 import { LinkButton } from "@/components/ui/link-button";
 import { useFocusTrap } from "@/components/ui/use-focus-trap";
+import { wallColour, type WallToneId } from "@/content/finishes";
 import { whatsappLink } from "@/config/site.config";
 import { artworkInquiryMessage, copy } from "@/content/copy";
 import { cn } from "@/lib/utils";
@@ -38,6 +39,7 @@ export interface SizeOption {
 export function ArtworkExperience({
   title,
   imageSrc,
+  wallTone,
   imageAlt,
   imageWidth,
   imageHeight,
@@ -55,6 +57,8 @@ export function ArtworkExperience({
 }: {
   title: string;
   imageSrc: string;
+  /** The wall this piece is specified for — painted behind it everywhere. */
+  wallTone: WallToneId;
   imageAlt: string;
   /** Intrinsic pixel dimensions — required so the fullscreen viewer reserves
    *  the artwork's real proportions instead of letterboxing it. */
@@ -278,7 +282,8 @@ export function ArtworkExperience({
               type="button"
               onClick={() => setZoomed(true)}
               aria-label={`View ${title} full screen`}
-              className="group relative flex max-h-[72svh] w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8"
+              className="group relative flex max-h-[72svh] w-full items-center justify-center overflow-hidden rounded-xl border border-line p-6 sm:p-8"
+              style={{ backgroundColor: wallColour(wallTone) }}
             >
               <Image
                 src={imageSrc}
@@ -459,7 +464,8 @@ export function ArtworkExperience({
         >
             <div
               data-zoom={zoomVisible ? "shown" : "pending"}
-              className="zoom-panel relative max-h-full w-full max-w-4xl"
+              className="zoom-panel relative max-h-full w-full max-w-4xl overflow-hidden rounded-lg"
+              style={{ backgroundColor: wallColour(wallTone) }}
               onClick={(e) => e.stopPropagation()}
             >
               <Image

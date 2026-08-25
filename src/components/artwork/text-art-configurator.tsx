@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import { FRAME_FINISHES, getFinish } from "@/content/finishes";
+import { MOUNTS, getMount } from "@/content/finishes";
 import {
   GROUNDS,
   INKS,
@@ -62,7 +62,7 @@ export function TextArtConfigurator({
   const typeface = getTypeface(typefaceId);
   const ink = getInk(inkId);
   const ground = getGround(groundId);
-  const finish = getFinish(finishId);
+  const finish = getMount(finishId);
 
   const lines = useMemo(
     () => text.split("\n").map((l) => l.trim()).filter(Boolean).slice(0, 5),
@@ -101,18 +101,13 @@ export function TextArtConfigurator({
       {/* Preview */}
       <div>
         <div
-          className="mx-auto w-full max-w-md shadow-[0_18px_40px_-20px_rgba(25,21,16,0.55)]"
-          style={{
-            backgroundColor: finish.colour,
-            padding: `${finish.widthRatio * 100}%`,
-          }}
+          className="mx-auto w-full max-w-md"
         >
           <div
             className="@container relative flex items-center justify-center overflow-hidden"
             style={{
               aspectRatio: `${aspect}`,
               backgroundColor: ground.value,
-              boxShadow: `0 0 0 1px ${finish.innerColour}`,
             }}
           >
             <p
@@ -131,7 +126,7 @@ export function TextArtConfigurator({
           </div>
         </div>
         <p className="mt-3 text-center text-xs leading-5 text-muted">
-          Shown at {widthCm} × {heightCm} cm in a {finish.name.toLowerCase()} frame.
+          Shown at {widthCm} × {heightCm} cm, {finish.name.toLowerCase()}.
           Proportions are exact; colour on screen is approximate.
         </p>
       </div>
@@ -212,7 +207,7 @@ export function TextArtConfigurator({
 
         <fieldset className="border-0 p-0">
           <legend className="text-xs font-semibold uppercase tracking-widest text-muted">
-            Ground
+            Wall
           </legend>
           <div className="mt-2 flex flex-wrap gap-2">
             {GROUNDS.map((colour) => (
@@ -246,10 +241,10 @@ export function TextArtConfigurator({
 
         <fieldset className="border-0 p-0">
           <legend className="text-xs font-semibold uppercase tracking-widest text-muted">
-            Frame
+            Mounting
           </legend>
           <div className="mt-2 flex flex-wrap gap-2">
-            {FRAME_FINISHES.map((option) => (
+            {MOUNTS.map((option: (typeof MOUNTS)[number]) => (
               <button
                 key={option.id}
                 type="button"

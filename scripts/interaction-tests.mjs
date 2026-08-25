@@ -129,7 +129,7 @@ async function testKeyboardNavigation(page, vp) {
  * into content the overlay was covering.
  */
 async function testDialogFocusTrap(page, vp) {
-  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/idea-bulb`, { waitUntil: "networkidle" });
   await page.locator("[role=tab]", { hasText: /^Artwork$/ }).click();
   await page.locator("main button[aria-label*='full screen']").click();
 
@@ -182,7 +182,7 @@ async function testDialogFocusTrap(page, vp) {
 
 async function testArtworkPage(page, vp) {
   // A panoramic piece exercises the aspect handling most strictly.
-  await page.goto(`${BASE}/portfolio/glass-horizon`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/ask-better-questions`, { waitUntil: "networkidle" });
   await page.addStyleTag({
     content: "*,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important}",
   });
@@ -231,7 +231,7 @@ async function testArtworkPage(page, vp) {
   );
 
   // --- A shared URL restores that size.
-  await page.goto(`${BASE}/portfolio/glass-horizon?size=xl`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/ask-better-questions?size=xl`, { waitUntil: "networkidle" });
   await page.waitForTimeout(250);
   const restored = await page.evaluate(
     () => document.querySelector("[aria-live=polite]")?.textContent ?? "",
@@ -276,7 +276,9 @@ async function testArtworkPage(page, vp) {
   record(
     vp.name,
     "room scene defaults to the artwork's primary venue",
-    sceneState.active === "Office reception",
+    // This group uses a panoramic piece specified for universities first, so
+    // the classroom is the correct default. Pinned to the piece, not a scene.
+    sceneState.active === "Classroom",
     `active: ${sceneState.active}`,
   );
   record(
@@ -286,7 +288,7 @@ async function testArtworkPage(page, vp) {
     sceneState.options.join(", "),
   );
 
-  await page.locator("fieldset button", { hasText: "Classroom" }).click();
+  await page.locator("fieldset button", { hasText: "Office reception" }).click();
   await page.waitForTimeout(220);
   const switched = await page.evaluate(() => ({
     caption: document.querySelector("figcaption")?.textContent ?? "",
@@ -295,7 +297,7 @@ async function testArtworkPage(page, vp) {
   record(
     vp.name,
     "switching scene updates the preview and its caption",
-    /classroom/i.test(switched.caption) && /75 cm desk/.test(switched.caption) && switched.pressed === 1,
+    /office reception/i.test(switched.caption) && /110 cm reception desk/.test(switched.caption) && switched.pressed === 1,
     switched.caption.trim().slice(0, 70),
   );
 
@@ -579,7 +581,7 @@ async function testArPanel(page, vp) {
 
 async function testTextConfigurator(page, vp) {
   // Only text pieces are configurable; a non-text piece must not offer it.
-  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/idea-bulb`, { waitUntil: "networkidle" });
   record(
     vp.name,
     "configurator is not offered on a non-text piece",
@@ -658,7 +660,7 @@ async function testTextConfigurator(page, vp) {
   );
 
   // Ink on a ground of the same tone must be called out rather than accepted.
-  await page.locator("[role=tabpanel] fieldset", { hasText: "Ground" })
+  await page.locator("[role=tabpanel] fieldset", { hasText: "Wall" })
     .locator("button", { hasText: "Ink" })
     .click();
   await page.waitForTimeout(250);
@@ -736,7 +738,7 @@ async function testWallPlanner(page, vp) {
 
   // Adding and removing pieces.
   const before = await pieceCount();
-  await page.locator("main button", { hasText: "Ascent" }).first().click();
+  await page.locator("main button", { hasText: "Collective" }).first().click();
   await page.waitForTimeout(350);
   const afterAdd = await pieceCount();
   record(vp.name, "adding a piece places it on the wall", afterAdd === before + 1, `${before} → ${afterAdd}`);
@@ -1118,7 +1120,7 @@ async function testReducedMotion(browser) {
     state.progressBar === 0,
   );
 
-  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/idea-bulb`, { waitUntil: "networkidle" });
   await page.locator("main button[aria-label*='full screen']").click();
   await page.waitForTimeout(250);
   const dialogOpacity = await page.evaluate(() => {

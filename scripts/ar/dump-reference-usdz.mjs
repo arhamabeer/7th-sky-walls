@@ -62,7 +62,7 @@ const base64 = await page.evaluate(async () => {
   // front face, a plain edge colour elsewhere — is expressed in USD.
   const geometry = new THREE.BoxGeometry(0.9, 1.2, 0.035);
   const texture = await new THREE.TextureLoader().loadAsync(
-    "https://usdz.local/public/artworks/meridian-seven.jpg",
+    "https://usdz.local/public/artworks/idea-bulb.png",
   );
   texture.colorSpace = THREE.SRGBColorSpace;
   const artMaterial = new THREE.MeshStandardMaterial({

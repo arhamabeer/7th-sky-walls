@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Artwork } from "@/lib/content/schema";
 import { getBlurDataURL, getCollectionById } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 
 /**
  * Gallery tile.
@@ -10,8 +11,12 @@ import { getBlurDataURL, getCollectionById } from "@/lib/content";
  * it. Two reasons: a catalog mixing 3:4 portraits, squares and 5:2 panoramas
  * produces ragged rows and captions at inconsistent heights when every tile
  * takes its own proportions; and cropping an artwork in the grid
- * misrepresents the piece being sold. Matting solves both, and reads like
- * framed work on a gallery wall.
+ * misrepresents the piece being sold. Matting solves both.
+ *
+ * The tile is painted in the piece's specified wall tone rather than the site's
+ * surface colour. The images carry alpha and no ground — they are cut letters,
+ * not pictures — so a white-lettered piece made for a dark wall is literally
+ * invisible on a white tile.
  */
 export function ArtworkCard({
   artwork,
@@ -31,14 +36,19 @@ export function ArtworkCard({
       href={`/portfolio/${artwork.slug}`}
       className="group flex h-full flex-col focus-visible:outline-2 focus-visible:outline-accent"
     >
-      <div className="flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-line bg-surface p-6 transition-colors group-hover:border-ink/30 sm:p-8">
+      <div
+        className="flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-line p-6 transition-colors group-hover:border-ink/30 sm:p-8"
+        style={{ backgroundColor: wallColour(artwork.wallTone) }}
+      >
         <Image
           src={artwork.image.src}
           alt={artwork.alt}
           width={artwork.image.width}
           height={artwork.image.height}
           sizes={sizes}
-          className="h-auto max-h-full w-auto max-w-full object-contain shadow-[0_10px_26px_-14px_rgba(0,0,0,0.45)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          // drop-shadow, not shadow-*: a box-shadow on a transparent PNG outlines the
+          // image's rectangle, which drew a visible card behind every piece.
+          className="h-auto max-h-full w-auto max-w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
         />
       </div>

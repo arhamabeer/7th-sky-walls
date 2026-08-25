@@ -1,106 +1,83 @@
 /**
  * Builds the texture used by both the GLB and the USDZ for one artwork.
  *
- * The frame is composited INTO the texture rather than modelled as separate
- * geometry with its own material. That is not a shortcut — three.js's
- * USDZExporter silently drops meshes that carry a material array, producing a
+ * One mesh, one material, one texture. That is not a shortcut: three.js's
+ * USDZExporter silently drops meshes carrying a material array, producing a
  * USDZ with no geometry at all, which would have shipped an empty AR
- * experience to every iPhone with nothing to reveal it short of a real device.
- * One mesh, one material, one texture avoids that entire class of failure and
- * also satisfies the guidance that multi-object USDZ scenes can drift off the
- * plane they are anchored to.
+ * experience to every iPhone with nothing short of a real device to reveal it.
+ * It also satisfies the guidance that multi-object USDZ scenes can drift off
+ * the plane they are anchored to.
  *
- * The stated size is treated as the FINISHED piece — what actually hangs on
- * the wall — with the frame drawn inside it. Scale claims then need no
- * asterisk.
+ * The artwork is composited onto the wall tone it is specified for, with a thin
+ * margin of that tone around it. Two reasons. The tone is what the piece is
+ * designed against, so a white-lettered piece stays visible instead of
+ * vanishing into a white texture. And the margin gives the box's side faces a
+ * UV coordinate that lands on flat colour, which is what keeps the edges from
+ * showing a smeared slice of the artwork.
+ *
+ * KNOWN LIMIT, and the reason this is not the end state. These pieces are cut
+ * letters with the wall showing between them, so the honest AR model is a plane
+ * with an alpha-masked texture and no panel at all. That needs the geometry
+ * switched from a box to a plane, alphaMode MASK in the GLB, and an
+ * opacityThreshold on the USDZ shader — and Quick Look's handling of cutout
+ * alpha cannot be confirmed without an iPhone. Doing it unverified is precisely
+ * how the empty-USDZ bug above happened. It is scoped as Phase 10 work
+ * alongside the outstanding device QA. Until then AR answers "how big is this
+ * on my wall", which is what it is measured against.
+ *
+ * The stated size is treated as the FINISHED piece — what actually hangs on the
+ * wall. Scale claims then need no asterisk.
  */
 import sharp from "sharp";
 
-/** Frame treatments inferred from an artwork's stated materials. */
-const FRAME_STYLES = [
-  {
-    name: "hardwood",
-    match: /hardwood|wood/i,
-    /** Frame width as a fraction of the piece's short edge. */
-    widthRatio: 0.035,
-    colour: { r: 74, g: 54, b: 36 },
-    /** Inner shadow line, suggesting the float gap of a floating frame. */
-    inner: { r: 32, g: 24, b: 17 },
-  },
-  {
-    name: "aluminium",
-    match: /aluminum|aluminium|metal/i,
-    widthRatio: 0.018,
-    colour: { r: 196, g: 198, b: 201 },
-    inner: { r: 120, g: 123, b: 127 },
-  },
-  {
-    name: "canvas",
-    match: /canvas/i,
-    // A gallery-wrapped canvas has no visible frame face, just the wrapped edge.
-    widthRatio: 0.008,
-    colour: { r: 238, g: 234, b: 226 },
-    inner: { r: 205, g: 199, b: 188 },
-  },
-];
+/**
+ * Wall tones, kept in step with WALL_TONES in src/content/finishes.ts and the
+ * generator's own table. A piece is specified with its wall, so the AR texture
+ * is built against the same one the site shows.
+ */
+const WALL_TONES = {
+  dark: { name: "dark wall", colour: "#33363B" },
+  light: { name: "light wall", colour: "#EDEAE3" },
+  accent: { name: "accent wall", colour: "#F5C518" },
+};
 
-export function frameStyleFor(materials = []) {
-  const text = materials.join(" ");
-  return FRAME_STYLES.find((f) => f.match.test(text)) ?? FRAME_STYLES[2];
+export function wallToneFor(tone) {
+  const found = WALL_TONES[tone];
+  if (!found) throw new Error(`Unknown wall tone "${tone}"`);
+  return found;
 }
 
-/**
- * @param {object} options
- * @param {string} options.sourcePath   Artwork image on disk.
- * @param {number} options.maxEdge      Longest edge of the output texture.
- * @param {object} options.frame        Result of frameStyleFor().
- * @param {number} options.aspect       width / height of the finished piece.
- * @returns {Promise<{buffer: Buffer, width: number, height: number, frameUv: [number, number]}>}
- *   The texture, plus a UV coordinate that lands inside the frame border —
- *   used to pin the box's side faces to a flat frame colour.
- */
-export async function buildArTexture({ sourcePath, maxEdge = 1024, frame, aspect }) {
+export async function buildArTexture({ sourcePath, maxEdge = 1024, wall, aspect }) {
   const width = aspect >= 1 ? maxEdge : Math.round(maxEdge * aspect);
   const height = aspect >= 1 ? Math.round(maxEdge / aspect) : maxEdge;
 
   const shortEdge = Math.min(width, height);
-  const border = Math.max(2, Math.round(shortEdge * frame.widthRatio));
-  const innerLine = Math.max(1, Math.round(border * 0.18));
+  // A thin margin, not a frame: enough flat colour for the side-face UV to land
+  // in, and it reads as the breathing room a mounted piece actually has.
+  const margin = Math.max(2, Math.round(shortEdge * 0.02));
 
-  const artWidth = width - border * 2;
-  const artHeight = height - border * 2;
+  const artWidth = width - margin * 2;
+  const artHeight = height - margin * 2;
 
+  // `contain`, never `cover`: cropping a word cloud cuts words off the edge,
+  // and the proportions are what the size chart promises. The artwork's aspect
+  // already matches the piece, so there is nothing to letterbox.
   const artwork = await sharp(sourcePath)
-    .resize(artWidth, artHeight, { fit: "cover", position: "centre" })
+    .resize(artWidth, artHeight, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
     .toBuffer();
-
-  // Frame face, then a darker inner line, then the artwork on top.
-  const innerW = artWidth + innerLine * 2;
-  const innerH = artHeight + innerLine * 2;
 
   const buffer = await sharp({
-    create: {
-      width,
-      height,
-      channels: 3,
-      background: frame.colour,
-    },
+    create: { width, height, channels: 3, background: wall.colour },
   })
-    .composite([
-      {
-        input: {
-          create: { width: innerW, height: innerH, channels: 3, background: frame.inner },
-        },
-        left: border - innerLine,
-        top: border - innerLine,
-      },
-      { input: artwork, left: border, top: border },
-    ])
-    .jpeg({ quality: 86, mozjpeg: true })
+    .composite([{ input: artwork, left: margin, top: margin }])
+    .jpeg({ quality: 88, mozjpeg: true })
     .toBuffer();
 
-  // A point centred in the top border, safely inside the frame face.
-  const frameUv = [0.5, border / 2 / height];
+  // A point centred in the top margin, safely on flat wall colour.
+  const frameUv = [0.5, margin / 2 / height];
 
   return { buffer, width, height, frameUv };
 }
