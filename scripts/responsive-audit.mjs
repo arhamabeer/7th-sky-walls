@@ -87,6 +87,9 @@ const PAGES = [
   { path: "/services", name: "services" },
   { path: "/about", name: "about" },
   { path: "/contact", name: "contact" },
+  // Deliberately missing, to check the not-found page. Its own 404 response is
+  // the point, so it is declared rather than treated as a broken resource.
+  { path: "/no-such-page", name: "not-found", expectStatus: 404 },
 ];
 
 /**
@@ -284,15 +287,50 @@ async function main() {
         : undefined,
     });
     const page = await context.newPage();
+    /**
+     * Console errors are tagged with the page being loaded, so a page that is
+     * *meant* to 404 does not report its own status as a broken resource while
+     * still catching genuinely missing assets.
+     */
+    let currentPage = "";
+    let expectStatus = 200;
+    const isOwnStatusError = (text) =>
+      expectStatus !== 200 && /Failed to load resource.*status of \d+/.test(text);
+
     page.on("console", (msg) => {
-      if (msg.type() === "error") consoleErrors.push({ viewport: vp.name, text: msg.text().slice(0, 200) });
+      if (msg.type() !== "error") return;
+      const text = msg.text().slice(0, 200);
+      if (isOwnStatusError(text)) return;
+      consoleErrors.push({ viewport: vp.name, page: currentPage, text });
     });
     page.on("pageerror", (err) => {
-      consoleErrors.push({ viewport: vp.name, text: `pageerror: ${String(err).slice(0, 200)}` });
+      consoleErrors.push({
+        viewport: vp.name,
+        page: currentPage,
+        text: `pageerror: ${String(err).slice(0, 200)}`,
+      });
     });
 
     for (const pg of PAGES) {
-      await page.goto(BASE + pg.path, { waitUntil: "networkidle", timeout: 45000 });
+      currentPage = pg.name;
+      expectStatus = pg.expectStatus ?? 200;
+      const response = await page.goto(BASE + pg.path, {
+        waitUntil: "networkidle",
+        timeout: 45000,
+      });
+      const status = response?.status() ?? 0;
+      if (status !== expectStatus) {
+        findings.push({
+          viewport: vp.name,
+          class: vp.class,
+          size: `${vp.width}x${vp.height}`,
+          page: pg.name,
+          severity: "error",
+          kind: "unexpected-status",
+          detail: `${pg.path} returned ${status}, expected ${expectStatus}`,
+          offenders: [],
+        });
+      }
       // Let entrance animations settle and lazy images resolve.
       await page.evaluate(() => {
         document.documentElement.style.scrollBehavior = "auto";
@@ -365,8 +403,10 @@ async function main() {
   if (consoleErrors.length) {
     console.log("Console errors:");
     const uniq = new Map();
-    for (const c of consoleErrors) if (!uniq.has(c.text)) uniq.set(c.text, c.viewport);
-    for (const [text, viewport] of uniq) console.log(`  [${viewport}] ${text}`);
+    for (const c of consoleErrors) {
+      if (!uniq.has(c.text)) uniq.set(c.text, `${c.viewport} ${c.page}`);
+    }
+    for (const [text, where] of uniq) console.log(`  [${where}] ${text}`);
     console.log("");
   }
 

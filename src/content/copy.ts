@@ -58,6 +58,14 @@ export const copy = {
     ctaTitle: "Have a wall in mind?",
     ctaSubtitle: "Tell us about your space — we'll respond with ideas within one working day.",
   },
+  notFound: {
+    eyebrow: "Nothing here",
+    title: "That page has moved, or never existed.",
+    body:
+      "Either way, the work is still where you left it. Start from the portfolio, or tell us what you were looking for and we'll point you at it.",
+    linksLabel: "Other places to look",
+    suggestionsTitle: "Start with these",
+  },
   planner: {
     eyebrow: "Plan a wall",
     title: "Gallery wall planner",
