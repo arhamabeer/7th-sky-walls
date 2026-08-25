@@ -29,13 +29,16 @@ and one Android handset.
    between them — no panel, no rectangle. That is the GLB, and it is what
    Android AR uses too.
 
-   **Expected, and the first thing to judge.** The model is currently a panel
-   carrying the artwork, not the cut letters alone. For this product the honest
-   model is a plane with an alpha-masked texture, so the real wall shows between
-   the letters — that is Phase 10, and it is held back precisely because Quick
-   Look's handling of cutout alpha cannot be confirmed without this test. While
-   you are here, note whether the panel reads as acceptable or as obviously
-   wrong; that decides how urgent Phase 10 is.
+   **The one thing this test exists for.** iOS is the exception. Quick Look takes
+   the USDZ, which still carries a box and the opaque artwork-on-wall-tone
+   texture, because nobody has confirmed how Quick Look handles cutout alpha. So
+   in the 3D view and on Android you will see **cut letters**, and when AR opens
+   on the iPhone you will see a **panel**.
+
+   What to report back: whether that panel reads as acceptable on the wall or as
+   obviously wrong. That answer decides whether the USDZ gets the same alpha
+   treatment as the GLB — and if it does, this is the device that has to confirm
+   it works, rather than an invisible piece shipping to every iPhone.
 3. Tap **Place on my wall**. AR Quick Look should open over Safari.
 4. **Orientation.** Point at a wall. The artwork must stand upright, facing
    into the room.
