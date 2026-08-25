@@ -980,23 +980,40 @@ async function testInquiryForm(page, vp) {
   await page.waitForTimeout(2500);
 
   const afterValid = await page.evaluate(() => {
-    const status = document.querySelector("main [role=status]");
+    // Success replaces the form with a role=status panel; an undelivered
+    // submission keeps the form and puts a role=alert above it. Reading only
+    // the first found the success case and nothing else.
+    const status =
+      document.querySelector("main [role=status]") ?? document.querySelector("main [role=alert]");
     return {
       text: status?.textContent?.trim() ?? "",
       formGone: document.querySelectorAll("main form").length === 0,
     };
   });
+  /**
+   * A valid submission must end in one of exactly two honest states, and which
+   * one depends on whether email delivery is configured for this build.
+   *
+   * Configured: a thank-you carrying a reference the studio can cite.
+   * Not configured: a plain statement that it did not send, plus the two
+   * channels that work without any configuration.
+   *
+   * What must never happen is the third state this used to allow — a thank-you
+   * for an inquiry that only reached a log file. So the assertion is on the
+   * pair, and the run reports which one it saw.
+   */
+  const acknowledged = /thank you/i.test(afterValid.text) && /INQ-/.test(afterValid.text);
+  const declaredUndelivered =
+    /not connected/i.test(afterValid.text) && /whatsapp/i.test(afterValid.text);
   record(
     vp.name,
-    "a complete inquiry is accepted",
-    /thank you/i.test(afterValid.text),
-    afterValid.text.slice(0, 60),
-  );
-  record(
-    vp.name,
-    "acknowledgement includes a reference",
-    /INQ-/.test(afterValid.text),
-    afterValid.text.slice(0, 80),
+    "a complete inquiry ends in an honest state, never a false success",
+    acknowledged !== declaredUndelivered,
+    acknowledged
+      ? "acknowledged with a reference"
+      : declaredUndelivered
+        ? "declared undelivered and offered the direct channels"
+        : `neither: ${afterValid.text.slice(0, 70)}`,
   );
   record(
     vp.name,
