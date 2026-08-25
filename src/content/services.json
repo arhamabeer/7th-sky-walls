@@ -1,0 +1,67 @@
+[
+  {
+    "slug": "custom-wall-art",
+    "name": "Custom Wall Art",
+    "summary": "Original artwork designed for your wall, your brand and your light.",
+    "description": "We start from your space — its dimensions, palette and purpose — and design artwork that belongs to it. Every piece is mocked up on a photo of your actual wall before production, so what you approve is what gets installed.",
+    "deliverables": [
+      "Concept directions with mood boards",
+      "Digital mockups on photos of your wall",
+      "Archival large-format production",
+      "Choice of canvas, acrylic, aluminum or fine-art paper"
+    ],
+    "idealFor": ["office", "hotel", "cafe", "restaurant"]
+  },
+  {
+    "slug": "murals-and-installations",
+    "name": "Murals & Large-Scale Installations",
+    "summary": "Hand-finished murals and multi-panel installations that own the room.",
+    "description": "For walls that deserve more than a frame — painted murals, printed wall coverings and layered multi-panel installations, engineered for the scale of atriums, corridors and full building façades.",
+    "deliverables": [
+      "Site survey and wall preparation plan",
+      "Full-scale design proofs",
+      "On-site painting or precision installation",
+      "Protective finishes for high-traffic areas"
+    ],
+    "idealFor": ["school", "university", "hotel", "restaurant"]
+  },
+  {
+    "slug": "corporate-branding-walls",
+    "name": "Corporate Branding Walls",
+    "summary": "Reception walls, culture walls and brand stories told in physical space.",
+    "description": "Your office walls are your most-seen brand asset. We translate brand systems into dimensional logo walls, culture and values walls, timeline installations and acoustic art that photographs as well as it works.",
+    "deliverables": [
+      "Brand-to-space translation concepts",
+      "Dimensional lettering and logo fabrication",
+      "Culture, values and timeline walls",
+      "Acoustic-friendly art panels"
+    ],
+    "idealFor": ["office", "university"]
+  },
+  {
+    "slug": "calligraphy-and-typography",
+    "name": "Calligraphy & Typography Studio",
+    "summary": "Words as art — from sacred calligraphy to modern type compositions.",
+    "description": "A dedicated studio practice for text-based art: contemporary calligraphy, verses and poetry, name pieces and motivational typography. Most pieces can be personalized with your own words, typography style and palette.",
+    "deliverables": [
+      "Custom text, typography and palette options",
+      "Live preview before you order",
+      "Hand-embellished finishes available",
+      "Faith-appropriate placement guidance"
+    ],
+    "idealFor": ["office", "school", "university", "hotel"]
+  },
+  {
+    "slug": "curation-and-installation",
+    "name": "Space Curation & Installation",
+    "summary": "A complete art program for your space — planned, sourced and installed.",
+    "description": "For new builds and renovations: we plan art wall-by-wall across your floor plan, balance scale and palette across rooms, and handle delivery, leveling and mounting — one accountable team from plan to final walkthrough.",
+    "deliverables": [
+      "Floor-plan-based art programming",
+      "Scale and palette planning per room",
+      "Professional delivery and installation",
+      "Post-installation care guide"
+    ],
+    "idealFor": ["hotel", "office", "university", "restaurant"]
+  }
+]

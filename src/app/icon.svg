@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <!-- Placeholder brand mark: a framed horizon with a rising arc.
+       Deliberately abstract (no brand letterforms) so a rebrand only
+       requires replacing this file. -->
+  <rect x="10" y="10" width="100" height="100" rx="14" stroke="#191510" stroke-width="7"/>
+  <path d="M 28 78 A 40 40 0 0 1 92 78" stroke="#8F6830" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="60" cy="46" r="8" fill="#33506B"/>
+</svg>
