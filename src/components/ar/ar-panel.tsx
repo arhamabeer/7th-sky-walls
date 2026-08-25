@@ -76,6 +76,8 @@ export function ArPanel({
   widthCm,
   heightCm,
   customImage,
+  customGlb,
+  stageBackground,
   onAnalytics,
 }: {
   glb: string;
@@ -91,6 +93,24 @@ export function ArPanel({
    * unmentioned.
    */
   customImage?: string | null;
+  /**
+   * A GLB authored in the browser from the customer's wording.
+   *
+   * Replaces the pre-built model in the 3D stage and on the WebXR path, so the
+   * piece on screen is the one that was configured. iOS still gets the original
+   * USDZ: Quick Look's handling of cutout alpha is unverified, and that is not
+   * something to guess at.
+   */
+  customGlb?: string | null;
+  /**
+   * The wall colour behind the 3D stage.
+   *
+   * Needed because a configured piece can be pale — "bone" ink is one of the
+   * options — and pale letters on the site's cream surface are invisible. Same
+   * failure the gallery tiles had before they started painting each piece's own
+   * wall tone.
+   */
+  stageBackground?: string;
   alt: string;
   title: string;
   sizeLabel: string;
@@ -240,9 +260,12 @@ export function ArPanel({
 
   return (
     <div className="rounded-xl border border-line bg-surface p-4 sm:p-5">
-      <div className="aspect-[4/3] overflow-hidden rounded-lg bg-background">
+      <div
+        className="aspect-[4/3] overflow-hidden rounded-lg bg-background"
+        style={stageBackground ? { backgroundColor: stageBackground } : undefined}
+      >
         <ModelViewerStage
-          glb={glb}
+          glb={customGlb ?? glb}
           usdz={usdz}
           poster={poster}
           alt={`${alt} — three-dimensional view`}
@@ -261,10 +284,9 @@ export function ArPanel({
           that plainly, and point at the view that can. */}
       {customImage && (
         <p className="mt-2 rounded-lg border border-accent/40 bg-surface p-3 text-xs leading-5">
-          The 3D view and AR above show the original piece — your wording is set
-          by hand before printing, so it is not in the 3D model. The camera
-          preview below does show your words, and your settings travel with the
-          inquiry either way.
+          {customGlb
+            ? "This is your wording, built for your device. On an iPhone the AR handoff still opens the original piece — your settings travel with the inquiry either way."
+            : "The 3D view above shows the original piece. The camera preview below shows your words, and your settings travel with the inquiry either way."}
         </p>
       )}
 

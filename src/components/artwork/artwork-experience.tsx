@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { RoomScalePreview } from "@/components/artwork/room-scale-preview";
 import { ROOM_SCENES } from "@/components/artwork/room-scenes";
@@ -13,6 +13,8 @@ import {
 import { LinkButton } from "@/components/ui/link-button";
 import { useFocusTrap } from "@/components/ui/use-focus-trap";
 import { renderCustomArt } from "@/components/artwork/render-custom-art";
+import { getGround } from "@/components/artwork/text-art-options";
+import { buildCustomGlb } from "@/components/ar/build-glb-client";
 import { wallColour, type WallToneId } from "@/content/finishes";
 import { whatsappLink } from "@/config/site.config";
 import { artworkInquiryMessage, copy } from "@/content/copy";
@@ -210,6 +212,31 @@ export function ArtworkExperience({
   /** Only ever the image for the configuration currently on screen. */
   const customImage = customKey && rendered?.key === customKey ? rendered.url : null;
 
+  /**
+   * A GLB for the configured piece, so the 3D stage shows what was configured
+   * rather than the original.
+   *
+   * Rebuilt when the wording or the size changes, and the previous object URL is
+   * released — an unrevoked blob URL keeps its data alive for the life of the
+   * document, and this one carries a 1400px PNG.
+   */
+  /**
+   * Derived, not stored. The builder returns a data URL, so there is no resource
+   * to own and no effect to write — which also means the model can never lag a
+   * frame behind the wording it belongs to.
+   */
+  const customGlb = useMemo(
+    () =>
+      customImage
+        ? buildCustomGlb({
+            texturePngDataUrl: customImage,
+            widthCm: size.widthCm,
+            heightCm: size.heightCm,
+          })
+        : null,
+    [customImage, size.widthCm, size.heightCm],
+  );
+
   const closeZoom = useCallback(() => {
     setZoomVisible(false);
     setZoomed(false);
@@ -385,6 +412,10 @@ export function ArtworkExperience({
               widthCm={size.widthCm}
               heightCm={size.heightCm}
               customImage={customImage}
+              customGlb={customGlb}
+              stageBackground={
+                customGlb && config ? getGround(config.ground).value : wallColour(wallTone)
+              }
               onAnalytics={trackAr}
             />
           ) : (

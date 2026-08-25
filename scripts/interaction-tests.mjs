@@ -1390,11 +1390,70 @@ async function testCustomTextReachesPreview(browser) {
     await page.waitForTimeout(1500);
     await page.locator("[role=tab]", { hasText: /^On your wall$/ }).click();
 
+    /**
+     * The 3D stage must show the configured piece, at true size.
+     *
+     * This is a GLB authored in the browser, and a hand-written binary format is
+     * exactly where a subtle error hides — a wrong offset loads as nothing, a
+     * wrong unit places a 90cm piece at 90 metres. So the assertions are that
+     * model-viewer parsed it and that its measured dimensions are the piece's
+     * real ones, which is the whole basis of the true-to-scale claim.
+     */
+    await page
+      .waitForFunction(() => document.querySelector("model-viewer")?.loaded === true, null, {
+        timeout: 20000,
+      })
+      .catch(() => {});
+    const model = await page.evaluate(() => {
+      const mv = document.querySelector("model-viewer");
+      if (!mv) return null;
+      const d = mv.getDimensions?.();
+      return {
+        loaded: mv.loaded === true,
+        isCustom: (mv.src ?? "").startsWith("data:model/gltf-binary"),
+        iosSrcUnchanged: (mv.getAttribute("ios-src") ?? "").startsWith("/ar/"),
+        widthM: d ? Number(d.x.toFixed(3)) : null,
+        heightM: d ? Number(d.y.toFixed(3)) : null,
+      };
+    });
+    record(
+      "custom-text",
+      "the 3D stage loads a model built from the custom wording",
+      Boolean(model?.loaded && model.isCustom),
+      `loaded=${model?.loaded} custom=${model?.isCustom}`,
+    );
+    // Sabr at Large is 90 x 120 cm.
+    record(
+      "custom-text",
+      "the custom model is authored at the piece's true size",
+      Math.abs((model?.widthM ?? 0) - 0.9) < 0.005 &&
+        Math.abs((model?.heightM ?? 0) - 1.2) < 0.005,
+      `${model?.widthM} x ${model?.heightM} m, expected 0.9 x 1.2`,
+    );
+    // Quick Look's handling of cutout alpha is unverified, so iOS must keep the
+    // pre-built asset rather than being handed something untested.
+    record(
+      "custom-text",
+      "iOS still receives the pre-built USDZ",
+      Boolean(model?.iosSrcUnchanged),
+    );
+
+    /**
+     * The one difference left has to be stated: iOS gets the original.
+     *
+     * This assertion used to require the opposite — that the panel said the 3D
+     * view could not carry the wording — which was true before the model was
+     * built in the browser. Now the 3D view does carry it and only the Quick
+     * Look handoff does not, so that is what must be said.
+     */
     const noticed = await page
       .waitForFunction(
         () =>
           [...document.querySelectorAll("[role=tabpanel]")].some(
-            (el) => !el.hidden && /show the original piece/i.test(el.textContent ?? ""),
+            (el) =>
+              !el.hidden &&
+              /iphone/i.test(el.textContent ?? "") &&
+              /original piece/i.test(el.textContent ?? ""),
           ),
         null,
         { timeout: 10000 },
@@ -1403,7 +1462,7 @@ async function testCustomTextReachesPreview(browser) {
       .catch(() => false);
     record(
       "custom-text",
-      "the panel says the 3D view does not carry the custom wording",
+      "the panel states that the iPhone AR handoff still opens the original",
       noticed,
     );
 
