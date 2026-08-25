@@ -4,6 +4,39 @@ import { useEffect, useRef, useState } from "react";
 import type { ElementType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+const OPTIONS: IntersectionObserverInit = {
+  threshold: 0.12,
+  rootMargin: "0px 0px -6% 0px",
+};
+
+let observer: IntersectionObserver | null = null;
+const pending = new WeakMap<Element, () => void>();
+
+/**
+ * One observer for every reveal on the page rather than one each. The busiest
+ * pages carry 25 of these, and 25 observers watching the same viewport with
+ * identical options is 25 times the setup for the same answer.
+ */
+function watch(node: Element, onVisible: () => void) {
+  observer ??= new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const callback = pending.get(entry.target);
+      pending.delete(entry.target);
+      observer?.unobserve(entry.target);
+      callback?.();
+    }
+  }, OPTIONS);
+
+  pending.set(node, onVisible);
+  observer.observe(node);
+
+  return () => {
+    pending.delete(node);
+    observer?.unobserve(node);
+  };
+}
+
 /**
  * Viewport-triggered entrance reveal.
  *
@@ -41,22 +74,9 @@ export function Reveal({
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-
     // Anything already on screen at mount is revealed without waiting for a
     // scroll, which covers deep links and restored scroll positions.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setShown(true);
-            observer.disconnect();
-          }
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
+    return watch(node, () => setShown(true));
   }, []);
 
   return (
