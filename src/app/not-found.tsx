@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { copy } from "@/content/copy";
 import { getFeaturedArtworks, getBlurDataURL } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 
@@ -71,14 +72,17 @@ export default function NotFound() {
                       href={`/portfolio/${artwork.slug}`}
                       className="group flex flex-col"
                     >
-                      <div className="flex h-56 items-center justify-center overflow-hidden rounded-xl border border-line bg-surface p-6">
+                      <div
+                        className="flex h-56 items-center justify-center overflow-hidden rounded-xl border border-line p-6"
+                        style={{ backgroundColor: wallColour(artwork.wallTone) }}
+                      >
                         <Image
                           src={artwork.image.src}
                           alt={artwork.alt}
                           width={artwork.image.width}
                           height={artwork.image.height}
                           sizes="(min-width: 640px) 30vw, 90vw"
-                          className="h-auto max-h-full w-auto max-w-full object-contain shadow-[0_10px_26px_-14px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                          className="h-auto max-h-full w-auto max-w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />
                       </div>

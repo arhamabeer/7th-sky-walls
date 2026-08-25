@@ -12,6 +12,9 @@ import {
 } from "@/components/artwork/text-art-configurator";
 import { LinkButton } from "@/components/ui/link-button";
 import { useFocusTrap } from "@/components/ui/use-focus-trap";
+import { wallColour, type WallToneId } from "@/content/finishes";
+import { whatsappLink } from "@/config/site.config";
+import { artworkInquiryMessage, copy } from "@/content/copy";
 import { cn } from "@/lib/utils";
 
 export interface SizeOption {
@@ -36,6 +39,7 @@ export interface SizeOption {
 export function ArtworkExperience({
   title,
   imageSrc,
+  wallTone,
   imageAlt,
   imageWidth,
   imageHeight,
@@ -53,6 +57,8 @@ export function ArtworkExperience({
 }: {
   title: string;
   imageSrc: string;
+  /** The wall this piece is specified for — painted behind it everywhere. */
+  wallTone: WallToneId;
   imageAlt: string;
   /** Intrinsic pixel dimensions — required so the fullscreen viewer reserves
    *  the artwork's real proportions instead of letterboxing it. */
@@ -276,7 +282,8 @@ export function ArtworkExperience({
               type="button"
               onClick={() => setZoomed(true)}
               aria-label={`View ${title} full screen`}
-              className="group relative flex max-h-[72svh] w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8"
+              className="group relative flex max-h-[72svh] w-full items-center justify-center overflow-hidden rounded-xl border border-line p-6 sm:p-8"
+              style={{ backgroundColor: wallColour(wallTone) }}
             >
               <Image
                 src={imageSrc}
@@ -418,6 +425,28 @@ export function ArtworkExperience({
             </button>
           )}
           <p className="mt-2 text-xs leading-5 text-muted">{sizeNote}</p>
+
+          {/* The action belongs here, next to the size chooser. This is the
+              point where a visitor has decided what they want, and the only
+              inquiry route used to be a card further down the page that did
+              not carry the size they had just picked — so they had to say it
+              again. Both links carry the chosen size, and the configuration
+              too if they have set one. */}
+          <div className="mt-6 flex flex-wrap gap-3 border-t border-line pt-6">
+            <LinkButton href={customInquiryHref}>{copy.cta.inquireArtwork}</LinkButton>
+            <LinkButton
+              href={whatsappLink(
+                artworkInquiryMessage(
+                  title,
+                  `${size.label} (${size.widthCm} × ${size.heightCm} cm)`,
+                ),
+              )}
+              external
+              variant="outline"
+            >
+              {copy.cta.whatsapp}
+            </LinkButton>
+          </div>
         </div>
       </div>
 
@@ -435,7 +464,8 @@ export function ArtworkExperience({
         >
             <div
               data-zoom={zoomVisible ? "shown" : "pending"}
-              className="zoom-panel relative max-h-full w-full max-w-4xl"
+              className="zoom-panel relative max-h-full w-full max-w-4xl overflow-hidden rounded-lg"
+              style={{ backgroundColor: wallColour(wallTone) }}
               onClick={(e) => e.stopPropagation()}
             >
               <Image

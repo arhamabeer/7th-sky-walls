@@ -210,7 +210,7 @@ export function RoomScalePreview({
             alt=""
             fill
             sizes="(min-width: 1024px) 40vw, 80vw"
-            className="object-cover"
+            className="object-contain"
             {...(blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {})}
           />
         </div>

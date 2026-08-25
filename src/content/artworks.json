@@ -1,458 +1,23 @@
 [
   {
-    "slug": "meridian-seven",
-    "title": "Meridian Seven",
-    "collection": "skyline-geometry",
-    "description": "Seven ascending planes of dusk blue and brass intersect like a city skyline at last light — a confident anchor piece for reception walls.",
-    "alt": "Abstract geometric artwork of seven overlapping angular planes in dusk blue and brass tones",
+    "slug": "idea-bulb",
+    "title": "Idea",
+    "collection": "word-clouds",
+    "description": "Forty cut words packed into a lightbulb, with IDEA raised deeper than the rest and finished in brass. Reads as a shape from across the floor and as language from two metres.",
+    "alt": "Lightbulb built from dozens of raised cut words, with the word IDEA large and gold at its centre",
     "venues": [
       "office",
-      "hotel"
-    ],
-    "styles": [
-      "abstract",
-      "geometric"
-    ],
-    "orientation": "portrait",
-    "image": {
-      "src": "/artworks/meridian-seven.d61ab204.jpg",
-      "width": 1500,
-      "height": 2000
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2025,
-    "featured": true
-  },
-  {
-    "slug": "glass-horizon",
-    "title": "Glass Horizon",
-    "collection": "skyline-geometry",
-    "description": "A wide, quiet composition of layered horizon bands — glass, sea and sky reduced to clean geometry for long walls.",
-    "alt": "Wide abstract artwork of layered horizontal bands in blue, ivory and warm grey",
-    "venues": [
-      "office",
-      "hotel",
-      "restaurant"
-    ],
-    "styles": [
-      "abstract",
-      "minimal"
-    ],
-    "orientation": "panorama",
-    "image": {
-      "src": "/artworks/glass-horizon.efe791f6.jpg",
-      "width": 2000,
-      "height": 800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": false,
-    "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
-    ],
-    "year": 2025,
-    "featured": false
-  },
-  {
-    "slug": "night-grid",
-    "title": "Night Grid",
-    "collection": "skyline-geometry",
-    "description": "A dense lattice of illuminated windows against warm black — the city at midnight, abstracted into rhythm.",
-    "alt": "Square abstract artwork of a glowing window grid pattern on a dark warm background",
-    "venues": [
-      "office",
-      "cafe"
-    ],
-    "styles": [
-      "abstract",
-      "geometric"
-    ],
-    "orientation": "square",
-    "image": {
-      "src": "/artworks/night-grid.181a55de.jpg",
-      "width": 1800,
-      "height": 1800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "m",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "ascent",
-    "title": "Ascent",
-    "collection": "skyline-geometry",
-    "description": "Diagonal brass lines climb through deep ivory space — a piece about momentum, made for stairwells and ambition.",
-    "alt": "Portrait abstract artwork of ascending diagonal brass lines on an ivory background",
-    "venues": [
-      "office",
-      "university"
-    ],
-    "styles": [
-      "abstract",
-      "minimal"
-    ],
-    "orientation": "portrait",
-    "image": {
-      "src": "/artworks/ascent.4ea4d66e.jpg",
-      "width": 1500,
-      "height": 2000
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "m",
-    "customText": false,
-    "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "sabr",
-    "title": "Sabr",
-    "collection": "sacred-lines",
-    "description": "The word 'patience' rendered as a single unbroken stroke — contemporary calligraphy with sculptural weight, personalizable with your own word or verse.",
-    "alt": "Contemporary calligraphy artwork of a single flowing dark stroke on a warm ivory field",
-    "venues": [
-      "office",
-      "hotel",
-      "school"
-    ],
-    "styles": [
-      "calligraphy",
-      "minimal"
-    ],
-    "orientation": "portrait",
-    "image": {
-      "src": "/artworks/sabr.9a60cb9d.jpg",
-      "width": 1500,
-      "height": 2000
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": true,
-    "materials": [
-      "Archival matte canvas",
-      "Hand-embellished ink detail",
-      "Floating hardwood frame"
-    ],
-    "year": 2025,
-    "featured": true
-  },
-  {
-    "slug": "shukr",
-    "title": "Shukr",
-    "collection": "sacred-lines",
-    "description": "Gratitude composed in circular balance — a centered calligraphic form that settles any room it enters.",
-    "alt": "Square calligraphy artwork with a circular flowing stroke composition in ink and brass",
-    "venues": [
-      "hotel",
-      "restaurant",
-      "office"
-    ],
-    "styles": [
-      "calligraphy"
-    ],
-    "orientation": "square",
-    "image": {
-      "src": "/artworks/shukr.44df93e4.jpg",
-      "width": 1800,
-      "height": 1800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "m",
-    "customText": true,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2025,
-    "featured": false
-  },
-  {
-    "slug": "bismillah-flow",
-    "title": "Bismillah Flow",
-    "collection": "sacred-lines",
-    "description": "A wide, flowing calligraphic composition designed to open a space — traditionally placed above entrances and reception walls.",
-    "alt": "Wide calligraphy artwork with flowing horizontal strokes in deep ink on ivory",
-    "venues": [
-      "office",
-      "hotel",
-      "school",
-      "university"
-    ],
-    "styles": [
-      "calligraphy"
-    ],
-    "orientation": "panorama",
-    "image": {
-      "src": "/artworks/bismillah-flow.1f31dd80.jpg",
-      "width": 2000,
-      "height": 800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": true,
-    "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "noor",
-    "title": "Noor",
-    "collection": "sacred-lines",
-    "description": "'Light' written in radiating strokes over a soft gold field — quiet, warm and endlessly giftable to a space.",
-    "alt": "Portrait calligraphy artwork of radiating strokes over a soft gold gradient",
-    "venues": [
-      "hotel",
-      "cafe",
-      "office"
-    ],
-    "styles": [
-      "calligraphy"
-    ],
-    "orientation": "portrait",
-    "image": {
-      "src": "/artworks/noor.8f927b18.jpg",
-      "width": 1500,
-      "height": 2000
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "m",
-    "customText": true,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "monsoon-leaves",
-    "title": "Monsoon Leaves",
-    "collection": "botanical-fields",
-    "description": "Oversized leaf silhouettes layered in rain-washed greens — brings the calm of a courtyard garden indoors.",
-    "alt": "Portrait botanical artwork of layered oversized leaf silhouettes in deep greens",
-    "venues": [
-      "cafe",
-      "restaurant",
-      "hotel"
-    ],
-    "styles": [
-      "botanical",
-      "organic"
-    ],
-    "orientation": "portrait",
-    "image": {
-      "src": "/artworks/monsoon-leaves.83b7491a.jpg",
-      "width": 1500,
-      "height": 2000
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2025,
-    "featured": true
-  },
-  {
-    "slug": "courtyard-fern",
-    "title": "Courtyard Fern",
-    "collection": "botanical-fields",
-    "description": "A single fern frond studied across a wide field of morning light — botanical minimalism for dining walls.",
-    "alt": "Wide botanical artwork of a fern frond against a pale morning light gradient",
-    "venues": [
-      "restaurant",
-      "cafe"
-    ],
-    "styles": [
-      "botanical",
-      "minimal"
-    ],
-    "orientation": "landscape",
-    "image": {
-      "src": "/artworks/courtyard-fern.e2299967.jpg",
-      "width": 2000,
-      "height": 1500
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": false,
-    "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "wild-garden",
-    "title": "Wild Garden",
-    "collection": "botanical-fields",
-    "description": "Dense, joyful overgrowth in full color — the piece that turns a plain corner into the favorite seat in the house.",
-    "alt": "Square botanical artwork of dense colorful garden foliage",
-    "venues": [
-      "cafe",
-      "restaurant",
-      "school"
-    ],
-    "styles": [
-      "botanical",
-      "organic"
-    ],
-    "orientation": "square",
-    "image": {
-      "src": "/artworks/wild-garden.f1b37230.jpg",
-      "width": 1800,
-      "height": 1800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "m",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "banyan-shade",
-    "title": "Banyan Shade",
-    "collection": "botanical-fields",
-    "description": "The sprawling canopy of an old banyan rendered in soft duotone — grounding, generous and made for long lobby walls.",
-    "alt": "Panoramic botanical artwork of a banyan tree canopy in soft green duotone",
-    "venues": [
-      "hotel",
       "university",
-      "office"
+      "school"
     ],
     "styles": [
-      "botanical"
-    ],
-    "orientation": "panorama",
-    "image": {
-      "src": "/artworks/banyan-shade.9b8f0d1b.jpg",
-      "width": 2000,
-      "height": 800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2025,
-    "featured": false
-  },
-  {
-    "slug": "lahore-jaali",
-    "title": "Lahore Jaali",
-    "collection": "heritage-arches",
-    "description": "A carved stone screen studied in raking light — heritage geometry that gives hospitality spaces instant rootedness.",
-    "alt": "Portrait artwork of an intricate carved jaali screen pattern in warm stone tones",
-    "venues": [
-      "hotel",
-      "restaurant"
-    ],
-    "styles": [
-      "heritage",
-      "architectural"
+      "word cloud",
+      "typography"
     ],
     "orientation": "portrait",
+    "wallTone": "dark",
     "image": {
-      "src": "/artworks/lahore-jaali.37c6a69d.jpg",
+      "src": "/artworks/idea-bulb.e5b493c1.png",
       "width": 1500,
       "height": 2000
     },
@@ -465,66 +30,30 @@
     "defaultSize": "l",
     "customText": false,
     "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
     ],
-    "year": 2025,
+    "year": 2026,
     "featured": true
   },
   {
-    "slug": "old-city-doors",
-    "title": "Old City Doors",
-    "collection": "heritage-arches",
-    "description": "A row of weathered haveli doors in faded jewel tones — every one a story, together a streetscape.",
-    "alt": "Wide artwork of a row of old wooden doors in faded blue, green and red paint",
+    "slug": "growth-arrow",
+    "title": "Growth",
+    "collection": "word-clouds",
+    "description": "The vocabulary of a company that is scaling, packed into one silhouette. Sprayed MDF, so the hero word can be matched to an exact brand colour without a premium.",
+    "alt": "Word cloud of raised cut letters forming a bulb shape with the word GROWTH picked out in colour",
     "venues": [
-      "restaurant",
-      "cafe",
-      "hotel"
-    ],
-    "styles": [
-      "heritage"
-    ],
-    "orientation": "landscape",
-    "image": {
-      "src": "/artworks/old-city-doors.19c665bc.jpg",
-      "width": 2000,
-      "height": 1500
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "l",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "minaret-dawn",
-    "title": "Minaret Dawn",
-    "collection": "heritage-arches",
-    "description": "A single minaret silhouette against first light — restraint, height and stillness for stairwells and tall walls.",
-    "alt": "Portrait artwork of a minaret silhouette against a soft dawn gradient",
-    "venues": [
-      "hotel",
+      "office",
       "university"
     ],
     "styles": [
-      "heritage",
-      "minimal"
+      "word cloud",
+      "typography"
     ],
     "orientation": "portrait",
+    "wallTone": "dark",
     "image": {
-      "src": "/artworks/minaret-dawn.5ba04d4d.jpg",
+      "src": "/artworks/growth-arrow.c3379fc0.png",
       "width": 1500,
       "height": 2000
     },
@@ -534,141 +63,33 @@
       "l",
       "xl"
     ],
-    "defaultSize": "xl",
-    "customText": false,
-    "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "caravanserai",
-    "title": "Caravanserai",
-    "collection": "heritage-arches",
-    "description": "Repeating arches recede into warm shadow — a panoramic study of rhythm and rest for corridor walls.",
-    "alt": "Panoramic artwork of repeating stone arches receding into warm shadow",
-    "venues": [
-      "hotel",
-      "restaurant",
-      "university"
-    ],
-    "styles": [
-      "heritage",
-      "architectural"
-    ],
-    "orientation": "panorama",
-    "image": {
-      "src": "/artworks/caravanserai.df983da9.jpg",
-      "width": 2000,
-      "height": 800
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
     "defaultSize": "l",
     "customText": false,
     "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
+      "CNC-routed MDF",
+      "12 mm standoff mounting"
     ],
-    "year": 2025,
+    "year": 2026,
     "featured": false
   },
   {
-    "slug": "dawn-over-clifton",
-    "title": "Dawn Over Clifton",
-    "collection": "chromatic-drift",
-    "description": "A sea-to-sky gradient caught at the exact minute the city wakes — pure atmosphere for walls that need calm, not noise.",
-    "alt": "Wide color-field artwork of a soft gradient from deep sea blue to pale dawn gold",
+    "slug": "collective",
+    "title": "Collective",
+    "collection": "word-clouds",
+    "description": "A square word cloud for the wall above a bank of desks, built from the words a team actually uses in its stand-ups rather than the ones on a poster.",
+    "alt": "Square arrangement of raised cut words with the word TEAM largest at the centre",
     "venues": [
       "office",
-      "hotel",
       "cafe"
     ],
     "styles": [
-      "color-field",
-      "minimal"
-    ],
-    "orientation": "landscape",
-    "image": {
-      "src": "/artworks/dawn-over-clifton.20ea88f6.jpg",
-      "width": 2000,
-      "height": 1500
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "xl",
-    "customText": false,
-    "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
-    ],
-    "year": 2025,
-    "featured": true
-  },
-  {
-    "slug": "sea-glass",
-    "title": "Sea Glass",
-    "collection": "chromatic-drift",
-    "description": "Cool green-blue drift with a single warm seam — quiet color that changes character with the room's light.",
-    "alt": "Portrait color-field artwork in sea green and blue with a thin warm gold seam",
-    "venues": [
-      "office",
-      "hotel"
-    ],
-    "styles": [
-      "color-field"
-    ],
-    "orientation": "portrait",
-    "image": {
-      "src": "/artworks/sea-glass.89b12b69.jpg",
-      "width": 1500,
-      "height": 2000
-    },
-    "sizes": [
-      "s",
-      "m",
-      "l",
-      "xl"
-    ],
-    "defaultSize": "m",
-    "customText": false,
-    "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
-    ],
-    "year": 2024,
-    "featured": false
-  },
-  {
-    "slug": "amber-hour",
-    "title": "Amber Hour",
-    "collection": "chromatic-drift",
-    "description": "The last warm hour of the day held in a square frame — amber into rose into dusk.",
-    "alt": "Square color-field artwork of an amber to rose to dusk gradient",
-    "venues": [
-      "cafe",
-      "restaurant"
-    ],
-    "styles": [
-      "color-field"
+      "word cloud",
+      "typography"
     ],
     "orientation": "square",
+    "wallTone": "light",
     "image": {
-      "src": "/artworks/amber-hour.bb4a305b.jpg",
+      "src": "/artworks/collective.e1020e16.png",
       "width": 1800,
       "height": 1800
     },
@@ -681,30 +102,31 @@
     "defaultSize": "m",
     "customText": false,
     "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
+      "CNC-routed MDF",
+      "On a backer panel"
     ],
-    "year": 2024,
+    "year": 2026,
     "featured": false
   },
   {
-    "slug": "monsoon-blue",
-    "title": "Monsoon Blue",
-    "collection": "chromatic-drift",
-    "description": "Deep rain-cloud blues breaking into light at the top edge — weight below, hope above.",
-    "alt": "Portrait color-field artwork of deep blue tones breaking into pale light at the top",
+    "slug": "deep-work",
+    "title": "Deep Work",
+    "collection": "word-clouds",
+    "description": "Made for the quiet end of a floor: the words that describe concentration, cut in matte acrylic so nothing under the downlights turns into a mirror.",
+    "alt": "Lightbulb word cloud in raised white letters with the word FOCUS at its centre",
     "venues": [
       "office",
-      "university"
+      "university",
+      "school"
     ],
     "styles": [
-      "color-field",
-      "minimal"
+      "word cloud",
+      "typography"
     ],
     "orientation": "portrait",
+    "wallTone": "dark",
     "image": {
-      "src": "/artworks/monsoon-blue.68f88428.jpg",
+      "src": "/artworks/deep-work.656c3354.png",
       "width": 1500,
       "height": 2000
     },
@@ -717,30 +139,69 @@
     "defaultSize": "l",
     "customText": false,
     "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
     ],
-    "year": 2025,
-    "featured": false
+    "year": 2026,
+    "featured": true
+  },
+  {
+    "slug": "outside-the-box",
+    "title": "Think Outside the Box",
+    "collection": "words-at-work",
+    "description": "Four words at the scale of the wall, with a noughts-and-crosses grid broken by a winning line underneath. The line is the whole joke, and it is cut in brass.",
+    "alt": "The words THINK OUTSIDE THE BOX in large raised letters above a noughts-and-crosses grid struck through by one line",
+    "venues": [
+      "office",
+      "university",
+      "school",
+      "cafe"
+    ],
+    "styles": [
+      "typography",
+      "monumental"
+    ],
+    "orientation": "portrait",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/outside-the-box.18367e77.png",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "PVC foam board",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": true
   },
   {
     "slug": "begin-anyway",
     "title": "Begin Anyway",
     "collection": "words-at-work",
-    "description": "Two words in monumental type for the wall people see first thing in the morning — customizable to your team's own mantra.",
-    "alt": "Portrait typography artwork with the words Begin Anyway in monumental serif type",
+    "description": "Two words for the wall people pass on the way to a hard meeting. Cut in dark PVC on a colour wall, which is the combination that reads from furthest away.",
+    "alt": "The words BEGIN ANYWAY in large raised dark letters on a bright wall",
     "venues": [
       "office",
-      "university",
-      "school"
+      "school",
+      "university"
     ],
     "styles": [
-      "typography"
+      "typography",
+      "monumental"
     ],
     "orientation": "portrait",
+    "wallTone": "accent",
     "image": {
-      "src": "/artworks/begin-anyway.fa23347a.jpg",
+      "src": "/artworks/begin-anyway.80de07a1.png",
       "width": 1500,
       "height": 2000
     },
@@ -750,33 +211,33 @@
       "l",
       "xl"
     ],
-    "defaultSize": "l",
+    "defaultSize": "m",
     "customText": true,
     "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
+      "PVC foam board",
+      "Flush mounted"
     ],
-    "year": 2025,
-    "featured": true
+    "year": 2026,
+    "featured": false
   },
   {
-    "slug": "deep-work",
-    "title": "Deep Work",
+    "slug": "ship-then-fix",
+    "title": "Ship It Then Fix It",
     "collection": "words-at-work",
-    "description": "A wide, quiet typographic field for focus zones and libraries — set your own words in the same measured type.",
-    "alt": "Wide typography artwork with the words Deep Work in spaced capital letters",
+    "description": "A landscape statement for the wall above a long desk run. Acrylic on 12 mm standoffs, so each word throws its own shadow and the line has depth along its length.",
+    "alt": "The words SHIP IT THEN FIX IT in raised cut letters across a wide wall",
     "venues": [
       "office",
       "university"
     ],
     "styles": [
       "typography",
-      "minimal"
+      "monumental"
     ],
     "orientation": "landscape",
+    "wallTone": "dark",
     "image": {
-      "src": "/artworks/deep-work.0c23e0e3.jpg",
+      "src": "/artworks/ship-then-fix.8b732fad.png",
       "width": 2000,
       "height": 1500
     },
@@ -789,32 +250,144 @@
     "defaultSize": "l",
     "customText": true,
     "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
     ],
-    "year": 2024,
+    "year": 2026,
     "featured": false
   },
   {
-    "slug": "learn-build-repeat",
-    "title": "Learn. Build. Repeat.",
+    "slug": "ask-better-questions",
+    "title": "Ask Better Questions",
     "collection": "words-at-work",
-    "description": "Three words stacked with engineering precision — made for maker labs, CS departments and startup floors.",
-    "alt": "Square typography artwork with the stacked words Learn Build Repeat",
+    "description": "A panoramic line for a corridor, where a piece is read while walking past rather than while standing still. Sprayed MDF in a matched brand colour.",
+    "alt": "The words ASK BETTER QUESTIONS in raised letters running along a wide corridor wall",
     "venues": [
       "university",
       "school",
       "office"
     ],
     "styles": [
+      "typography",
+      "monumental"
+    ],
+    "orientation": "panorama",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/ask-better-questions.f0aafb04.png",
+      "width": 2500,
+      "height": 1000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "CNC-routed MDF",
+      "On a backer panel"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "bright-ideas",
+    "title": "Bright Ideas",
+    "collection": "line-and-wire",
+    "description": "Six outline bulbs on wires, each carrying one word, printed as a continuous coloured line. Light enough to mount with tape, which keeps a leased wall intact.",
+    "alt": "Six outlined lightbulbs in bright colours hanging on wires, each containing one word",
+    "venues": [
+      "office",
+      "cafe",
+      "school"
+    ],
+    "styles": [
+      "line art",
       "typography"
     ],
-    "orientation": "square",
+    "orientation": "landscape",
+    "wallTone": "light",
     "image": {
-      "src": "/artworks/learn-build-repeat.1a32c007.jpg",
-      "width": 1800,
-      "height": 1800
+      "src": "/artworks/bright-ideas.1e813f29.png",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": false,
+    "materials": [
+      "3D-printed PLA",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": true
+  },
+  {
+    "slug": "hanging-goals",
+    "title": "Hanging Goals",
+    "collection": "line-and-wire",
+    "description": "A panoramic run of outline bulbs at alternating drops, so the row reads as hung rather than ruled. Colour is the filament, so there is no finish to chip.",
+    "alt": "A wide row of outlined lightbulbs on wires at alternating heights, each holding a word",
+    "venues": [
+      "office",
+      "cafe",
+      "university"
+    ],
+    "styles": [
+      "line art",
+      "typography"
+    ],
+    "orientation": "panorama",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/hanging-goals.d55462f3.png",
+      "width": 2500,
+      "height": 1000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": false,
+    "materials": [
+      "3D-printed PLA",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "lit",
+    "title": "Lit",
+    "collection": "line-and-wire",
+    "description": "Four bulbs rather than six, for a narrower wall or the space between two windows. The same continuous-line print, sized so each word still reads from across the room.",
+    "alt": "Four outlined lightbulbs in bright colours on wires, each holding a single word",
+    "venues": [
+      "cafe",
+      "office",
+      "school"
+    ],
+    "styles": [
+      "line art",
+      "typography"
+    ],
+    "orientation": "landscape",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/lit.1e813f29.png",
+      "width": 2000,
+      "height": 1500
     },
     "sizes": [
       "s",
@@ -823,32 +396,106 @@
       "xl"
     ],
     "defaultSize": "m",
-    "customText": true,
+    "customText": false,
     "materials": [
-      "Archival matte canvas",
-      "UV-cured pigment print",
-      "Floating hardwood frame"
+      "3D-printed PLA",
+      "Flush mounted"
     ],
-    "year": 2024,
+    "year": 2026,
     "featured": false
   },
   {
-    "slug": "the-long-game",
-    "title": "The Long Game",
-    "collection": "words-at-work",
-    "description": "A vertical typographic column about patience and compounding — for the corridor between where you are and where you're going.",
-    "alt": "Portrait typography artwork with the words The Long Game in a tall vertical column",
+    "slug": "six-questions",
+    "title": "Six Questions",
+    "collection": "line-and-wire",
+    "description": "The questions a team should be able to answer, one to a bulb, along a classroom or corridor wall. Printed in six colours so each reads as its own idea.",
+    "alt": "Six outlined lightbulbs in different colours along a wide wall, each carrying one word",
+    "venues": [
+      "school",
+      "university",
+      "office"
+    ],
+    "styles": [
+      "line art",
+      "typography"
+    ],
+    "orientation": "panorama",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/six-questions.d55462f3.png",
+      "width": 2500,
+      "height": 1000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": false,
+    "materials": [
+      "3D-printed PLA",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "house-rules",
+    "title": "House Rules",
+    "collection": "values-boards",
+    "description": "Five words at deliberately unequal sizes and alternating alignment, so the group reads as a composition rather than an enlarged bullet list. Brushed aluminium.",
+    "alt": "Five value words in raised brushed metal letters at varying sizes, alternately left and right aligned",
     "venues": [
       "office",
+      "hotel"
+    ],
+    "styles": [
+      "typography",
+      "branding"
+    ],
+    "orientation": "portrait",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/house-rules.4eecda8a.png",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "Brushed aluminium",
+      "25 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "what-we-stand-for",
+    "title": "What We Stand For",
+    "collection": "values-boards",
+    "description": "For the wall behind a reception desk, where the words are read while someone waits. One word raised deeper than the rest so the group has a centre.",
+    "alt": "A composed group of raised value words at varying sizes, one deeper than the others",
+    "venues": [
+      "office",
+      "hotel",
       "university"
     ],
     "styles": [
       "typography",
-      "minimal"
+      "branding"
     ],
     "orientation": "portrait",
+    "wallTone": "light",
     "image": {
-      "src": "/artworks/the-long-game.dbafc5fb.jpg",
+      "src": "/artworks/what-we-stand-for.fb2834cf.png",
       "width": 1500,
       "height": 2000
     },
@@ -861,11 +508,374 @@
     "defaultSize": "m",
     "customText": true,
     "materials": [
-      "Fine-art paper",
-      "UV-cured pigment print",
-      "Slim aluminum frame"
+      "CNC-routed MDF",
+      "On a backer panel"
     ],
-    "year": 2025,
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "team-charter",
+    "title": "Team Charter",
+    "collection": "values-boards",
+    "description": "The words a team agreed on, cut in acrylic and mounted where they cannot be minimised. Every word is yours; the composition is the part we do.",
+    "alt": "Raised acrylic value words composed as a single group on a dark wall",
+    "venues": [
+      "office",
+      "university"
+    ],
+    "styles": [
+      "typography",
+      "branding"
+    ],
+    "orientation": "portrait",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/team-charter.054c3793.png",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "how-we-work",
+    "title": "How We Work",
+    "collection": "values-boards",
+    "description": "A landscape values board for a meeting-room wall, sized so it reads from the far end of the table. PVC foam, so it mounts with tape on a wall that cannot be drilled.",
+    "alt": "A wide composition of raised value words at varying sizes across a meeting room wall",
+    "venues": [
+      "office",
+      "hotel"
+    ],
+    "styles": [
+      "typography",
+      "branding"
+    ],
+    "orientation": "landscape",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/how-we-work.c4de672a.png",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "PVC foam board",
+      "Flush mounted"
+    ],
+    "year": 2026,
+    "featured": true
+  },
+  {
+    "slug": "sabr",
+    "title": "Sabr",
+    "collection": "sacred-lines",
+    "description": "The word for patience, cut as dimensional letterforms so the stroke gains a real edge and a real shadow. Can be reset with your own word, in Urdu, Arabic or Latin script.",
+    "alt": "The word Sabr cut as raised calligraphic letterforms with a brass flourish beneath",
+    "venues": [
+      "office",
+      "hotel",
+      "restaurant"
+    ],
+    "styles": [
+      "calligraphy",
+      "typography"
+    ],
+    "orientation": "portrait",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/sabr.1c5e5a69.png",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": true
+  },
+  {
+    "slug": "bismillah",
+    "title": "Bismillah",
+    "collection": "sacred-lines",
+    "description": "A square piece for an entrance, cut in brushed aluminium so the grain reads as material rather than colour. Set in Naskh when the wording is Arabic.",
+    "alt": "The word Bismillah cut as raised calligraphic letterforms in brushed metal",
+    "venues": [
+      "office",
+      "hotel",
+      "restaurant"
+    ],
+    "styles": [
+      "calligraphy",
+      "typography"
+    ],
+    "orientation": "square",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/bismillah.adc9541b.png",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
+    "customText": true,
+    "materials": [
+      "Brushed aluminium",
+      "25 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "shukr",
+    "title": "Shukr",
+    "collection": "sacred-lines",
+    "description": "Gratitude as a single cut word on a dark wall, where a pale letterform has the most contrast to work with. Urdu wording is set in Nastaliq.",
+    "alt": "The word Shukr in raised pale calligraphic letterforms on a dark wall",
+    "venues": [
+      "office",
+      "hotel",
+      "restaurant"
+    ],
+    "styles": [
+      "calligraphy",
+      "typography"
+    ],
+    "orientation": "portrait",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/shukr.cea512df.png",
+      "width": 1500,
+      "height": 2000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
+    "customText": true,
+    "materials": [
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "alhamdulillah",
+    "title": "Alhamdulillah",
+    "collection": "sacred-lines",
+    "description": "A panoramic word for the long wall of a dining room or prayer space, where the length of the line is the point. Cut in matte acrylic to stay readable under spotlights.",
+    "alt": "The word Alhamdulillah cut as raised calligraphic letterforms across a long wall",
+    "venues": [
+      "restaurant",
+      "hotel",
+      "office"
+    ],
+    "styles": [
+      "calligraphy",
+      "typography"
+    ],
+    "orientation": "panorama",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/alhamdulillah.7418a874.png",
+      "width": 2500,
+      "height": 1000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "reception-mark",
+    "title": "Reception Mark",
+    "collection": "brand-walls",
+    "description": "Mark, wordmark and rule in brushed aluminium on 25 mm standoffs — the wall a visitor photographs before the meeting. Can be lit from behind where the wall allows it.",
+    "alt": "A company mark and wordmark in raised brushed metal letters on a dark reception wall",
+    "venues": [
+      "office",
+      "hotel"
+    ],
+    "styles": [
+      "branding",
+      "typography"
+    ],
+    "orientation": "landscape",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/reception-mark.f9562981.png",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "l",
+    "customText": true,
+    "materials": [
+      "Brushed aluminium",
+      "25 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": true
+  },
+  {
+    "slug": "lobby-wordmark",
+    "title": "Lobby Wordmark",
+    "collection": "brand-walls",
+    "description": "A wordmark stretched across a double-height lobby wall, where a shallow shadow disappears at viewing distance and a 25 mm standoff does not.",
+    "alt": "A company wordmark in raised metal letters running across a wide lobby wall",
+    "venues": [
+      "hotel",
+      "office"
+    ],
+    "styles": [
+      "branding",
+      "typography"
+    ],
+    "orientation": "panorama",
+    "wallTone": "dark",
+    "image": {
+      "src": "/artworks/lobby-wordmark.ae972ade.png",
+      "width": 2500,
+      "height": 1000
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "xl",
+    "customText": true,
+    "materials": [
+      "Brushed aluminium",
+      "25 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "entrance-mark",
+    "title": "Entrance Mark",
+    "collection": "brand-walls",
+    "description": "A square mark for the wall beside a door, at the size that reads from the far side of a street without becoming signage. Matte acrylic on hidden standoffs.",
+    "alt": "A square company mark and wordmark in raised acrylic letters beside an entrance",
+    "venues": [
+      "cafe",
+      "restaurant",
+      "office"
+    ],
+    "styles": [
+      "branding",
+      "typography"
+    ],
+    "orientation": "square",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/entrance-mark.919da952.png",
+      "width": 1800,
+      "height": 1800
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
+    "customText": true,
+    "materials": [
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
+    "featured": false
+  },
+  {
+    "slug": "meeting-room-front",
+    "title": "Meeting Room Front",
+    "collection": "brand-walls",
+    "description": "The wall a video call looks at all day. Sized and placed so a camera frames it behind the person speaking rather than cropping it in half.",
+    "alt": "A company mark and wordmark in raised acrylic letters on a meeting room wall",
+    "venues": [
+      "office"
+    ],
+    "styles": [
+      "branding",
+      "typography"
+    ],
+    "orientation": "landscape",
+    "wallTone": "light",
+    "image": {
+      "src": "/artworks/meeting-room-front.3587a32c.png",
+      "width": 2000,
+      "height": 1500
+    },
+    "sizes": [
+      "s",
+      "m",
+      "l",
+      "xl"
+    ],
+    "defaultSize": "m",
+    "customText": true,
+    "materials": [
+      "Laser-cut acrylic",
+      "12 mm standoff mounting"
+    ],
+    "year": 2026,
     "featured": false
   }
 ]

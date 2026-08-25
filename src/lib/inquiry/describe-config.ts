@@ -1,4 +1,4 @@
-import { getFinish } from "@/content/finishes";
+import { getMount } from "@/content/finishes";
 import {
   getGround,
   getInk,
@@ -31,7 +31,7 @@ export function describeConfig(
   }
 
   const finishId = get("finish");
-  if (finishId) parts.push(`${getFinish(finishId).name.toLowerCase()} frame`);
+  if (finishId) parts.push(`${getMount(finishId).name.toLowerCase()}`);
 
   const text = get("text")?.trim();
   const typefaceId = get("typeface");

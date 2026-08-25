@@ -8,6 +8,11 @@ Brand identity is fully configurable from a single file:
 [`src/config/site.config.ts`](src/config/site.config.ts). Renaming the brand
 requires editing only that file.
 
+The work is **cut dimensional lettering** — raised letters and word-cloud panels
+mounted on a wall, not printed pictures. Artwork images are therefore PNG with
+alpha and no ground: the letters are the artwork and the wall behind them is the
+room's. Every piece declares the wall tone it is specified for.
+
 ## Getting started
 
 ```bash
@@ -26,7 +31,7 @@ everything else works.
 | Script | Purpose |
 | --- | --- |
 | `npm run generate:placeholders` | Regenerate placeholder artwork, blur placeholders, social cards and app icons. Gives each image a content-addressed filename and rewrites `artworks.json`, because `next/image` keys its cache on a URL that would otherwise not change when a file is replaced. |
-| `npm run generate:placeholders -- --blur-only` | Ingest real artwork dropped at `public/artworks/<slug>.jpg`: hashes and renames it, prunes the file it replaces, and refreshes blur placeholders and social cards. Use this once real artwork is in place — the full command would overwrite it. |
+| `npm run generate:placeholders -- --blur-only` | Ingest real artwork dropped at `public/artworks/<slug>.png` (transparent ground): hashes and renames it, prunes the file it replaces, and refreshes blur placeholders and social cards. Use this once real artwork is in place — the full command would overwrite it. |
 | `npm run generate:ar` | Build the GLB and USDZ for every artwork at every size, plus the manifest the app reads. |
 
 ### Checking
@@ -35,12 +40,14 @@ everything else works.
 | --- | --- |
 | `npm run verify` | Build, serve, check the hero arrangement, then audit 31 viewports across 16 pages. Refuses to audit a stale build. |
 | `npm run serve` | Serve the production build for the checks that need one. Frees the port first and refuses to serve anything but the build on disk. |
-| `npm run test:interaction` | 231 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
+| `npm run test:interaction` | 234 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
 | `npm run lighthouse` | SEO, best practices and accessibility gated at 90 across eleven routes. Needs a server running. |
 | `npm run lighthouse:detail <report>` | Read a saved report and show what is costing time. |
 | `npm run check:images` | Every artwork file matches its declared dimensions. |
 | `npm run check:ar` | Every AR asset encodes its advertised size and is Quick Look shaped. |
 | `npm run check:analytics` | Analytics load where they work and, just as importantly, not where they do not. |
+| `npm run check:slug-refs` | Every artwork and collection slug referenced in code still exists in the catalogue. |
+| `npm run check:brand` | Renaming the studio touches one config file and nothing else. Swaps in a long name and a new palette, rebuilds, checks the output and the header, then restores. Two builds — not for every change. |
 | `npm run audit:responsive` | The viewport audit on its own, against a running server. |
 | `npm run shots` | Full-page screenshots for review. `--selector` captures one element; `--click` presses a control first. |
 

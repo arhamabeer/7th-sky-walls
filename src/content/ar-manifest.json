@@ -1,826 +1,211 @@
 {
-  "meridian-seven": {
-    "frame": "hardwood",
+  "idea-bulb": {
+    "wall": "dark wall",
     "sizes": {
       "s": {
-        "glb": "/ar/meridian-seven/s.glb",
-        "usdz": "/ar/meridian-seven/s.usdz",
+        "glb": "/ar/idea-bulb/s.glb",
+        "usdz": "/ar/idea-bulb/s.usdz",
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 28860,
-        "usdzBytes": 32523
+        "glbBytes": 56560,
+        "usdzBytes": 60250
       },
       "m": {
-        "glb": "/ar/meridian-seven/m.glb",
-        "usdz": "/ar/meridian-seven/m.usdz",
+        "glb": "/ar/idea-bulb/m.glb",
+        "usdz": "/ar/idea-bulb/m.usdz",
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 28856,
-        "usdzBytes": 32523
+        "glbBytes": 56560,
+        "usdzBytes": 60250
       },
       "l": {
-        "glb": "/ar/meridian-seven/l.glb",
-        "usdz": "/ar/meridian-seven/l.usdz",
+        "glb": "/ar/idea-bulb/l.glb",
+        "usdz": "/ar/idea-bulb/l.usdz",
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 28856,
-        "usdzBytes": 32523
+        "glbBytes": 56560,
+        "usdzBytes": 60250
       },
       "xl": {
-        "glb": "/ar/meridian-seven/xl.glb",
-        "usdz": "/ar/meridian-seven/xl.usdz",
+        "glb": "/ar/idea-bulb/xl.glb",
+        "usdz": "/ar/idea-bulb/xl.usdz",
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 28852,
-        "usdzBytes": 32523
+        "glbBytes": 56556,
+        "usdzBytes": 60250
       }
     }
   },
-  "glass-horizon": {
-    "frame": "aluminium",
+  "growth-arrow": {
+    "wall": "dark wall",
     "sizes": {
       "s": {
-        "glb": "/ar/glass-horizon/s.glb",
-        "usdz": "/ar/glass-horizon/s.usdz",
-        "widthCm": 120,
-        "heightCm": 48,
-        "depthCm": 3.5,
-        "glbBytes": 23080,
-        "usdzBytes": 26747
-      },
-      "m": {
-        "glb": "/ar/glass-horizon/m.glb",
-        "usdz": "/ar/glass-horizon/m.usdz",
-        "widthCm": 150,
+        "glb": "/ar/growth-arrow/s.glb",
+        "usdz": "/ar/growth-arrow/s.usdz",
+        "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 23052,
-        "usdzBytes": 26747
+        "glbBytes": 71052,
+        "usdzBytes": 74737
       },
-      "l": {
-        "glb": "/ar/glass-horizon/l.glb",
-        "usdz": "/ar/glass-horizon/l.usdz",
-        "widthCm": 200,
+      "m": {
+        "glb": "/ar/growth-arrow/m.glb",
+        "usdz": "/ar/growth-arrow/m.usdz",
+        "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 23044,
-        "usdzBytes": 26747
+        "glbBytes": 71052,
+        "usdzBytes": 74737
+      },
+      "l": {
+        "glb": "/ar/growth-arrow/l.glb",
+        "usdz": "/ar/growth-arrow/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 71052,
+        "usdzBytes": 74737
       },
       "xl": {
-        "glb": "/ar/glass-horizon/xl.glb",
-        "usdz": "/ar/glass-horizon/xl.usdz",
-        "widthCm": 250,
-        "heightCm": 100,
+        "glb": "/ar/growth-arrow/xl.glb",
+        "usdz": "/ar/growth-arrow/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 23020,
-        "usdzBytes": 26747
+        "glbBytes": 71048,
+        "usdzBytes": 74737
       }
     }
   },
-  "night-grid": {
-    "frame": "hardwood",
+  "collective": {
+    "wall": "light wall",
     "sizes": {
       "s": {
-        "glb": "/ar/night-grid/s.glb",
-        "usdz": "/ar/night-grid/s.usdz",
+        "glb": "/ar/collective/s.glb",
+        "usdz": "/ar/collective/s.usdz",
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 35364,
-        "usdzBytes": 39032
+        "glbBytes": 51452,
+        "usdzBytes": 55122
       },
       "m": {
-        "glb": "/ar/night-grid/m.glb",
-        "usdz": "/ar/night-grid/m.usdz",
+        "glb": "/ar/collective/m.glb",
+        "usdz": "/ar/collective/m.usdz",
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 35360,
-        "usdzBytes": 39032
+        "glbBytes": 51448,
+        "usdzBytes": 55122
       },
       "l": {
-        "glb": "/ar/night-grid/l.glb",
-        "usdz": "/ar/night-grid/l.usdz",
+        "glb": "/ar/collective/l.glb",
+        "usdz": "/ar/collective/l.usdz",
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 35360,
-        "usdzBytes": 39032
+        "glbBytes": 51448,
+        "usdzBytes": 55122
       },
       "xl": {
-        "glb": "/ar/night-grid/xl.glb",
-        "usdz": "/ar/night-grid/xl.usdz",
+        "glb": "/ar/collective/xl.glb",
+        "usdz": "/ar/collective/xl.usdz",
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 35356,
-        "usdzBytes": 39032
+        "glbBytes": 51444,
+        "usdzBytes": 55122
       }
     }
   },
-  "ascent": {
-    "frame": "aluminium",
+  "deep-work": {
+    "wall": "dark wall",
     "sizes": {
       "s": {
-        "glb": "/ar/ascent/s.glb",
-        "usdz": "/ar/ascent/s.usdz",
+        "glb": "/ar/deep-work/s.glb",
+        "usdz": "/ar/deep-work/s.usdz",
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 26524,
-        "usdzBytes": 30203
+        "glbBytes": 62960,
+        "usdzBytes": 66635
       },
       "m": {
-        "glb": "/ar/ascent/m.glb",
-        "usdz": "/ar/ascent/m.usdz",
+        "glb": "/ar/deep-work/m.glb",
+        "usdz": "/ar/deep-work/m.usdz",
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 26524,
-        "usdzBytes": 30203
+        "glbBytes": 62960,
+        "usdzBytes": 66635
       },
       "l": {
-        "glb": "/ar/ascent/l.glb",
-        "usdz": "/ar/ascent/l.usdz",
+        "glb": "/ar/deep-work/l.glb",
+        "usdz": "/ar/deep-work/l.usdz",
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 26524,
-        "usdzBytes": 30203
+        "glbBytes": 62960,
+        "usdzBytes": 66635
       },
       "xl": {
-        "glb": "/ar/ascent/xl.glb",
-        "usdz": "/ar/ascent/xl.usdz",
+        "glb": "/ar/deep-work/xl.glb",
+        "usdz": "/ar/deep-work/xl.usdz",
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 26520,
-        "usdzBytes": 30203
+        "glbBytes": 62956,
+        "usdzBytes": 66635
       }
     }
   },
-  "sabr": {
-    "frame": "hardwood",
+  "outside-the-box": {
+    "wall": "dark wall",
     "sizes": {
       "s": {
-        "glb": "/ar/sabr/s.glb",
-        "usdz": "/ar/sabr/s.usdz",
+        "glb": "/ar/outside-the-box/s.glb",
+        "usdz": "/ar/outside-the-box/s.usdz",
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 33256,
-        "usdzBytes": 36947
+        "glbBytes": 51076,
+        "usdzBytes": 54724
       },
       "m": {
-        "glb": "/ar/sabr/m.glb",
-        "usdz": "/ar/sabr/m.usdz",
+        "glb": "/ar/outside-the-box/m.glb",
+        "usdz": "/ar/outside-the-box/m.usdz",
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 33256,
-        "usdzBytes": 36947
+        "glbBytes": 51076,
+        "usdzBytes": 54724
       },
       "l": {
-        "glb": "/ar/sabr/l.glb",
-        "usdz": "/ar/sabr/l.usdz",
+        "glb": "/ar/outside-the-box/l.glb",
+        "usdz": "/ar/outside-the-box/l.usdz",
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 33256,
-        "usdzBytes": 36947
+        "glbBytes": 51076,
+        "usdzBytes": 54724
       },
       "xl": {
-        "glb": "/ar/sabr/xl.glb",
-        "usdz": "/ar/sabr/xl.usdz",
+        "glb": "/ar/outside-the-box/xl.glb",
+        "usdz": "/ar/outside-the-box/xl.usdz",
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 33252,
-        "usdzBytes": 36947
-      }
-    }
-  },
-  "shukr": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/shukr/s.glb",
-        "usdz": "/ar/shukr/s.usdz",
-        "widthCm": 60,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 32604,
-        "usdzBytes": 36284
-      },
-      "m": {
-        "glb": "/ar/shukr/m.glb",
-        "usdz": "/ar/shukr/m.usdz",
-        "widthCm": 80,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 32600,
-        "usdzBytes": 36284
-      },
-      "l": {
-        "glb": "/ar/shukr/l.glb",
-        "usdz": "/ar/shukr/l.usdz",
-        "widthCm": 120,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 32600,
-        "usdzBytes": 36284
-      },
-      "xl": {
-        "glb": "/ar/shukr/xl.glb",
-        "usdz": "/ar/shukr/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 32596,
-        "usdzBytes": 36284
-      }
-    }
-  },
-  "bismillah-flow": {
-    "frame": "aluminium",
-    "sizes": {
-      "s": {
-        "glb": "/ar/bismillah-flow/s.glb",
-        "usdz": "/ar/bismillah-flow/s.usdz",
-        "widthCm": 120,
-        "heightCm": 48,
-        "depthCm": 3.5,
-        "glbBytes": 22120,
-        "usdzBytes": 25787
-      },
-      "m": {
-        "glb": "/ar/bismillah-flow/m.glb",
-        "usdz": "/ar/bismillah-flow/m.usdz",
-        "widthCm": 150,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 22092,
-        "usdzBytes": 25787
-      },
-      "l": {
-        "glb": "/ar/bismillah-flow/l.glb",
-        "usdz": "/ar/bismillah-flow/l.usdz",
-        "widthCm": 200,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 22084,
-        "usdzBytes": 25787
-      },
-      "xl": {
-        "glb": "/ar/bismillah-flow/xl.glb",
-        "usdz": "/ar/bismillah-flow/xl.usdz",
-        "widthCm": 250,
-        "heightCm": 100,
-        "depthCm": 3.5,
-        "glbBytes": 22060,
-        "usdzBytes": 25787
-      }
-    }
-  },
-  "noor": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/noor/s.glb",
-        "usdz": "/ar/noor/s.usdz",
-        "widthCm": 45,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 27568,
-        "usdzBytes": 31258
-      },
-      "m": {
-        "glb": "/ar/noor/m.glb",
-        "usdz": "/ar/noor/m.usdz",
-        "widthCm": 60,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 27568,
-        "usdzBytes": 31258
-      },
-      "l": {
-        "glb": "/ar/noor/l.glb",
-        "usdz": "/ar/noor/l.usdz",
-        "widthCm": 90,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 27568,
-        "usdzBytes": 31258
-      },
-      "xl": {
-        "glb": "/ar/noor/xl.glb",
-        "usdz": "/ar/noor/xl.usdz",
-        "widthCm": 120,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 27564,
-        "usdzBytes": 31258
-      }
-    }
-  },
-  "monsoon-leaves": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/monsoon-leaves/s.glb",
-        "usdz": "/ar/monsoon-leaves/s.usdz",
-        "widthCm": 45,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 32444,
-        "usdzBytes": 36100
-      },
-      "m": {
-        "glb": "/ar/monsoon-leaves/m.glb",
-        "usdz": "/ar/monsoon-leaves/m.usdz",
-        "widthCm": 60,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 32440,
-        "usdzBytes": 36100
-      },
-      "l": {
-        "glb": "/ar/monsoon-leaves/l.glb",
-        "usdz": "/ar/monsoon-leaves/l.usdz",
-        "widthCm": 90,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 32440,
-        "usdzBytes": 36100
-      },
-      "xl": {
-        "glb": "/ar/monsoon-leaves/xl.glb",
-        "usdz": "/ar/monsoon-leaves/xl.usdz",
-        "widthCm": 120,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 32436,
-        "usdzBytes": 36100
-      }
-    }
-  },
-  "courtyard-fern": {
-    "frame": "aluminium",
-    "sizes": {
-      "s": {
-        "glb": "/ar/courtyard-fern/s.glb",
-        "usdz": "/ar/courtyard-fern/s.usdz",
-        "widthCm": 60,
-        "heightCm": 45,
-        "depthCm": 3.5,
-        "glbBytes": 27684,
-        "usdzBytes": 31340
-      },
-      "m": {
-        "glb": "/ar/courtyard-fern/m.glb",
-        "usdz": "/ar/courtyard-fern/m.usdz",
-        "widthCm": 80,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 27680,
-        "usdzBytes": 31340
-      },
-      "l": {
-        "glb": "/ar/courtyard-fern/l.glb",
-        "usdz": "/ar/courtyard-fern/l.usdz",
-        "widthCm": 120,
-        "heightCm": 90,
-        "depthCm": 3.5,
-        "glbBytes": 27680,
-        "usdzBytes": 31340
-      },
-      "xl": {
-        "glb": "/ar/courtyard-fern/xl.glb",
-        "usdz": "/ar/courtyard-fern/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 27676,
-        "usdzBytes": 31340
-      }
-    }
-  },
-  "wild-garden": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/wild-garden/s.glb",
-        "usdz": "/ar/wild-garden/s.usdz",
-        "widthCm": 60,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 32836,
-        "usdzBytes": 36509
-      },
-      "m": {
-        "glb": "/ar/wild-garden/m.glb",
-        "usdz": "/ar/wild-garden/m.usdz",
-        "widthCm": 80,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 32832,
-        "usdzBytes": 36509
-      },
-      "l": {
-        "glb": "/ar/wild-garden/l.glb",
-        "usdz": "/ar/wild-garden/l.usdz",
-        "widthCm": 120,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 32832,
-        "usdzBytes": 36509
-      },
-      "xl": {
-        "glb": "/ar/wild-garden/xl.glb",
-        "usdz": "/ar/wild-garden/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 32828,
-        "usdzBytes": 36509
-      }
-    }
-  },
-  "banyan-shade": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/banyan-shade/s.glb",
-        "usdz": "/ar/banyan-shade/s.usdz",
-        "widthCm": 120,
-        "heightCm": 48,
-        "depthCm": 3.5,
-        "glbBytes": 20388,
-        "usdzBytes": 24057
-      },
-      "m": {
-        "glb": "/ar/banyan-shade/m.glb",
-        "usdz": "/ar/banyan-shade/m.usdz",
-        "widthCm": 150,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 20360,
-        "usdzBytes": 24057
-      },
-      "l": {
-        "glb": "/ar/banyan-shade/l.glb",
-        "usdz": "/ar/banyan-shade/l.usdz",
-        "widthCm": 200,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 20352,
-        "usdzBytes": 24057
-      },
-      "xl": {
-        "glb": "/ar/banyan-shade/xl.glb",
-        "usdz": "/ar/banyan-shade/xl.usdz",
-        "widthCm": 250,
-        "heightCm": 100,
-        "depthCm": 3.5,
-        "glbBytes": 20328,
-        "usdzBytes": 24057
-      }
-    }
-  },
-  "lahore-jaali": {
-    "frame": "aluminium",
-    "sizes": {
-      "s": {
-        "glb": "/ar/lahore-jaali/s.glb",
-        "usdz": "/ar/lahore-jaali/s.usdz",
-        "widthCm": 45,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 24584,
-        "usdzBytes": 28252
-      },
-      "m": {
-        "glb": "/ar/lahore-jaali/m.glb",
-        "usdz": "/ar/lahore-jaali/m.usdz",
-        "widthCm": 60,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 24580,
-        "usdzBytes": 28252
-      },
-      "l": {
-        "glb": "/ar/lahore-jaali/l.glb",
-        "usdz": "/ar/lahore-jaali/l.usdz",
-        "widthCm": 90,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 24580,
-        "usdzBytes": 28252
-      },
-      "xl": {
-        "glb": "/ar/lahore-jaali/xl.glb",
-        "usdz": "/ar/lahore-jaali/xl.usdz",
-        "widthCm": 120,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 24576,
-        "usdzBytes": 28252
-      }
-    }
-  },
-  "old-city-doors": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/old-city-doors/s.glb",
-        "usdz": "/ar/old-city-doors/s.usdz",
-        "widthCm": 60,
-        "heightCm": 45,
-        "depthCm": 3.5,
-        "glbBytes": 25400,
-        "usdzBytes": 29067
-      },
-      "m": {
-        "glb": "/ar/old-city-doors/m.glb",
-        "usdz": "/ar/old-city-doors/m.usdz",
-        "widthCm": 80,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 25400,
-        "usdzBytes": 29067
-      },
-      "l": {
-        "glb": "/ar/old-city-doors/l.glb",
-        "usdz": "/ar/old-city-doors/l.usdz",
-        "widthCm": 120,
-        "heightCm": 90,
-        "depthCm": 3.5,
-        "glbBytes": 25400,
-        "usdzBytes": 29067
-      },
-      "xl": {
-        "glb": "/ar/old-city-doors/xl.glb",
-        "usdz": "/ar/old-city-doors/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 25396,
-        "usdzBytes": 29067
-      }
-    }
-  },
-  "minaret-dawn": {
-    "frame": "aluminium",
-    "sizes": {
-      "s": {
-        "glb": "/ar/minaret-dawn/s.glb",
-        "usdz": "/ar/minaret-dawn/s.usdz",
-        "widthCm": 45,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 20296,
-        "usdzBytes": 23962
-      },
-      "m": {
-        "glb": "/ar/minaret-dawn/m.glb",
-        "usdz": "/ar/minaret-dawn/m.usdz",
-        "widthCm": 60,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 20292,
-        "usdzBytes": 23962
-      },
-      "l": {
-        "glb": "/ar/minaret-dawn/l.glb",
-        "usdz": "/ar/minaret-dawn/l.usdz",
-        "widthCm": 90,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 20292,
-        "usdzBytes": 23962
-      },
-      "xl": {
-        "glb": "/ar/minaret-dawn/xl.glb",
-        "usdz": "/ar/minaret-dawn/xl.usdz",
-        "widthCm": 120,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 20288,
-        "usdzBytes": 23962
-      }
-    }
-  },
-  "caravanserai": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/caravanserai/s.glb",
-        "usdz": "/ar/caravanserai/s.usdz",
-        "widthCm": 120,
-        "heightCm": 48,
-        "depthCm": 3.5,
-        "glbBytes": 21552,
-        "usdzBytes": 25220
-      },
-      "m": {
-        "glb": "/ar/caravanserai/m.glb",
-        "usdz": "/ar/caravanserai/m.usdz",
-        "widthCm": 150,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 21524,
-        "usdzBytes": 25220
-      },
-      "l": {
-        "glb": "/ar/caravanserai/l.glb",
-        "usdz": "/ar/caravanserai/l.usdz",
-        "widthCm": 200,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 21516,
-        "usdzBytes": 25220
-      },
-      "xl": {
-        "glb": "/ar/caravanserai/xl.glb",
-        "usdz": "/ar/caravanserai/xl.usdz",
-        "widthCm": 250,
-        "heightCm": 100,
-        "depthCm": 3.5,
-        "glbBytes": 21492,
-        "usdzBytes": 25220
-      }
-    }
-  },
-  "dawn-over-clifton": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/dawn-over-clifton/s.glb",
-        "usdz": "/ar/dawn-over-clifton/s.usdz",
-        "widthCm": 60,
-        "heightCm": 45,
-        "depthCm": 3.5,
-        "glbBytes": 23016,
-        "usdzBytes": 26666
-      },
-      "m": {
-        "glb": "/ar/dawn-over-clifton/m.glb",
-        "usdz": "/ar/dawn-over-clifton/m.usdz",
-        "widthCm": 80,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 23012,
-        "usdzBytes": 26666
-      },
-      "l": {
-        "glb": "/ar/dawn-over-clifton/l.glb",
-        "usdz": "/ar/dawn-over-clifton/l.usdz",
-        "widthCm": 120,
-        "heightCm": 90,
-        "depthCm": 3.5,
-        "glbBytes": 23012,
-        "usdzBytes": 26666
-      },
-      "xl": {
-        "glb": "/ar/dawn-over-clifton/xl.glb",
-        "usdz": "/ar/dawn-over-clifton/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 23008,
-        "usdzBytes": 26666
-      }
-    }
-  },
-  "sea-glass": {
-    "frame": "aluminium",
-    "sizes": {
-      "s": {
-        "glb": "/ar/sea-glass/s.glb",
-        "usdz": "/ar/sea-glass/s.usdz",
-        "widthCm": 45,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 10904,
-        "usdzBytes": 14577
-      },
-      "m": {
-        "glb": "/ar/sea-glass/m.glb",
-        "usdz": "/ar/sea-glass/m.usdz",
-        "widthCm": 60,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 10900,
-        "usdzBytes": 14577
-      },
-      "l": {
-        "glb": "/ar/sea-glass/l.glb",
-        "usdz": "/ar/sea-glass/l.usdz",
-        "widthCm": 90,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 10900,
-        "usdzBytes": 14577
-      },
-      "xl": {
-        "glb": "/ar/sea-glass/xl.glb",
-        "usdz": "/ar/sea-glass/xl.usdz",
-        "widthCm": 120,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 10896,
-        "usdzBytes": 14577
-      }
-    }
-  },
-  "amber-hour": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/amber-hour/s.glb",
-        "usdz": "/ar/amber-hour/s.usdz",
-        "widthCm": 60,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 29388,
-        "usdzBytes": 33057
-      },
-      "m": {
-        "glb": "/ar/amber-hour/m.glb",
-        "usdz": "/ar/amber-hour/m.usdz",
-        "widthCm": 80,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 29384,
-        "usdzBytes": 33057
-      },
-      "l": {
-        "glb": "/ar/amber-hour/l.glb",
-        "usdz": "/ar/amber-hour/l.usdz",
-        "widthCm": 120,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 29384,
-        "usdzBytes": 33057
-      },
-      "xl": {
-        "glb": "/ar/amber-hour/xl.glb",
-        "usdz": "/ar/amber-hour/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 29380,
-        "usdzBytes": 33057
-      }
-    }
-  },
-  "monsoon-blue": {
-    "frame": "hardwood",
-    "sizes": {
-      "s": {
-        "glb": "/ar/monsoon-blue/s.glb",
-        "usdz": "/ar/monsoon-blue/s.usdz",
-        "widthCm": 45,
-        "heightCm": 60,
-        "depthCm": 3.5,
-        "glbBytes": 23336,
-        "usdzBytes": 27000
-      },
-      "m": {
-        "glb": "/ar/monsoon-blue/m.glb",
-        "usdz": "/ar/monsoon-blue/m.usdz",
-        "widthCm": 60,
-        "heightCm": 80,
-        "depthCm": 3.5,
-        "glbBytes": 23332,
-        "usdzBytes": 27000
-      },
-      "l": {
-        "glb": "/ar/monsoon-blue/l.glb",
-        "usdz": "/ar/monsoon-blue/l.usdz",
-        "widthCm": 90,
-        "heightCm": 120,
-        "depthCm": 3.5,
-        "glbBytes": 23332,
-        "usdzBytes": 27000
-      },
-      "xl": {
-        "glb": "/ar/monsoon-blue/xl.glb",
-        "usdz": "/ar/monsoon-blue/xl.usdz",
-        "widthCm": 120,
-        "heightCm": 160,
-        "depthCm": 3.5,
-        "glbBytes": 23328,
-        "usdzBytes": 27000
+        "glbBytes": 51072,
+        "usdzBytes": 54724
       }
     }
   },
   "begin-anyway": {
-    "frame": "aluminium",
+    "wall": "accent wall",
     "sizes": {
       "s": {
         "glb": "/ar/begin-anyway/s.glb",
@@ -828,8 +213,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 37104,
-        "usdzBytes": 40769
+        "glbBytes": 31984,
+        "usdzBytes": 35649
       },
       "m": {
         "glb": "/ar/begin-anyway/m.glb",
@@ -837,8 +222,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 37100,
-        "usdzBytes": 40769
+        "glbBytes": 31980,
+        "usdzBytes": 35649
       },
       "l": {
         "glb": "/ar/begin-anyway/l.glb",
@@ -846,8 +231,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 37100,
-        "usdzBytes": 40769
+        "glbBytes": 31980,
+        "usdzBytes": 35649
       },
       "xl": {
         "glb": "/ar/begin-anyway/xl.glb",
@@ -855,131 +240,746 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 37096,
-        "usdzBytes": 40769
+        "glbBytes": 31976,
+        "usdzBytes": 35649
       }
     }
   },
-  "deep-work": {
-    "frame": "aluminium",
+  "ship-then-fix": {
+    "wall": "dark wall",
     "sizes": {
       "s": {
-        "glb": "/ar/deep-work/s.glb",
-        "usdz": "/ar/deep-work/s.usdz",
+        "glb": "/ar/ship-then-fix/s.glb",
+        "usdz": "/ar/ship-then-fix/s.usdz",
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 46888,
-        "usdzBytes": 50566
+        "glbBytes": 22256,
+        "usdzBytes": 25913
       },
       "m": {
-        "glb": "/ar/deep-work/m.glb",
-        "usdz": "/ar/deep-work/m.usdz",
+        "glb": "/ar/ship-then-fix/m.glb",
+        "usdz": "/ar/ship-then-fix/m.usdz",
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 46888,
-        "usdzBytes": 50566
+        "glbBytes": 22252,
+        "usdzBytes": 25913
       },
       "l": {
-        "glb": "/ar/deep-work/l.glb",
-        "usdz": "/ar/deep-work/l.usdz",
+        "glb": "/ar/ship-then-fix/l.glb",
+        "usdz": "/ar/ship-then-fix/l.usdz",
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 46888,
-        "usdzBytes": 50566
+        "glbBytes": 22252,
+        "usdzBytes": 25913
       },
       "xl": {
-        "glb": "/ar/deep-work/xl.glb",
-        "usdz": "/ar/deep-work/xl.usdz",
+        "glb": "/ar/ship-then-fix/xl.glb",
+        "usdz": "/ar/ship-then-fix/xl.usdz",
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 46884,
-        "usdzBytes": 50566
+        "glbBytes": 22248,
+        "usdzBytes": 25913
       }
     }
   },
-  "learn-build-repeat": {
-    "frame": "hardwood",
+  "ask-better-questions": {
+    "wall": "light wall",
     "sizes": {
       "s": {
-        "glb": "/ar/learn-build-repeat/s.glb",
-        "usdz": "/ar/learn-build-repeat/s.usdz",
-        "widthCm": 60,
-        "heightCm": 60,
+        "glb": "/ar/ask-better-questions/s.glb",
+        "usdz": "/ar/ask-better-questions/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 56568,
-        "usdzBytes": 60217
+        "glbBytes": 23372,
+        "usdzBytes": 27016
       },
       "m": {
-        "glb": "/ar/learn-build-repeat/m.glb",
-        "usdz": "/ar/learn-build-repeat/m.usdz",
-        "widthCm": 80,
-        "heightCm": 80,
+        "glb": "/ar/ask-better-questions/m.glb",
+        "usdz": "/ar/ask-better-questions/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 56564,
-        "usdzBytes": 60217
+        "glbBytes": 23344,
+        "usdzBytes": 27016
       },
       "l": {
-        "glb": "/ar/learn-build-repeat/l.glb",
-        "usdz": "/ar/learn-build-repeat/l.usdz",
-        "widthCm": 120,
-        "heightCm": 120,
+        "glb": "/ar/ask-better-questions/l.glb",
+        "usdz": "/ar/ask-better-questions/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 56564,
-        "usdzBytes": 60217
+        "glbBytes": 23336,
+        "usdzBytes": 27016
       },
       "xl": {
-        "glb": "/ar/learn-build-repeat/xl.glb",
-        "usdz": "/ar/learn-build-repeat/xl.usdz",
-        "widthCm": 160,
-        "heightCm": 160,
+        "glb": "/ar/ask-better-questions/xl.glb",
+        "usdz": "/ar/ask-better-questions/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 56560,
-        "usdzBytes": 60217
+        "glbBytes": 23312,
+        "usdzBytes": 27016
       }
     }
   },
-  "the-long-game": {
-    "frame": "aluminium",
+  "bright-ideas": {
+    "wall": "light wall",
     "sizes": {
       "s": {
-        "glb": "/ar/the-long-game/s.glb",
-        "usdz": "/ar/the-long-game/s.usdz",
+        "glb": "/ar/bright-ideas/s.glb",
+        "usdz": "/ar/bright-ideas/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 61336,
+        "usdzBytes": 65002
+      },
+      "m": {
+        "glb": "/ar/bright-ideas/m.glb",
+        "usdz": "/ar/bright-ideas/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 61332,
+        "usdzBytes": 65002
+      },
+      "l": {
+        "glb": "/ar/bright-ideas/l.glb",
+        "usdz": "/ar/bright-ideas/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 61332,
+        "usdzBytes": 65002
+      },
+      "xl": {
+        "glb": "/ar/bright-ideas/xl.glb",
+        "usdz": "/ar/bright-ideas/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 61328,
+        "usdzBytes": 65002
+      }
+    }
+  },
+  "hanging-goals": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/hanging-goals/s.glb",
+        "usdz": "/ar/hanging-goals/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 52008,
+        "usdzBytes": 55673
+      },
+      "m": {
+        "glb": "/ar/hanging-goals/m.glb",
+        "usdz": "/ar/hanging-goals/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 51980,
+        "usdzBytes": 55673
+      },
+      "l": {
+        "glb": "/ar/hanging-goals/l.glb",
+        "usdz": "/ar/hanging-goals/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 51972,
+        "usdzBytes": 55673
+      },
+      "xl": {
+        "glb": "/ar/hanging-goals/xl.glb",
+        "usdz": "/ar/hanging-goals/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 51948,
+        "usdzBytes": 55673
+      }
+    }
+  },
+  "lit": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/lit/s.glb",
+        "usdz": "/ar/lit/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 61320,
+        "usdzBytes": 65010
+      },
+      "m": {
+        "glb": "/ar/lit/m.glb",
+        "usdz": "/ar/lit/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 61316,
+        "usdzBytes": 65010
+      },
+      "l": {
+        "glb": "/ar/lit/l.glb",
+        "usdz": "/ar/lit/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 61316,
+        "usdzBytes": 65010
+      },
+      "xl": {
+        "glb": "/ar/lit/xl.glb",
+        "usdz": "/ar/lit/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 61312,
+        "usdzBytes": 65010
+      }
+    }
+  },
+  "six-questions": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/six-questions/s.glb",
+        "usdz": "/ar/six-questions/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 52008,
+        "usdzBytes": 55673
+      },
+      "m": {
+        "glb": "/ar/six-questions/m.glb",
+        "usdz": "/ar/six-questions/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 51980,
+        "usdzBytes": 55673
+      },
+      "l": {
+        "glb": "/ar/six-questions/l.glb",
+        "usdz": "/ar/six-questions/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 51972,
+        "usdzBytes": 55673
+      },
+      "xl": {
+        "glb": "/ar/six-questions/xl.glb",
+        "usdz": "/ar/six-questions/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 51948,
+        "usdzBytes": 55673
+      }
+    }
+  },
+  "house-rules": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/house-rules/s.glb",
+        "usdz": "/ar/house-rules/s.usdz",
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 46520,
-        "usdzBytes": 50187
+        "glbBytes": 49340,
+        "usdzBytes": 53014
       },
       "m": {
-        "glb": "/ar/the-long-game/m.glb",
-        "usdz": "/ar/the-long-game/m.usdz",
+        "glb": "/ar/house-rules/m.glb",
+        "usdz": "/ar/house-rules/m.usdz",
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 46516,
-        "usdzBytes": 50187
+        "glbBytes": 49340,
+        "usdzBytes": 53014
       },
       "l": {
-        "glb": "/ar/the-long-game/l.glb",
-        "usdz": "/ar/the-long-game/l.usdz",
+        "glb": "/ar/house-rules/l.glb",
+        "usdz": "/ar/house-rules/l.usdz",
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 46516,
-        "usdzBytes": 50187
+        "glbBytes": 49340,
+        "usdzBytes": 53014
       },
       "xl": {
-        "glb": "/ar/the-long-game/xl.glb",
-        "usdz": "/ar/the-long-game/xl.usdz",
+        "glb": "/ar/house-rules/xl.glb",
+        "usdz": "/ar/house-rules/xl.usdz",
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 46512,
-        "usdzBytes": 50187
+        "glbBytes": 49336,
+        "usdzBytes": 53014
+      }
+    }
+  },
+  "what-we-stand-for": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/what-we-stand-for/s.glb",
+        "usdz": "/ar/what-we-stand-for/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 45724,
+        "usdzBytes": 49380
+      },
+      "m": {
+        "glb": "/ar/what-we-stand-for/m.glb",
+        "usdz": "/ar/what-we-stand-for/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 45724,
+        "usdzBytes": 49380
+      },
+      "l": {
+        "glb": "/ar/what-we-stand-for/l.glb",
+        "usdz": "/ar/what-we-stand-for/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 45724,
+        "usdzBytes": 49380
+      },
+      "xl": {
+        "glb": "/ar/what-we-stand-for/xl.glb",
+        "usdz": "/ar/what-we-stand-for/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 45720,
+        "usdzBytes": 49380
+      }
+    }
+  },
+  "team-charter": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/team-charter/s.glb",
+        "usdz": "/ar/team-charter/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 48304,
+        "usdzBytes": 51972
+      },
+      "m": {
+        "glb": "/ar/team-charter/m.glb",
+        "usdz": "/ar/team-charter/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 48300,
+        "usdzBytes": 51972
+      },
+      "l": {
+        "glb": "/ar/team-charter/l.glb",
+        "usdz": "/ar/team-charter/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 48300,
+        "usdzBytes": 51972
+      },
+      "xl": {
+        "glb": "/ar/team-charter/xl.glb",
+        "usdz": "/ar/team-charter/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 48296,
+        "usdzBytes": 51972
+      }
+    }
+  },
+  "how-we-work": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/how-we-work/s.glb",
+        "usdz": "/ar/how-we-work/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 36556,
+        "usdzBytes": 40230
+      },
+      "m": {
+        "glb": "/ar/how-we-work/m.glb",
+        "usdz": "/ar/how-we-work/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 36552,
+        "usdzBytes": 40230
+      },
+      "l": {
+        "glb": "/ar/how-we-work/l.glb",
+        "usdz": "/ar/how-we-work/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 36552,
+        "usdzBytes": 40230
+      },
+      "xl": {
+        "glb": "/ar/how-we-work/xl.glb",
+        "usdz": "/ar/how-we-work/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 36548,
+        "usdzBytes": 40230
+      }
+    }
+  },
+  "sabr": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/sabr/s.glb",
+        "usdz": "/ar/sabr/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 27872,
+        "usdzBytes": 31562
+      },
+      "m": {
+        "glb": "/ar/sabr/m.glb",
+        "usdz": "/ar/sabr/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 27872,
+        "usdzBytes": 31562
+      },
+      "l": {
+        "glb": "/ar/sabr/l.glb",
+        "usdz": "/ar/sabr/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 27872,
+        "usdzBytes": 31562
+      },
+      "xl": {
+        "glb": "/ar/sabr/xl.glb",
+        "usdz": "/ar/sabr/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 27868,
+        "usdzBytes": 31562
+      }
+    }
+  },
+  "bismillah": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/bismillah/s.glb",
+        "usdz": "/ar/bismillah/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 31244,
+        "usdzBytes": 34918
+      },
+      "m": {
+        "glb": "/ar/bismillah/m.glb",
+        "usdz": "/ar/bismillah/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 31240,
+        "usdzBytes": 34918
+      },
+      "l": {
+        "glb": "/ar/bismillah/l.glb",
+        "usdz": "/ar/bismillah/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 31240,
+        "usdzBytes": 34918
+      },
+      "xl": {
+        "glb": "/ar/bismillah/xl.glb",
+        "usdz": "/ar/bismillah/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 31236,
+        "usdzBytes": 34918
+      }
+    }
+  },
+  "shukr": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/shukr/s.glb",
+        "usdz": "/ar/shukr/s.usdz",
+        "widthCm": 45,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 29828,
+        "usdzBytes": 33514
+      },
+      "m": {
+        "glb": "/ar/shukr/m.glb",
+        "usdz": "/ar/shukr/m.usdz",
+        "widthCm": 60,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 29824,
+        "usdzBytes": 33514
+      },
+      "l": {
+        "glb": "/ar/shukr/l.glb",
+        "usdz": "/ar/shukr/l.usdz",
+        "widthCm": 90,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 29824,
+        "usdzBytes": 33514
+      },
+      "xl": {
+        "glb": "/ar/shukr/xl.glb",
+        "usdz": "/ar/shukr/xl.usdz",
+        "widthCm": 120,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 29820,
+        "usdzBytes": 33514
+      }
+    }
+  },
+  "alhamdulillah": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/alhamdulillah/s.glb",
+        "usdz": "/ar/alhamdulillah/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 26696,
+        "usdzBytes": 30361
+      },
+      "m": {
+        "glb": "/ar/alhamdulillah/m.glb",
+        "usdz": "/ar/alhamdulillah/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 26668,
+        "usdzBytes": 30361
+      },
+      "l": {
+        "glb": "/ar/alhamdulillah/l.glb",
+        "usdz": "/ar/alhamdulillah/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 26660,
+        "usdzBytes": 30361
+      },
+      "xl": {
+        "glb": "/ar/alhamdulillah/xl.glb",
+        "usdz": "/ar/alhamdulillah/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 26636,
+        "usdzBytes": 30361
+      }
+    }
+  },
+  "reception-mark": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/reception-mark/s.glb",
+        "usdz": "/ar/reception-mark/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 27900,
+        "usdzBytes": 31561
+      },
+      "m": {
+        "glb": "/ar/reception-mark/m.glb",
+        "usdz": "/ar/reception-mark/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 27896,
+        "usdzBytes": 31561
+      },
+      "l": {
+        "glb": "/ar/reception-mark/l.glb",
+        "usdz": "/ar/reception-mark/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 27896,
+        "usdzBytes": 31561
+      },
+      "xl": {
+        "glb": "/ar/reception-mark/xl.glb",
+        "usdz": "/ar/reception-mark/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 27892,
+        "usdzBytes": 31561
+      }
+    }
+  },
+  "lobby-wordmark": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/lobby-wordmark/s.glb",
+        "usdz": "/ar/lobby-wordmark/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 17912,
+        "usdzBytes": 21572
+      },
+      "m": {
+        "glb": "/ar/lobby-wordmark/m.glb",
+        "usdz": "/ar/lobby-wordmark/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 17884,
+        "usdzBytes": 21572
+      },
+      "l": {
+        "glb": "/ar/lobby-wordmark/l.glb",
+        "usdz": "/ar/lobby-wordmark/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 17876,
+        "usdzBytes": 21572
+      },
+      "xl": {
+        "glb": "/ar/lobby-wordmark/xl.glb",
+        "usdz": "/ar/lobby-wordmark/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 17852,
+        "usdzBytes": 21572
+      }
+    }
+  },
+  "entrance-mark": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/entrance-mark/s.glb",
+        "usdz": "/ar/entrance-mark/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 31376,
+        "usdzBytes": 35043
+      },
+      "m": {
+        "glb": "/ar/entrance-mark/m.glb",
+        "usdz": "/ar/entrance-mark/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 31372,
+        "usdzBytes": 35043
+      },
+      "l": {
+        "glb": "/ar/entrance-mark/l.glb",
+        "usdz": "/ar/entrance-mark/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 31372,
+        "usdzBytes": 35043
+      },
+      "xl": {
+        "glb": "/ar/entrance-mark/xl.glb",
+        "usdz": "/ar/entrance-mark/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 31368,
+        "usdzBytes": 35043
+      }
+    }
+  },
+  "meeting-room-front": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/meeting-room-front/s.glb",
+        "usdz": "/ar/meeting-room-front/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 27208,
+        "usdzBytes": 30857
+      },
+      "m": {
+        "glb": "/ar/meeting-room-front/m.glb",
+        "usdz": "/ar/meeting-room-front/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 27208,
+        "usdzBytes": 30857
+      },
+      "l": {
+        "glb": "/ar/meeting-room-front/l.glb",
+        "usdz": "/ar/meeting-room-front/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 27208,
+        "usdzBytes": 30857
+      },
+      "xl": {
+        "glb": "/ar/meeting-room-front/xl.glb",
+        "usdz": "/ar/meeting-room-front/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 27204,
+        "usdzBytes": 30857
       }
     }
   }

@@ -1,30 +1,37 @@
 [
   {
-    "id": "archival-canvas",
-    "name": "Archival matte canvas",
-    "spec": "370 gsm cotton-poly blend, matte finish",
-    "why": "The default for large pieces. Matte kills glare from downlights and windows, which is what makes canvas readable in a lobby where a glossy print would be a mirror. Stretched over kiln-dried bars that will not warp in humidity.",
-    "bestFor": "Offices, hotels, restaurants"
+    "id": "cast-acrylic",
+    "name": "Laser-cut acrylic",
+    "spec": "10 mm cast acrylic, flame-polished edge, matte or gloss face",
+    "why": "The default for lettering that has to look sharp for a decade. Laser cutting leaves a clear polished edge that catches light along every stroke, which is what makes the letters read as objects rather than stickers. Matte faces are the safer choice under downlights — a gloss face directly below a spotlight becomes a mirror.",
+    "bestFor": "Reception walls, boardrooms, hotels"
   },
   {
-    "id": "fine-art-paper",
-    "name": "Fine-art paper",
-    "spec": "310 gsm cotton rag, acid-free",
-    "why": "For work where the surface texture matters — calligraphy, typography, anything with fine linework. Framed behind glazing, so it belongs where hands stay off it.",
-    "bestFor": "Reception walls, boardrooms, quiet rooms"
+    "id": "pvc-foam",
+    "name": "PVC foam board",
+    "spec": "19 mm expanded PVC, sprayed satin, sealed edge",
+    "why": "Light enough to mount with tape alone on a wall that cannot be drilled, and unaffected by humidity — it will not swell or warp the way a timber letter can. The 19 mm depth is what makes a shadow read from across a room; anything under 10 mm looks applied rather than mounted.",
+    "bestFor": "Leased offices, cafés, corridors"
   },
   {
-    "id": "dibond",
-    "name": "Aluminium composite",
-    "spec": "3 mm panel, direct UV print, satin seal",
-    "why": "Rigid, light and effectively immune to humidity. The right answer for corridors, stairwells and anywhere a canvas would eventually be knocked.",
-    "bestFor": "Schools, universities, high-traffic corridors"
+    "id": "routed-mdf",
+    "name": "CNC-routed MDF",
+    "spec": "19 mm MDF, primed and sprayed to any colour, sealed faces",
+    "why": "The most economical route to a large word cloud, and the only one that takes an exact brand colour without a premium. Sealed on every face so the cut edge cannot draw moisture. Kept away from wet areas, where PVC is the correct answer instead.",
+    "bestFor": "Schools, universities, studios, large word clouds"
   },
   {
-    "id": "wall-covering",
-    "name": "Printed wall covering",
-    "spec": "Class B fire-rated, wipe-clean, low-VOC",
-    "why": "For full-wall and mural work. Fire rating and cleanability are usually the two questions a facilities manager asks first, so the answer is on the spec sheet rather than in a follow-up.",
-    "bestFor": "Atriums, dining rooms, corridors, feature walls"
+    "id": "brushed-aluminium",
+    "name": "Brushed aluminium",
+    "spec": "3 mm aluminium face on 15 mm returns, clear anodised",
+    "why": "For reception and lobby walls that appear in photographs of the company. The brushed grain reads as a material rather than a colour and does not date. Longest-lived of the five and the most forgiving of being cleaned around.",
+    "bestFor": "Reception walls, lobbies, meeting-room fronts"
+  },
+  {
+    "id": "printed-pla",
+    "name": "3D-printed PLA",
+    "spec": "Continuous-line print, 8 mm depth, colour through the material",
+    "why": "The only practical way to make continuous outline work — a single unbroken line that a cutter cannot produce. The colour is the filament rather than a coat of paint, so there is no finish to chip. Light enough for tape mounting, which keeps a leased wall intact.",
+    "bestFor": "Co-working floors, classrooms, leased offices"
   }
 ]

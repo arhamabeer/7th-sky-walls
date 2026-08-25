@@ -10,6 +10,7 @@ import {
   getMaterials,
   getVenueById,
 } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { Reveal } from "@/components/motion/reveal";
@@ -72,14 +73,17 @@ export default function AboutPage() {
 
             {storyArtwork && (
               <Reveal>
-                <div className="flex items-center justify-center rounded-xl border border-line bg-surface p-8 sm:p-12">
+                <div
+                  className="flex items-center justify-center rounded-xl border border-line p-8 sm:p-12"
+                  style={{ backgroundColor: wallColour(storyArtwork.wallTone) }}
+                >
                   <Image
                     src={storyArtwork.image.src}
                     alt={storyArtwork.alt}
                     width={storyArtwork.image.width}
                     height={storyArtwork.image.height}
                     sizes="(min-width: 1024px) 42vw, 90vw"
-                    className="h-auto max-h-[24rem] w-auto max-w-full object-contain shadow-[0_18px_40px_-20px_rgba(25,21,16,0.5)]"
+                    className="h-auto max-h-[24rem] w-auto max-w-full object-contain drop-shadow-[0_16px_28px_rgba(25,21,16,0.38)]"
                     {...(storyBlur
                       ? { placeholder: "blur" as const, blurDataURL: storyBlur }
                       : {})}

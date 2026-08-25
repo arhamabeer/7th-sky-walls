@@ -1,15 +1,23 @@
 /**
  * Placeholder artwork generator.
  *
- * Renders one stylized JPEG per artwork in src/content/artworks.json
- * (deterministic per slug, styled per collection), a tiny base64 blur
- * placeholder map (src/content/blur.json), and PNG app icons from the
- * brand mark. Re-run any time: `node scripts/generate-placeholders.mjs`.
+ * Renders one PNG per artwork in src/content/artworks.json (deterministic per
+ * slug, styled per collection), a tiny base64 blur placeholder map
+ * (src/content/blur.json), and PNG app icons from the brand mark. Re-run any
+ * time: `node scripts/generate-placeholders.mjs`.
  *
- * These images are stand-ins until real artwork photography lands. To swap in
- * real work, drop files at /public/artworks/<slug>.jpg and re-run with
+ * PNG rather than JPEG because these pieces have alpha and no ground. The
+ * studio's product is cut lettering mounted on a wall: there is no rectangular
+ * substrate, so the image is the letters and the wall behind them belongs to
+ * the room. The site paints each piece's specified wall tone behind it, and AR
+ * puts it on the visitor's real wall. See lib/dimensional-art.mjs.
+ *
+ * These images are stand-ins until real installation photography lands. To swap
+ * in real work, drop files at /public/artworks/<slug>.png and re-run with
  * --blur-only; the script picks them up, gives each a content-addressed
- * filename, and rewrites artworks.json to match.
+ * filename, and rewrites artworks.json to match. Use PNG with a transparent
+ * ground — a photograph with its own wall in it will show as a rectangle on
+ * every other wall the site puts it on.
  *
  * Filenames carry a hash of the image bytes because next/image keys its cache
  * on the request URL, and replacing a file in place leaves that URL unchanged
@@ -22,6 +30,7 @@ import { mkdir, readdir, readFile, rm, unlink, writeFile } from "node:fs/promise
 import { createHash } from "node:crypto";
 import path from "node:path";
 import sharp from "sharp";
+import * as art_ from "./lib/dimensional-art.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT_DIR = path.join(ROOT, "public", "artworks");
@@ -35,12 +44,13 @@ const contentHash = (buffer) => createHash("sha256").update(buffer).digest("hex"
 
 /**
  * Resolve the master file for an artwork, tolerating both shapes: a plain
- * `<slug>.jpg` that someone has just dropped in, and the hashed filename this
+ * `<slug>.png` that someone has just dropped in, and the hashed filename this
  * script emits. The plain name wins, so dropping a replacement is enough to
- * have it picked up.
+ * have it picked up. The prune pattern also matches `.jpg`, so the opaque
+ * images this catalogue used before are cleared out rather than left orphaned.
  */
 async function readMaster(slug, currentSrc) {
-  const plain = path.join(OUT_DIR, `${slug}.jpg`);
+  const plain = path.join(OUT_DIR, `${slug}.png`);
   try {
     return { buffer: await readFile(plain), from: plain };
   } catch {
@@ -56,7 +66,7 @@ async function readMaster(slug, currentSrc) {
  */
 async function pruneOldRevisions(slug, keepFilename) {
   const entries = await readdir(OUT_DIR).catch(() => []);
-  const pattern = new RegExp(`^${slug}(\\.[0-9a-f]{8})?\\.jpg$`);
+  const pattern = new RegExp(`^${slug}(\\.[0-9a-f]{8})?\\.(png|jpg)$`);
   for (const name of entries) {
     if (name !== keepFilename && pattern.test(name)) {
       await unlink(path.join(OUT_DIR, name)).catch(() => {});
@@ -87,149 +97,110 @@ function rng(seedStr) {
   };
 }
 
-const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
-const between = (r, min, max) => min + r() * (max - min);
 
+/**
+ * Wall tones, kept in step with WALL_TONES in src/content/finishes.ts.
+ *
+ * A dimensional piece is specified with its wall, so the placeholder is drawn
+ * for the wall it is meant for: pale letters for a dark wall, dark letters for
+ * a light or colour one. The tone itself is never painted into the image — see
+ * the note in lib/dimensional-art.mjs.
+ */
+const WALL = {
+  dark: "#33363B",
+  light: "#EDEAE3",
+  accent: "#F5C518",
+};
+
+/**
+ * Face, cut edge and accent for each wall tone.
+ *
+ * The cut edge is darker than a pale face and lighter than a dark one. That is
+ * how a real bevel reads — the side catches light at a different angle from the
+ * face — and it is load-bearing here: with a near-black face and a black edge
+ * there is no extrusion to see, and a word cloud collapses into one silhouette.
+ */
 const PALETTES = {
-  "skyline-geometry": { bg: "#F4EFE6", shapes: ["#33506B", "#C8A971", "#191510", "#8F6830", "#5B748C"] },
-  "sacred-lines": { bg: "#FAF6EE", shapes: ["#191510", "#8F6830", "#33506B"] },
-  "botanical-fields": { bg: "#F2F1E8", shapes: ["#3E5C46", "#6D8B5E", "#2C4434", "#9DB380", "#C8A971"] },
-  "heritage-arches": { bg: "#F1E9DC", shapes: ["#8A6A4B", "#5C4632", "#B08D62", "#33506B", "#40342A"] },
-  "chromatic-drift": { bg: "#EFEBE2", shapes: ["#33506B", "#C8A971", "#7A9BB5", "#B76E4E", "#274058"] },
-  "words-at-work": { bg: "#F6F2EA", shapes: ["#191510", "#33506B", "#8F6830"] },
+  dark: {
+    face: "#FFFFFF",
+    side: "#9FA3AA",
+    accent: "#F2C10D",
+    accentSide: "#A17C07",
+    shadow: "#000000",
+    line: ["#4E9BF5", "#7ACB43", "#F0468C", "#F2C10D", "#22C7B4", "#9B72F0"],
+    lineSide: ["#2A5E9E", "#4A8226", "#9C2359", "#A17C07", "#127F73", "#5F44A3"],
+  },
+  light: {
+    face: "#16130F",
+    // Lighter than the face on purpose: see the note above the table.
+    side: "#6B6357",
+    accent: "#B8860B",
+    accentSide: "#6E4F06",
+    shadow: "#000000",
+    line: ["#2F7BE8", "#5FAE2E", "#E0357F", "#E0A800", "#17B3A3", "#7C4DE0"],
+    lineSide: ["#1B4C93", "#3B7020", "#8E1F50", "#8F6A00", "#0C6E64", "#4B2C94"],
+  },
+  accent: {
+    face: "#16130F",
+    side: "#6E5A2A",
+    accent: "#7A2E12",
+    accentSide: "#3F1708",
+    shadow: "#000000",
+    line: ["#16130F", "#7A2E12", "#1B4C93", "#3B7020", "#8E1F50", "#0C6E64"],
+    lineSide: ["#000000", "#3F1708", "#0E2A52", "#1F3D12", "#4C0F2A", "#053A34"],
+  },
 };
 
-function svgHeader(w, h, bg) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="${bg}"/>`;
-}
+/**
+ * Word pools. These are the words that actually appear on office walls, which
+ * is what makes a placeholder cloud read as the product rather than as lorem
+ * ipsum.
+ */
+const CLOUD_WORDS = [
+  "GO", "MEDIA", "BRAIN", "PROCESS", "COMMUNICATE", "OK", "WORDS", "POSITIVE",
+  "SUCCESS", "THINK", "GOAL", "RESEARCH", "TEAM", "CREATIVE", "SELL", "MEETING",
+  "POWER", "GROWTH", "FOCUS", "BUILD", "LEARN", "SHIP", "ASK", "DRAFT", "SOLVE",
+  "LISTEN", "MAKE", "TRY", "PLAN", "DEEP", "WORK", "IDEAS",
+];
 
-function skylineGeometry(r, w, h, p) {
-  let s = "";
-  const n = 6 + Math.floor(r() * 4);
-  for (let i = 0; i < n; i++) {
-    const x = between(r, -w * 0.2, w * 0.9);
-    const y = between(r, h * 0.1, h * 0.85);
-    const bw = between(r, w * 0.15, w * 0.55);
-    const bh = between(r, h * 0.08, h * 0.4);
-    const rot = between(r, -18, 18);
-    const color = pick(r, p.shapes);
-    const op = between(r, 0.55, 0.95).toFixed(2);
-    s += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${color}" opacity="${op}" transform="rotate(${rot.toFixed(1)} ${x + bw / 2} ${y + bh / 2})"/>`;
-  }
-  s += `<line x1="0" y1="${h * 0.72}" x2="${w}" y2="${h * 0.66}" stroke="${p.shapes[1]}" stroke-width="${w * 0.006}"/>`;
-  return s;
-}
+const HEROES = {
+  "idea-bulb": "IDEA",
+  "growth-arrow": "GROWTH",
+  collective: "TEAM",
+  "deep-work": "FOCUS",
+};
 
-function sacredLines(r, w, h, p) {
-  let s = "";
-  const strokes = 3 + Math.floor(r() * 3);
-  for (let i = 0; i < strokes; i++) {
-    const x0 = between(r, w * 0.15, w * 0.4);
-    const y0 = between(r, h * 0.2, h * 0.5);
-    const c1x = between(r, w * 0.2, w * 0.9);
-    const c1y = between(r, h * 0.05, h * 0.9);
-    const c2x = between(r, w * 0.1, w * 0.8);
-    const c2y = between(r, h * 0.1, h * 0.95);
-    const x1 = between(r, w * 0.55, w * 0.9);
-    const y1 = between(r, h * 0.5, h * 0.85);
-    const width = between(r, w * 0.015, w * 0.05);
-    const color = i === 0 ? p.shapes[0] : pick(r, p.shapes);
-    s += `<path d="M ${x0} ${y0} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x1} ${y1}" stroke="${color}" stroke-width="${width}" fill="none" stroke-linecap="round" opacity="${between(r, 0.75, 1).toFixed(2)}"/>`;
-  }
-  s += `<circle cx="${w * between(r, 0.6, 0.8)}" cy="${h * between(r, 0.18, 0.3)}" r="${w * 0.02}" fill="${p.shapes[1]}"/>`;
-  return s;
-}
+const BULB_WORDS = ["Innovation", "Goals", "Success", "Research", "Growth", "Teamwork"];
+const VALUE_WORDS = ["Curious", "Honest", "Together", "Precise", "Bold", "Useful"];
 
-function botanicalFields(r, w, h, p) {
-  let s = "";
-  const leaves = 8 + Math.floor(r() * 7);
-  for (let i = 0; i < leaves; i++) {
-    const cx = between(r, 0, w);
-    const cy = between(r, 0, h);
-    const rx = between(r, w * 0.06, w * 0.22);
-    const ry = rx * between(r, 2, 3.4);
-    const rot = between(r, 0, 360);
-    const color = pick(r, p.shapes);
-    s += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${color}" opacity="${between(r, 0.35, 0.8).toFixed(2)}" transform="rotate(${rot.toFixed(0)} ${cx} ${cy})"/>`;
-  }
-  return s;
-}
+/** Which pieces carry the noughts-and-crosses motif. */
+const MOTIF_SLUGS = new Set(["outside-the-box"]);
 
-function heritageArches(r, w, h, p) {
-  let s = "";
-  const cols = 3 + Math.floor(r() * 3);
-  const aw = w / (cols + 1);
-  for (let i = 0; i < cols; i++) {
-    const x = aw * (i + 0.5) + between(r, -aw * 0.1, aw * 0.1);
-    const top = between(r, h * 0.12, h * 0.3);
-    const bottom = h * between(r, 0.85, 0.98);
-    const color = pick(r, p.shapes);
-    s += `<path d="M ${x} ${bottom} L ${x} ${top + aw * 0.45} A ${aw * 0.45} ${aw * 0.45} 0 0 1 ${x + aw * 0.9} ${top + aw * 0.45} L ${x + aw * 0.9} ${bottom} Z" fill="${color}" opacity="${between(r, 0.5, 0.9).toFixed(2)}"/>`;
-  }
-  return s;
-}
-
-function panoramicDrift(r, w, h, p) {
-  // Panoramic canvases need horizontal emphasis; vertical gradients read as
-  // flat bands at 5:2.
-  const c1 = pick(r, p.shapes);
-  let c2 = pick(r, p.shapes);
-  if (c2 === c1) c2 = p.shapes[(p.shapes.indexOf(c1) + 1) % p.shapes.length];
-  let s =
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">` +
-    `<stop offset="0" stop-color="${p.bg}"/><stop offset="0.45" stop-color="${c1}" stop-opacity="0.8"/><stop offset="1" stop-color="${c2}"/>` +
-    `</linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/>`;
-  const bands = 3 + Math.floor(r() * 3);
-  for (let i = 0; i < bands; i++) {
-    const y = between(r, h * 0.15, h * 0.85);
-    s += `<rect y="${y}" width="${w}" height="${h * between(r, 0.02, 0.07)}" fill="${pick(r, p.shapes)}" opacity="${between(r, 0.3, 0.7).toFixed(2)}"/>`;
-  }
-  return s;
-}
-
-function chromaticDrift(r, w, h, p) {
-  const c1 = pick(r, p.shapes);
-  let c2 = pick(r, p.shapes);
-  if (c2 === c1) c2 = p.shapes[(p.shapes.indexOf(c1) + 1) % p.shapes.length];
-  const angle = pick(r, [0, 90, 45]);
-  const x2 = angle === 90 ? 0 : 1;
-  const y2 = angle === 0 ? 1 : angle === 45 ? 1 : 0;
-  const mid = between(r, 0.35, 0.65).toFixed(2);
-  return (
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="${x2}" y2="${y2}">` +
-    `<stop offset="0" stop-color="${c1}"/><stop offset="${mid}" stop-color="${c2}" stop-opacity="0.85"/><stop offset="1" stop-color="${p.bg}"/>` +
-    `</linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/>` +
-    `<rect y="${h * between(r, 0.55, 0.75)}" width="${w}" height="${h * 0.008}" fill="#C8A971" opacity="0.9"/>`
-  );
-}
-
-function wordsAtWork(r, w, h, p, title) {
-  const words = title.replace(/[^A-Za-z. ]/g, "").split(/[\s.]+/).filter(Boolean);
-  const color = p.shapes[0];
-  // Bold serif caps advance at roughly 0.72em including letter-spacing. Fit the
-  // longest word inside 78% of the width, then clamp so all lines fit vertically.
-  const longest = Math.max(...words.map((x) => x.length));
-  const size = Math.min(
-    (w * 0.78) / (longest * 0.72),
-    (h * 0.8) / (words.length * 1.18),
-  );
-  const lineH = size * 1.18;
-  const startY = h / 2 - ((words.length - 1) * lineH) / 2;
-  let s = `<rect x="${w * 0.06}" y="${h * 0.06}" width="${w * 0.88}" height="${h * 0.88}" fill="none" stroke="${pick(r, p.shapes)}" stroke-width="${w * 0.004}" opacity="0.5"/>`;
-  words.forEach((word, i) => {
-    s += `<text x="${w / 2}" y="${startY + i * lineH}" font-family="Georgia, 'Times New Roman', serif" font-size="${size}" font-weight="bold" fill="${color}" text-anchor="middle" dominant-baseline="middle" letter-spacing="${size * 0.06}">${word.toUpperCase()}</text>`;
-  });
-  return s;
-}
-
+/**
+ * One draw function per collection. Keyed by collection rather than by slug so
+ * a new piece in an existing series needs no code — only a catalogue entry.
+ */
 const GENERATORS = {
-  "skyline-geometry": skylineGeometry,
-  "sacred-lines": sacredLines,
-  "botanical-fields": botanicalFields,
-  "heritage-arches": heritageArches,
-  "chromatic-drift": chromaticDrift,
-  "words-at-work": wordsAtWork,
+  "word-clouds": (r, w, h, p, art) =>
+    art_.wordCloudBulb(r, w, h, p, {
+      words: CLOUD_WORDS,
+      hero: HEROES[art.slug] ?? art.title.split(/\s+/)[0].toUpperCase(),
+    }),
+  "words-at-work": (r, w, h, p, art) =>
+    art_.statementLines(r, w, h, p, { title: art.title, motif: MOTIF_SLUGS.has(art.slug) }),
+  "line-and-wire": (r, w, h, p, art) =>
+    art_.lineArtBulbs(r, w, h, p, {
+      words: art.orientation === "panorama" ? BULB_WORDS : BULB_WORDS.slice(0, 4),
+    }),
+  "values-boards": (r, w, h, p) => art_.valuesBoard(r, w, h, p, { words: VALUE_WORDS }),
+  "sacred-lines": (r, w, h, p, art) => art_.raisedScript(r, w, h, p, { word: art.title }),
+  "brand-walls": (r, w, h, p, art) => art_.brandWall(r, w, h, p, { title: art.title }),
 };
+
+/** Transparent canvas: the wall belongs to the room, not to the image. */
+function svgOpen(w, h) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+}
 
 /**
  * Social share card for one artwork, 1200x630.
@@ -315,24 +286,29 @@ async function main() {
   for (const art of artworks) {
     const { width: w, height: h } = art.image;
 
+    const wall = WALL[art.wallTone];
+    if (!wall) throw new Error(`Artwork "${art.slug}" has no known wallTone`);
+
     let buffer;
     if (BLUR_ONLY) {
       ({ buffer } = await readMaster(art.slug, art.image.src));
     } else {
-      const p = PALETTES[art.collection] ?? PALETTES["chromatic-drift"];
-      // Panoramic canvases get a horizontal treatment regardless of
-      // collection — the standard generators assume a taller canvas.
-      const gen =
-        art.orientation === "panorama"
-          ? panoramicDrift
-          : (GENERATORS[art.collection] ?? chromaticDrift);
-      const svg = svgHeader(w, h, p.bg) + gen(rng(art.slug), w, h, p, art.title) + "</svg>";
-      buffer = await sharp(Buffer.from(svg)).jpeg({ quality: 80, mozjpeg: true }).toBuffer();
+      const p = PALETTES[art.wallTone];
+      const gen = GENERATORS[art.collection];
+      // Fail rather than fall back. A silent default meant a new collection
+      // quietly rendered as the wrong series, which nothing downstream catches.
+      if (!gen) {
+        throw new Error(
+          `No generator for collection "${art.collection}" (artwork "${art.slug}")`,
+        );
+      }
+      const svg = svgOpen(w, h) + gen(rng(art.slug), w, h, p, art) + "</svg>";
+      buffer = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
     }
 
     // The filename follows the bytes, so an unchanged image keeps its URL (and
     // its caches) while a changed one gets a new URL nothing has cached.
-    const filename = `${art.slug}.${contentHash(buffer)}.jpg`;
+    const filename = `${art.slug}.${contentHash(buffer)}.png`;
     const file = path.join(OUT_DIR, filename);
     await writeFile(file, buffer);
     await pruneOldRevisions(art.slug, filename);
@@ -343,13 +319,17 @@ async function main() {
       renamed += 1;
     }
 
-    const tiny = await sharp(buffer).resize(20).jpeg({ quality: 40 }).toBuffer();
+    // Flatten onto the wall tone before the blur and the share card. Both are
+    // opaque JPEG, and an alpha ground flattens to black by default — which
+    // would give every piece a black placeholder and a black share card.
+    const onWall = await sharp(buffer).flatten({ background: wall });
+    const tiny = await onWall.clone().resize(20).jpeg({ quality: 40 }).toBuffer();
     blur[art.slug] = `data:image/jpeg;base64,${tiny.toString("base64")}`;
 
     await buildOgCard(
       art,
       collectionName[art.collection] ?? "",
-      file,
+      await onWall.clone().jpeg({ quality: 90 }).toBuffer(),
       path.join(OG_DIR, `${art.slug}.jpg`),
     );
 
@@ -368,6 +348,31 @@ async function main() {
     await writeFile(ARTWORKS_JSON, JSON.stringify(artworks, null, 2) + "\n");
     console.log(`updated artworks.json: ${renamed} image URL(s) re-hashed`);
   }
+
+  /**
+   * Remove files for pieces that are no longer in the catalogue.
+   *
+   * Per-slug pruning cannot see these: when a piece is retired its slug stops
+   * being iterated, so its file is never visited and sits in the directory
+   * being deployed and served forever. Renaming the whole catalogue left twenty
+   * of them behind.
+   */
+  const wanted = new Set(artworks.map((a) => path.basename(a.image.src)));
+  let orphans = 0;
+  for (const name of await readdir(OUT_DIR).catch(() => [])) {
+    if (!wanted.has(name)) {
+      await unlink(path.join(OUT_DIR, name)).catch(() => {});
+      orphans += 1;
+    }
+  }
+  const ogWanted = new Set(artworks.map((a) => `${a.slug}.jpg`));
+  for (const name of await readdir(OG_DIR).catch(() => [])) {
+    if (!ogWanted.has(name)) {
+      await unlink(path.join(OG_DIR, name)).catch(() => {});
+      orphans += 1;
+    }
+  }
+  if (orphans) console.log(`removed ${orphans} file(s) for pieces no longer in the catalogue`);
 
   // App icons from the brand mark.
   const mark = path.join(BRAND_DIR, "mark.svg");

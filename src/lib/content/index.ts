@@ -129,7 +129,8 @@ export interface ArAsset {
 }
 
 interface ArManifestEntry {
-  frame: string;
+  /** The wall tone the AR texture was built against. */
+  wall: string;
   sizes: Record<string, ArAsset>;
 }
 
@@ -141,8 +142,9 @@ export function getArAssets(slug: string): Record<string, ArAsset> | undefined {
   return entry.sizes;
 }
 
-export function getArFrameName(slug: string): string | undefined {
-  return arManifest[slug]?.frame;
+/** The wall tone an artwork's AR texture was built against. */
+export function getArWallTone(slug: string): string | undefined {
+  return arManifest[slug]?.wall;
 }
 
 export function getCollections(): Collection[] {

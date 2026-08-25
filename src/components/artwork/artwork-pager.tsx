@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Artwork } from "@/lib/content/schema";
 import { getBlurDataURL } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -46,13 +47,16 @@ function PagerLink({
           isNext && "flex-row-reverse text-right",
         )}
       >
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-line">
+        <div
+          className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg"
+          style={{ backgroundColor: wallColour(artwork.wallTone) }}
+        >
           <Image
             src={artwork.image.src}
             alt=""
             fill
             sizes="64px"
-            className="object-cover"
+            className="object-contain p-1"
             {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
           />
         </div>

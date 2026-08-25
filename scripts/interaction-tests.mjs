@@ -129,7 +129,7 @@ async function testKeyboardNavigation(page, vp) {
  * into content the overlay was covering.
  */
 async function testDialogFocusTrap(page, vp) {
-  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/idea-bulb`, { waitUntil: "networkidle" });
   await page.locator("[role=tab]", { hasText: /^Artwork$/ }).click();
   await page.locator("main button[aria-label*='full screen']").click();
 
@@ -182,7 +182,7 @@ async function testDialogFocusTrap(page, vp) {
 
 async function testArtworkPage(page, vp) {
   // A panoramic piece exercises the aspect handling most strictly.
-  await page.goto(`${BASE}/portfolio/glass-horizon`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/ask-better-questions`, { waitUntil: "networkidle" });
   await page.addStyleTag({
     content: "*,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important}",
   });
@@ -231,7 +231,7 @@ async function testArtworkPage(page, vp) {
   );
 
   // --- A shared URL restores that size.
-  await page.goto(`${BASE}/portfolio/glass-horizon?size=xl`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/ask-better-questions?size=xl`, { waitUntil: "networkidle" });
   await page.waitForTimeout(250);
   const restored = await page.evaluate(
     () => document.querySelector("[aria-live=polite]")?.textContent ?? "",
@@ -276,7 +276,9 @@ async function testArtworkPage(page, vp) {
   record(
     vp.name,
     "room scene defaults to the artwork's primary venue",
-    sceneState.active === "Office reception",
+    // This group uses a panoramic piece specified for universities first, so
+    // the classroom is the correct default. Pinned to the piece, not a scene.
+    sceneState.active === "Classroom",
     `active: ${sceneState.active}`,
   );
   record(
@@ -286,7 +288,7 @@ async function testArtworkPage(page, vp) {
     sceneState.options.join(", "),
   );
 
-  await page.locator("fieldset button", { hasText: "Classroom" }).click();
+  await page.locator("fieldset button", { hasText: "Office reception" }).click();
   await page.waitForTimeout(220);
   const switched = await page.evaluate(() => ({
     caption: document.querySelector("figcaption")?.textContent ?? "",
@@ -295,7 +297,7 @@ async function testArtworkPage(page, vp) {
   record(
     vp.name,
     "switching scene updates the preview and its caption",
-    /classroom/i.test(switched.caption) && /75 cm desk/.test(switched.caption) && switched.pressed === 1,
+    /office reception/i.test(switched.caption) && /110 cm reception desk/.test(switched.caption) && switched.pressed === 1,
     switched.caption.trim().slice(0, 70),
   );
 
@@ -395,6 +397,36 @@ async function testArPanel(page, vp) {
   // A separate USDZ is mandatory: model-viewer's own generator emits
   // horizontal anchoring, so wall placement on iOS depends on ios-src.
   record(vp.name, "a pre-built USDZ is supplied for iOS", Boolean(attrs.iosSrc));
+
+  /**
+   * model-viewer's own progress bar has to stay out of the panel. It hides
+   * itself by adding a class when loading completes, and that never fired here
+   * — the element upgrades lazily and gets its `src` as a property afterwards,
+   * so the terminal progress event landed before anything was listening. The
+   * bar then sat across the top of the panel permanently. A stylesheet rule
+   * removes it; this is what notices if the rule goes.
+   */
+  await page
+    .waitForFunction(() => document.querySelector("model-viewer")?.loaded === true, null, {
+      timeout: 8000,
+    })
+    .catch(() => {});
+  const progressBar = await page.evaluate(() => {
+    const mv = document.querySelector("model-viewer");
+    const bar = mv?.shadowRoot?.querySelector("div.bar");
+    if (!bar) return { loaded: mv?.loaded ?? false, visible: false };
+    const rect = bar.getBoundingClientRect();
+    return {
+      loaded: mv.loaded,
+      visible: getComputedStyle(bar).display !== "none" && rect.height > 0,
+    };
+  });
+  record(
+    vp.name,
+    "no leftover progress bar once the model has loaded",
+    progressBar.loaded && !progressBar.visible,
+    `loaded=${progressBar.loaded} barVisible=${progressBar.visible}`,
+  );
 
   // Assets must actually be served, and with types the platforms accept.
   const assets = await page.evaluate(async () => {
@@ -549,7 +581,7 @@ async function testArPanel(page, vp) {
 
 async function testTextConfigurator(page, vp) {
   // Only text pieces are configurable; a non-text piece must not offer it.
-  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/idea-bulb`, { waitUntil: "networkidle" });
   record(
     vp.name,
     "configurator is not offered on a non-text piece",
@@ -628,7 +660,7 @@ async function testTextConfigurator(page, vp) {
   );
 
   // Ink on a ground of the same tone must be called out rather than accepted.
-  await page.locator("[role=tabpanel] fieldset", { hasText: "Ground" })
+  await page.locator("[role=tabpanel] fieldset", { hasText: "Wall" })
     .locator("button", { hasText: "Ink" })
     .click();
   await page.waitForTimeout(250);
@@ -706,7 +738,7 @@ async function testWallPlanner(page, vp) {
 
   // Adding and removing pieces.
   const before = await pieceCount();
-  await page.locator("main button", { hasText: "Ascent" }).first().click();
+  await page.locator("main button", { hasText: "Collective" }).first().click();
   await page.waitForTimeout(350);
   const afterAdd = await pieceCount();
   record(vp.name, "adding a piece places it on the wall", afterAdd === before + 1, `${before} → ${afterAdd}`);
@@ -948,23 +980,40 @@ async function testInquiryForm(page, vp) {
   await page.waitForTimeout(2500);
 
   const afterValid = await page.evaluate(() => {
-    const status = document.querySelector("main [role=status]");
+    // Success replaces the form with a role=status panel; an undelivered
+    // submission keeps the form and puts a role=alert above it. Reading only
+    // the first found the success case and nothing else.
+    const status =
+      document.querySelector("main [role=status]") ?? document.querySelector("main [role=alert]");
     return {
       text: status?.textContent?.trim() ?? "",
       formGone: document.querySelectorAll("main form").length === 0,
     };
   });
+  /**
+   * A valid submission must end in one of exactly two honest states, and which
+   * one depends on whether email delivery is configured for this build.
+   *
+   * Configured: a thank-you carrying a reference the studio can cite.
+   * Not configured: a plain statement that it did not send, plus the two
+   * channels that work without any configuration.
+   *
+   * What must never happen is the third state this used to allow — a thank-you
+   * for an inquiry that only reached a log file. So the assertion is on the
+   * pair, and the run reports which one it saw.
+   */
+  const acknowledged = /thank you/i.test(afterValid.text) && /INQ-/.test(afterValid.text);
+  const declaredUndelivered =
+    /not connected/i.test(afterValid.text) && /whatsapp/i.test(afterValid.text);
   record(
     vp.name,
-    "a complete inquiry is accepted",
-    /thank you/i.test(afterValid.text),
-    afterValid.text.slice(0, 60),
-  );
-  record(
-    vp.name,
-    "acknowledgement includes a reference",
-    /INQ-/.test(afterValid.text),
-    afterValid.text.slice(0, 80),
+    "a complete inquiry ends in an honest state, never a false success",
+    acknowledged !== declaredUndelivered,
+    acknowledged
+      ? "acknowledged with a reference"
+      : declaredUndelivered
+        ? "declared undelivered and offered the direct channels"
+        : `neither: ${afterValid.text.slice(0, 70)}`,
   );
   record(
     vp.name,
@@ -1088,7 +1137,7 @@ async function testReducedMotion(browser) {
     state.progressBar === 0,
   );
 
-  await page.goto(`${BASE}/portfolio/meridian-seven`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/portfolio/idea-bulb`, { waitUntil: "networkidle" });
   await page.locator("main button[aria-label*='full screen']").click();
   await page.waitForTimeout(250);
   const dialogOpacity = await page.evaluate(() => {

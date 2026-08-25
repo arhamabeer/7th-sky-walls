@@ -28,7 +28,7 @@ import {
   type SizeOption,
 } from "@/components/artwork/artwork-experience";
 import { sceneForVenue } from "@/components/artwork/room-scenes";
-import { defaultFinishFor } from "@/content/finishes";
+import { defaultMountFor } from "@/content/finishes";
 import { ArtworkPager } from "@/components/artwork/artwork-pager";
 
 export async function generateStaticParams() {
@@ -160,6 +160,7 @@ export default async function ArtworkPage({
             <ArtworkExperience
               title={artwork.title}
               imageSrc={artwork.image.src}
+              wallTone={artwork.wallTone}
               imageAlt={artwork.alt}
               imageWidth={artwork.image.width}
               imageHeight={artwork.image.height}
@@ -167,7 +168,7 @@ export default async function ArtworkPage({
               sizes={sizeOptions}
               defaultSizeId={artwork.defaultSize}
               defaultSceneId={sceneForVenue(artwork.venues[0]).id}
-              defaultFinishId={defaultFinishFor(artwork.materials).id}
+              defaultFinishId={defaultMountFor(artwork.materials).id}
               customisable={artwork.customText}
               defaultText={artwork.title}
               aspect={getOrientationAspect(artwork.orientation)}
@@ -244,7 +245,15 @@ export default async function ArtworkPage({
             </p>
             <div className="mt-5 flex flex-col gap-3">
               {/* Carries the piece through to the form so the visitor does not
-                  retype what they were already looking at. */}
+                  retype what they were already looking at.
+
+                  Deliberately without a size. This block is server-rendered on
+                  a static page and cannot know which size is selected, and
+                  sending the default would be worse than sending none — a
+                  visitor who switched to extra large would have "large" put in
+                  their mouth. The size-aware route is the pair of buttons
+                  beside the size chooser above, which is where a decision
+                  about size is actually made. */}
               <LinkButton
                 href={`/contact?artwork=${encodeURIComponent(artwork.slug)}`}
               >

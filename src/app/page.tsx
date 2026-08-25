@@ -10,6 +10,7 @@ import {
   getFeaturedArtworks,
   getVenues,
 } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -29,12 +30,12 @@ export const metadata: Metadata = {
  * as curated. The third piece is the visual anchor and the LCP element.
  */
 const HERO_SLUGS = [
-  "lahore-jaali",
-  "monsoon-leaves",
-  "meridian-seven",
+  "outside-the-box",
+  "bright-ideas",
+  "idea-bulb",
   "sabr",
-  "amber-hour",
   "deep-work",
+  "collective",
 ];
 
 export default function HomePage() {
@@ -47,7 +48,7 @@ export default function HomePage() {
   const venues = getVenues();
   const artworks = allArtworks;
   // A confident, office-appropriate piece for the wall-preview demonstration.
-  const showcasePiece = allArtworks.find((a) => a.slug === "meridian-seven");
+  const showcasePiece = allArtworks.find((a) => a.slug === "idea-bulb");
 
   return (
     <>
@@ -92,14 +93,17 @@ export default function HomePage() {
                     className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-ink/30"
                   >
                     {cover && (
-                      <div className="flex h-48 items-center justify-center overflow-hidden bg-background p-5">
+                      <div
+                        className="flex h-48 items-center justify-center overflow-hidden p-5"
+                        style={{ backgroundColor: wallColour(cover.wallTone) }}
+                      >
                         <Image
                           src={cover.image.src}
                           alt={cover.alt}
                           width={cover.image.width}
                           height={cover.image.height}
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                          className="h-auto max-h-full w-auto max-w-full object-contain shadow-[0_10px_26px_-14px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                          className="h-auto max-h-full w-auto max-w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />
                       </div>

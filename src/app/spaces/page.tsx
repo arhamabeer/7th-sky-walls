@@ -4,6 +4,7 @@ import Link from "next/link";
 import { copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getArtworks, getBlurDataURL, getVenues } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
 import { Container } from "@/components/ui/container";
@@ -64,7 +65,7 @@ export default function SpacesPage() {
                     {preview.length > 0 && (
                       <div
                         aria-hidden
-                        className="flex h-44 items-center justify-center gap-4 bg-background px-6 sm:gap-6"
+                        className="flex h-44 items-center justify-center gap-4 px-6 sm:gap-6"
                       >
                         {preview.map((artwork) => {
                           const blur = getBlurDataURL(artwork.slug);
@@ -73,9 +74,13 @@ export default function SpacesPage() {
                             // three of them plus the gaps always fit whatever
                             // the card is. Sizing the images by percentage
                             // instead overflows once the gaps are counted.
+                            // Each piece carries its own wall tone, so a row
+                            // mixing a dark-wall piece with a light-wall one
+                            // shows both against the wall they are made for.
                             <span
                               key={artwork.slug}
-                              className="flex min-w-0 flex-1 items-center justify-center"
+                              className="flex min-w-0 flex-1 items-center justify-center self-stretch"
+                              style={{ backgroundColor: wallColour(artwork.wallTone) }}
                             >
                               <Image
                                 src={artwork.image.src}
@@ -83,7 +88,7 @@ export default function SpacesPage() {
                                 width={artwork.image.width}
                                 height={artwork.image.height}
                                 sizes="(min-width: 768px) 16vw, 30vw"
-                                className="h-auto max-h-28 w-auto max-w-full object-contain shadow-[0_8px_20px_-12px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
+                                className="h-auto max-h-28 w-auto max-w-full object-contain drop-shadow-[0_8px_14px_rgba(0,0,0,0.32)] transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
                                 {...(blur
                                   ? { placeholder: "blur" as const, blurDataURL: blur }
                                   : {})}

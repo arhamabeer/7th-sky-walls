@@ -10,6 +10,7 @@ import {
   getServices,
   getVenueById,
 } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { Chip } from "@/components/ui/chip";
@@ -141,10 +142,8 @@ export default function ServicesPage() {
                       aria-label={`${artwork.title}, an example of ${service.name}`}
                     >
                       <div
-                        className={cn(
-                          "flex items-center justify-center overflow-hidden rounded-xl border border-line p-8 transition-colors group-hover:border-ink/30 sm:p-12",
-                          flipped ? "bg-background" : "bg-surface",
-                        )}
+                        className="flex items-center justify-center overflow-hidden rounded-xl border border-line p-8 transition-colors group-hover:border-ink/30 sm:p-12"
+                        style={{ backgroundColor: wallColour(artwork.wallTone) }}
                       >
                         <Image
                           src={artwork.image.src}
@@ -152,7 +151,7 @@ export default function ServicesPage() {
                           width={artwork.image.width}
                           height={artwork.image.height}
                           sizes="(min-width: 1024px) 45vw, 90vw"
-                          className="h-auto max-h-[26rem] w-auto max-w-full object-contain shadow-[0_18px_40px_-20px_rgba(25,21,16,0.5)] transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
+                          className="h-auto max-h-[26rem] w-auto max-w-full object-contain drop-shadow-[0_16px_28px_rgba(25,21,16,0.38)] transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />
                       </div>

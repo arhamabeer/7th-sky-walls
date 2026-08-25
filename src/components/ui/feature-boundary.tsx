@@ -2,6 +2,7 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { copy } from "@/content/copy";
+import { reportError } from "@/lib/report-error";
 
 /**
  * Contains a failure to one interactive panel.
@@ -35,6 +36,7 @@ export class FeatureBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error(`Feature failed${this.props.label ? `: ${this.props.label}` : ""}`, error, info);
+    reportError(`feature:${this.props.label ?? "unnamed"}`, error);
   }
 
   private retry = () => this.setState({ failed: false });

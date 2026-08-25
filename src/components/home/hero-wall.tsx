@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Artwork } from "@/lib/content/schema";
 import { getBlurDataURL } from "@/lib/content";
+import { wallColour } from "@/content/finishes";
 import { ScrollParallax } from "@/components/motion/parallax";
 
 /**
@@ -54,8 +55,14 @@ function Frame({
   const blur = getBlurDataURL(artwork.slug);
   return (
     <div
-      className="relative rounded-[3px] bg-surface p-[4%] shadow-[0_20px_44px_-22px_rgba(25,21,16,0.6)] ring-1 ring-black/5"
-      style={{ aspectRatio: `${artwork.image.width} / ${artwork.image.height}` }}
+      // Painted in the piece's own wall tone. On the site's surface colour a
+      // white-lettered piece made for a dark wall came out as pale grey on
+      // white — present in the DOM, invisible on the page.
+      className="relative rounded-[3px] p-[4%] shadow-[0_20px_44px_-22px_rgba(25,21,16,0.6)] ring-1 ring-black/5"
+      style={{
+        aspectRatio: `${artwork.image.width} / ${artwork.image.height}`,
+        backgroundColor: wallColour(artwork.wallTone),
+      }}
     >
       <Image
         src={artwork.image.src}
@@ -65,7 +72,7 @@ function Frame({
         {...(anchor
           ? { fetchPriority: "high" as const, loading: "eager" as const }
           : { loading: "lazy" as const })}
-        className="object-cover p-[4%]"
+        className="object-contain p-[4%]"
         {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
       />
     </div>
