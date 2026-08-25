@@ -29,6 +29,7 @@ export default function PlannerPage() {
     title: artwork.title,
     collection: artwork.collection,
     imageSrc: artwork.image.src,
+    wallTone: artwork.wallTone,
     blurDataURL: getBlurDataURL(artwork.slug),
     defaultSizeId: artwork.defaultSize,
     sizes: artwork.sizes.map((sizeId) => {

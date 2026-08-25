@@ -10,6 +10,7 @@ import {
   type Arrangement,
   type PlannedPiece,
 } from "@/components/planner/layout";
+import { WALL_TONES, wallColour, type WallToneId } from "@/content/finishes";
 import { cn } from "@/lib/utils";
 
 export interface PlannerArtwork {
@@ -18,6 +19,8 @@ export interface PlannerArtwork {
   collection: string;
   imageSrc: string;
   blurDataURL?: string;
+  /** The wall this piece is specified for. */
+  wallTone: WallToneId;
   sizes: Array<{ id: string; label: string; widthCm: number; heightCm: number }>;
   defaultSizeId: string;
 }
@@ -45,6 +48,27 @@ const MAX_PIECES = 7;
 export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
   const fieldId = useId();
   const [wall, setWall] = useState(DEFAULT_WALL);
+  /**
+   * The wall's own colour, chosen rather than assumed.
+   *
+   * Necessary now that pieces are cut letters on transparent grounds: a
+   * white-lettered piece made for a dark wall is invisible on a pale one, which
+   * is a fact about the installation and not something to paper over. Starts on
+   * whichever tone the opening selection is mostly specified for.
+   */
+  const [tone, setTone] = useState<WallToneId>(() => {
+    // Open on the tone the seeded pieces are mostly specified for, so the first
+    // thing on screen is a correct pairing rather than one the visitor has to
+    // fix. Computed from the same seed the selection uses.
+    const seeded = artworks.filter((a) => a.collection === artworks[0]?.collection).slice(0, 3);
+    const pool = seeded.length >= 2 ? seeded : artworks.slice(0, 3);
+    const counts = new Map<WallToneId, number>();
+    for (const a of pool) counts.set(a.wallTone, (counts.get(a.wallTone) ?? 0) + 1);
+    let best: WallToneId = "light";
+    let most = 0;
+    for (const [t, n] of counts) if (n > most) { most = n; best = t; }
+    return best;
+  });
   const [arrangement, setArrangement] = useState<Arrangement["id"]>("row");
   /**
    * Opens with three pieces from one series at the smallest tier, which lands
@@ -67,6 +91,19 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
     () => Object.fromEntries(artworks.map((a) => [a.slug, a])),
     [artworks],
   );
+
+  /** The tone most of the chosen pieces are specified for, as a suggestion. */
+  const suggestedTone = useMemo<WallToneId | null>(() => {
+    const counts = new Map<WallToneId, number>();
+    for (const { slug } of selection) {
+      const t = bySlug[slug]?.wallTone;
+      if (t) counts.set(t, (counts.get(t) ?? 0) + 1);
+    }
+    let best: WallToneId | null = null;
+    let most = 0;
+    for (const [t, n] of counts) if (n > most) { most = n; best = t; }
+    return best;
+  }, [selection, bySlug]);
 
   const pieces: PlannedPiece[] = useMemo(() => {
     const result: PlannedPiece[] = [];
@@ -140,8 +177,11 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
       {/* The wall */}
       <div>
         <div
-          className="relative w-full overflow-hidden rounded-xl border border-line bg-[color-mix(in_srgb,var(--brand-line)_36%,white)]"
-          style={{ aspectRatio: `${wall.widthCm} / ${wall.heightCm}` }}
+          className="relative w-full overflow-hidden rounded-xl border border-line transition-colors duration-300 motion-reduce:transition-none"
+          style={{
+            aspectRatio: `${wall.widthCm} / ${wall.heightCm}`,
+            backgroundColor: wallColour(tone),
+          }}
           role="img"
           aria-label={
             pieces.length
@@ -159,7 +199,11 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
           {layout.placed.map((piece) => (
             <div
               key={piece.key}
-              className="absolute shadow-[0_12px_28px_-14px_rgba(25,21,16,0.55)] ring-1 ring-black/10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+              // No ring and no box shadow: these are transparent PNGs of cut
+              // letters, and a bordered, shadowed rectangle around one reads as
+              // a sheet of paper pinned to the wall. The shadow moves onto the
+              // image, where it follows the letters.
+              className="absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
               style={{
                 width: `${(piece.widthCm / wall.widthCm) * 100}%`,
                 height: `${(piece.heightCm / wall.heightCm) * 100}%`,
@@ -172,7 +216,7 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 20vw, 40vw"
-                className="object-contain"
+                className="object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)]"
                 {...(piece.blurDataURL
                   ? { placeholder: "blur" as const, blurDataURL: piece.blurDataURL }
                   : {})}
@@ -252,6 +296,44 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
               />
             </div>
           </div>
+
+          {/* The wall's own colour. Not decoration: these pieces are cut letters
+              on a transparent ground, so a pale piece on a pale wall genuinely
+              disappears — which is a property of the installation and the reason
+              every piece states the wall it is specified for. */}
+          <p className="mt-4 text-sm font-medium">Wall colour</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {Object.values(WALL_TONES).map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setTone(option.id as WallToneId)}
+                aria-pressed={option.id === tone}
+                className={cn(optionClass(option.id === tone), "gap-2 pl-3")}
+              >
+                <span
+                  aria-hidden
+                  className="h-4 w-4 rounded-full ring-1 ring-black/15"
+                  style={{ backgroundColor: option.colour }}
+                />
+                {option.name}
+              </button>
+            ))}
+          </div>
+          {suggestedTone && suggestedTone !== tone && (
+            <p className="mt-2 text-xs leading-5 text-muted">
+              Most of these pieces are specified for a{" "}
+              {WALL_TONES[suggestedTone].name.toLowerCase()}.{" "}
+              <button
+                type="button"
+                onClick={() => setTone(suggestedTone)}
+                className="font-semibold text-accent underline underline-offset-4"
+              >
+                Switch to it
+              </button>
+              .
+            </p>
+          )}
         </fieldset>
 
         <fieldset className="border-0 p-0">
@@ -289,7 +371,10 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
                   key={key}
                   className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface p-3"
                 >
-                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded bg-line">
+                  <div
+                    className="relative h-12 w-12 shrink-0 overflow-hidden rounded"
+                    style={{ backgroundColor: wallColour(artwork.wallTone) }}
+                  >
                     <Image
                       src={artwork.imageSrc}
                       alt=""

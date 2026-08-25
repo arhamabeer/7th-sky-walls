@@ -210,6 +210,57 @@ const PROBE = () => {
     issues.push({ severity: "error", kind: "missing-alt", detail: `${noAlt.length} image(s) without alt`, offenders: noAlt.slice(0, 5).map((i) => i.src) });
   }
 
+  /**
+   * 6b. A box shadow or ring around an artwork image.
+   *
+   * Artwork images are transparent PNGs of cut letters, so a shadow or border on
+   * the element that wraps one outlines the image's rectangle instead of the
+   * letters — it reads as a sheet of paper taped to the wall, which is the
+   * opposite of the product. Shadows belong on the image as a drop-shadow
+   * filter, where they follow the alpha.
+   *
+   * This is a check rather than three component tests because the same mistake
+   * has now appeared three times in different places — the gallery tiles, the
+   * camera overlay, and the wall planner — and each time it looked deliberate
+   * until someone saw it on a wall.
+   */
+  const papered = imgs
+    .filter((i) => {
+      const src = i.currentSrc || i.src || "";
+      // Optimised URLs carry the original path in a query parameter, so decode
+      // before matching or every next/image request looks like something else.
+      const decoded = decodeURIComponent(src);
+      return decoded.includes("/artworks/") || decoded.startsWith("data:image/png");
+    })
+    .map((i) => {
+      const parent = i.parentElement;
+      if (!parent) return null;
+      const cs = getComputedStyle(parent);
+      // Box-shadow only. A ring is a box-shadow in Tailwind, so both spellings
+      // are covered, and a hairline border is not the bug: the gallery tile is
+      // deliberately a bordered card.
+      if (cs.boxShadow === "none" || cs.boxShadow === "") return null;
+      // And only when the wrapper is transparent. That is the distinction that
+      // separates the bug from the intent: a wrapper painting a wall colour is
+      // standing in for a wall, so a shadow belongs to that swatch — which is
+      // what the home hero's tiles are. A transparent wrapper has no surface for
+      // a shadow to belong to, so the shadow can only be outlining the image's
+      // rectangle, and that is what reads as paper.
+      if (cs.backgroundColor !== "rgba(0, 0, 0, 0)" && cs.backgroundColor !== "transparent") {
+        return null;
+      }
+      return `${parent.tagName}.${(parent.getAttribute("class") ?? "").slice(0, 44)}`;
+    })
+    .filter(Boolean);
+  if (papered.length) {
+    issues.push({
+      severity: "error",
+      kind: "artwork-in-a-box",
+      detail: "artwork image wrapped in a shadowed box, which outlines its rectangle instead of the letters",
+      offenders: [...new Set(papered)].slice(0, 4),
+    });
+  }
+
   // 7. Font size legibility on small screens.
   if (vw < 500) {
     const tiny = textNodes
