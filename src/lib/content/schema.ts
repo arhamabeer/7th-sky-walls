@@ -105,6 +105,19 @@ export const materialSchema = z.object({
   spec: z.string(),
   /** Why this material rather than another — the reasoning, not the sales pitch. */
   why: z.string().min(40),
+  /**
+   * How the material behaves in fire, as a property of the material.
+   *
+   * Required, because two pages tell the reader that fire rating is the first
+   * thing a facilities manager asks and then never answered it. A raised
+   * question with no answer is worse than a wrong number.
+   *
+   * Stated as material behaviour, never as a certified result for this studio's
+   * letters: "expanded PVC is self-extinguishing" is a fact about PVC, whereas
+   * "our letters are Class B certified" would be a claim needing a test
+   * certificate the studio has not provided.
+   */
+  fire: z.string().min(20),
   bestFor: z.string(),
 });
 export type Material = z.infer<typeof materialSchema>;

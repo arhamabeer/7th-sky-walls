@@ -228,6 +228,10 @@ export default async function SpacePage({ params }: PageProps<"/spaces/[venue]">
                     {material.spec}
                   </p>
                   <p className="mt-3 text-sm leading-6 text-muted">{material.bestFor}</p>
+                  <p className="mt-3 border-t border-line pt-3 text-xs leading-5 text-muted">
+                    <span className="font-semibold text-accent">In fire: </span>
+                    {material.fire}
+                  </p>
                 </div>
               </Reveal>
             ))}

@@ -142,7 +142,16 @@ export default function AboutPage() {
                   <p className="mt-1 font-mono text-xs uppercase tracking-wider text-accent">
                     {material.spec}
                   </p>
-                  <p className="mt-4 flex-1 text-sm leading-7 text-muted">{material.why}</p>
+                  <p className="mt-4 text-sm leading-7 text-muted">{material.why}</p>
+                  {/* Its own block, labelled. Two pages tell the reader that fire
+                      rating is the first thing a facilities manager asks, and
+                      until now nothing answered it. */}
+                  <div className="mt-4 flex-1 rounded-lg border border-line bg-background p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+                      In fire
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-muted">{material.fire}</p>
+                  </div>
                   <p className="mt-4 border-t border-line pt-4 text-xs font-semibold uppercase tracking-widest text-muted">
                     {material.bestFor}
                   </p>
