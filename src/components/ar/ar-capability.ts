@@ -25,6 +25,11 @@ export interface ArCapability {
   isImmersive: boolean;
   /** True when the experience leaves the page and returns. */
   handsOff: boolean;
+  /**
+   * Android only: Scene Viewer is worth offering as a secondary attempt, but
+   * must not be the primary action because it is expected to fail.
+   */
+  sceneViewerFallback?: boolean;
   reason: string;
 }
 
@@ -80,6 +85,8 @@ export async function detectArCapability(): Promise<ArCapability> {
   }
 
   const xr = (navigator as Navigator & { xr?: { isSessionSupported(mode: string): Promise<boolean> } }).xr;
+  /** Distinguishes "asked and told no" from "could not ask" — see below. */
+  let xrAnswered = false;
   if (xr?.isSessionSupported) {
     try {
       if (await xr.isSessionSupported("immersive-ar")) {
@@ -90,21 +97,50 @@ export async function detectArCapability(): Promise<ArCapability> {
           reason: "WebXR immersive-ar is supported",
         };
       }
+      xrAnswered = true;
     } catch {
-      /* treat a rejection as unsupported */
+      /* treat a rejection as unsupported, and as no answer */
     }
   }
 
   if (isAndroid()) {
-    // Scene Viewer ships with Google Play Services for AR, which prompts to
-    // install itself when missing, so offering it on Android is reasonable
-    // even without a feature test.
-    return {
-      tier: "scene-viewer",
-      isImmersive: true,
-      handsOff: true,
-      reason: "Android can hand off to Scene Viewer",
-    };
+    /**
+     * WebXR and Scene Viewer are both gated on Google Play Services for AR, so
+     * a Chrome that exposes navigator.xr and then answers "immersive-ar: no" is
+     * telling us ARCore is unavailable — and Scene Viewer will fail the same
+     * way.
+     *
+     * This used to return scene-viewer for every Android on the reasoning that
+     * Play Services for AR prompts to install itself when missing. On a handset
+     * where the Play Store reports that app "incompatible with this device"
+     * there is nothing to install, so the primary button was dead and the only
+     * working option was a small link underneath it. Found on a real device,
+     * and it is the exact failure this detection exists to prevent.
+     *
+     * Scene Viewer stays reachable as a clearly-labelled secondary attempt, so
+     * a device where this inference is wrong is not shut out of real AR.
+     *
+     * With navigator.xr absent entirely — an older browser or a WebView — we
+     * genuinely cannot tell, and Scene Viewer's own install prompt is a better
+     * bet than assuming failure.
+     */
+    if (!xrAnswered) {
+      return {
+        tier: "scene-viewer",
+        isImmersive: true,
+        handsOff: true,
+        reason: "Android, WebXR support unknown; Scene Viewer may hand off",
+      };
+    }
+    if (supportsCamera()) {
+      return {
+        tier: "overlay",
+        isImmersive: false,
+        handsOff: false,
+        sceneViewerFallback: true,
+        reason: "Android reports no immersive-ar, so ARCore is unavailable",
+      };
+    }
   }
 
   if (supportsCamera()) {
