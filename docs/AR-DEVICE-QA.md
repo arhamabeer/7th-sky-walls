@@ -25,8 +25,15 @@ and one Android handset.
 ## iPhone — Safari
 
 1. Open an artwork page, choose **Large**, open the **On your wall** tab.
-2. The 3D view should show the framed piece. Confirm the frame colour matches
-   the material listed on the page.
+2. The 3D view should show the piece on a panel in its specified wall tone.
+
+   **Expected, and the first thing to judge.** The model is currently a panel
+   carrying the artwork, not the cut letters alone. For this product the honest
+   model is a plane with an alpha-masked texture, so the real wall shows between
+   the letters — that is Phase 10, and it is held back precisely because Quick
+   Look's handling of cutout alpha cannot be confirmed without this test. While
+   you are here, note whether the panel reads as acceptable or as obviously
+   wrong; that decides how urgent Phase 10 is.
 3. Tap **Place on my wall**. AR Quick Look should open over Safari.
 4. **Orientation.** Point at a wall. The artwork must stand upright, facing
    into the room.
@@ -37,15 +44,17 @@ and one Android handset.
 5. **Flush mounting.** The back of the frame should sit against the wall, not
    float in front of it or sink into it.
 6. **True scale.** Measure the placed artwork. At Large it must be 90 × 120 cm
-   for a portrait piece. Anything else means the authored dimensions or
+   for a portrait piece — Sabr and Idea are both portrait. Anything else means the authored dimensions or
    `metersPerUnit` are wrong.
 7. **Scale lock.** Try to pinch-resize. It must not resize —
    `#allowsContentScaling=0` is appended by model-viewer for
    `ar-scale="fixed"`.
 8. Repeat at **Small** and **Extra large** to confirm each size loads its own
    model rather than a rescaled one.
-9. Test a **panoramic** piece (Glass Horizon) — the widest models are where an
-   aspect or rotation error is most obvious.
+9. Test a **panoramic** piece (Ask Better Questions) — the widest models are
+   where an aspect or rotation error is most obvious.
+10. Test a **word cloud** (Idea) at Extra large. A cloud is the case where a
+    wrong aspect or a crop is unmistakable, because words run off the edge.
 
 ## Android — Chrome
 
