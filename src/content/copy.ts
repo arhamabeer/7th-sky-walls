@@ -68,7 +68,7 @@ export const copy = {
     feature: {
       title: "This preview couldn't start",
       body:
-        "Everything else on this page still works, including the inquiry — and we can send you a mockup of this piece on a photo of your wall instead.",
+        "Everything else on this page still works, including the inquiry. If it keeps failing, send us the wall and we'll put the mockup together for you.",
       retry: "Reload the preview",
     },
   },

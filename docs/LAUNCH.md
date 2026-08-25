@@ -22,11 +22,32 @@ npm run lighthouse
 | `check:images` | Every artwork file on disk matches the dimensions the site declares. A mismatch causes layout shift and letterboxed renders. |
 | `check:ar` | All 96 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires. |
 | `verify` | Production build, hero wall arrangement, and the responsive audit across 31 viewports — desktop, laptop, tablet and phone, portrait and landscape. |
-| `test:interaction` | 183 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts. |
-| `lighthouse` | SEO, best practices and accessibility at 90+ on seven routes. All three currently sit at 100. |
+| `test:interaction` | 204 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts. |
+| `lighthouse` | SEO, best practices and accessibility at 90+ on eleven routes. All three currently sit at 100. |
 
 `npm run test:interaction` and `npm run lighthouse` need a server already
-running (`npx next start -p 4020`); `npm run verify` starts its own.
+running — use `npm run serve`, which frees the port first and refuses to serve
+a build other than the one on disk. Starting `next start` by hand is how a
+stale server ends up answering, and that failure presents as an unstyled page
+or a defect that was already fixed rather than as an error. `npm run verify`
+starts and checks its own server.
+
+### Error boundaries
+
+`error.tsx`, `global-error.tsx` and `FeatureBoundary` cannot be exercised by
+the automated suite without shipping code that throws, so they were verified by
+hand and should be re-verified if any of the three changes. Each check is a
+temporary edit, reverted immediately after:
+
+| Boundary | How to trigger it | Expected |
+| --- | --- | --- |
+| `error.tsx` | Add `src/app/boom-test/page.tsx` with `export const dynamic = "force-dynamic"` and a `throw` in the component. A static page that throws fails the build instead. | HTTP 500 carrying the branded page, heading "That didn't load.", working retry |
+| `global-error.tsx` | Make a client component rendered by the root layout throw in the browser (`if (typeof window !== "undefined") throw …` in `SmoothScroll`) | Branded page with no header, brand background and display font applied, working retry |
+| `FeatureBoundary` | Same client-only throw inside `WallPlanner` or `ArtworkExperience` | Page heading, surrounding sections and inquiry all still present; only the panel replaced, with a retry |
+
+Verified 2026-08-25: all three behave as described, including `--brand-accent`
+and the display font resolving inside `global-error`, and the planner page
+keeping its `h1` and its hanging notes while only the panel is replaced.
 
 ## Content and configuration
 
