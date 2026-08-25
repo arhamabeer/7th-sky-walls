@@ -50,8 +50,8 @@ function fitSize(
   fontOf: (size: number) => string,
   maxWidth: number,
   maxHeight: number,
+  lineRatio: number,
 ): number {
-  const lineRatio = 1.22;
   let low = 4;
   let high = Math.floor(maxHeight);
   let best = low;
@@ -103,13 +103,17 @@ export async function renderCustomArt({
   const style = typeface.italic ? "italic " : "";
   const fontOf = (size: number) => `${style}${typeface.weight} ${size}px ${family}`;
 
-  const size = fitSize(ctx, cleaned, fontOf, width * 0.88, height * 0.8);
+  const lineRatio = typeface.lineHeight ?? 1.22;
+  const size = fitSize(ctx, cleaned, fontOf, width * 0.88, height * 0.8, lineRatio);
   ctx.font = fontOf(size);
   ctx.fillStyle = ink.value;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  const lineHeight = size * 1.22;
+  // Right-to-left scripts need the canvas told, or the shaped run is laid out
+  // in the wrong order — the shaping itself is the browser's, and correct.
+  if (typeface.rtl) ctx.direction = "rtl";
+  const lineHeight = size * lineRatio;
   const startY = height / 2 - ((cleaned.length - 1) * lineHeight) / 2;
   cleaned.forEach((line, i) => {
     ctx.fillText(line, width / 2, startY + i * lineHeight);

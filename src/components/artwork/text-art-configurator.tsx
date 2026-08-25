@@ -70,8 +70,14 @@ export function TextArtConfigurator({
   );
 
   const fontSize = useMemo(
-    () => fitFontSize(lines.length ? lines : ["Your words"], aspect, typeface.advance),
-    [lines, aspect, typeface.advance],
+    () =>
+      fitFontSize(
+        lines.length ? lines : ["Your words"],
+        aspect,
+        typeface.advance,
+        typeface.lineHeight,
+      ),
+    [lines, aspect, typeface.advance, typeface.lineHeight],
   );
 
   const contrast = contrastRatio(ink.value, ground.value);
@@ -111,8 +117,13 @@ export function TextArtConfigurator({
             }}
           >
             <p
-              className="whitespace-pre-line px-[6%] text-center leading-[1.22]"
+              // dir follows the chosen voice, so Urdu and Arabic run
+              // right-to-left. "auto" rather than "rtl" so a Latin word typed
+              // into an RTL face still reads correctly.
+              dir={typeface.rtl ? "auto" : "ltr"}
+              className="whitespace-pre-line px-[6%] text-center"
               style={{
+                lineHeight: typeface.lineHeight ?? 1.22,
                 fontFamily: typeface.stack,
                 fontWeight: typeface.weight,
                 fontStyle: typeface.italic ? "italic" : "normal",
@@ -146,6 +157,9 @@ export function TextArtConfigurator({
             }}
             rows={3}
             maxLength={160}
+            // The field has to match the script being typed, or the caret and
+            // punctuation land on the wrong side of the words.
+            dir={typeface.rtl ? "auto" : "ltr"}
             placeholder={"One line per line break\nUp to five lines"}
             // Global :focus-visible outline left intact — see inquiry-form.
             className="mt-1.5 block min-h-24 w-full resize-y rounded-lg border border-line bg-background px-4 py-3 text-base leading-7 focus:border-ink"

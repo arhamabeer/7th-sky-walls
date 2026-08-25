@@ -19,6 +19,16 @@ export interface TypefaceOption {
   /** Average advance per character in em, used to fit text to the canvas. */
   advance: number;
   letterSpacing: string;
+  /**
+   * Line height as a multiple of the font size.
+   *
+   * Nastaliq needs far more than a Latin face: its descenders sweep well below
+   * the baseline and its strokes climb above the x-height, so the shared 1.22
+   * clipped both ends. Defaults to 1.22 where it is not stated.
+   */
+  lineHeight?: number;
+  /** Right-to-left scripts, which the preview and the textarea must respect. */
+  rtl?: boolean;
 }
 
 export const TYPEFACES: TypefaceOption[] = [
@@ -49,6 +59,30 @@ export const TYPEFACES: TypefaceOption[] = [
     weight: 500,
     advance: 0.54,
     letterSpacing: "0.02em",
+  },
+  {
+    id: "urdu",
+    name: "Urdu — Nastaliq",
+    note: "The hand Urdu is actually written in. Set your words in Urdu and they are cut in this.",
+    stack: "var(--font-urdu), serif",
+    weight: 600,
+    // Nastaliq joins and overlaps, so characters take far less width each than
+    // a Latin face and far more height. Both measured rather than guessed.
+    advance: 0.34,
+    letterSpacing: "0",
+    lineHeight: 2.1,
+    rtl: true,
+  },
+  {
+    id: "arabic",
+    name: "Arabic — Naskh",
+    note: "For Arabic wording and Quranic verse, where Naskh is the correct hand rather than Nastaliq.",
+    stack: "var(--font-arabic), serif",
+    weight: 700,
+    advance: 0.42,
+    letterSpacing: "0",
+    lineHeight: 1.7,
+    rtl: true,
   },
 ];
 
@@ -115,9 +149,12 @@ export function fitFontSize(
   lines: string[],
   aspect: number,
   advance: number,
+  lineHeight = 1.22,
 ): number {
   const longest = Math.max(1, ...lines.map((l) => l.length));
   const byWidth = 82 / (longest * advance);
-  const byHeight = (76 / aspect) / (Math.max(1, lines.length) * 1.22);
+  // Nastaliq at 2.1 line height needs the divisor to follow the face, or two
+  // lines of Urdu overlap each other.
+  const byHeight = 76 / aspect / (Math.max(1, lines.length) * lineHeight);
   return Math.max(3, Math.min(byWidth, byHeight, 26));
 }

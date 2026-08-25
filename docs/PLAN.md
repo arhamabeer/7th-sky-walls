@@ -348,7 +348,7 @@ the post-launch backlog into the build.
    visitor it was sent, which loses inquiries silently — the one failure mode
    that must not reach launch.
 
-### Phase 9 — Urdu and Arabic in the configurator
+### Phase 9 — Urdu and Arabic in the configurator — COMPLETE
 
 Confirmed: both scripts, in the faces each is actually written in.
 
@@ -361,11 +361,25 @@ Both `preload: false`. An Arabic Nastaliq subset runs to roughly 150–250 KB,
 which must never touch the initial load — it downloads when the configurator is
 opened and that face chosen, and not before.
 
-Work: the two faces, `dir="auto"` through the preview so mixed Urdu and English
-resolves per-paragraph without a manual direction toggle, line breaking and
-type-fit sizing checked against Nastaliq's much greater line height, and the
-chosen script carried into the inquiry so the studio receives the words in the
-script they were typed in.
+Done. `dir="auto"` on both the field and the preview, so mixed Urdu and English
+resolves per paragraph without a manual toggle and the caret lands on the right
+side while typing. Line height is per face rather than shared — Nastaliq needs
+about 2.1 against a Latin face's 1.22 and clipped its own descenders at the
+shared value — and the fit calculation takes it, so three lines of Urdu no
+longer overlap.
+
+**The wording reaches AR.** Nastaliq shaping has no working server-side path, so
+the browser does it: the same canvas that draws the preview feeds a GLB authored
+in the browser, which model-viewer and the WebXR path both accept. Verified end
+to end — "پیاری دیوار" shaped and joined in the 3D stage, at 0.90 × 1.20 m for
+Sabr at Large. iOS still receives the pre-built USDZ, and the panel says so.
+
+Both faces confirmed absent from the initial load: a home page fetches two font
+files, and the Nastaliq subset arrives only when the Urdu voice is chosen.
+
+Nine checks cover it, per script: the real face rather than a fallback,
+direction on the field and the preview, no clipping, more line height than a
+Latin face, and the model built at true size.
 
 ### Phase 10 — frameless AR, then customer wording in AR
 

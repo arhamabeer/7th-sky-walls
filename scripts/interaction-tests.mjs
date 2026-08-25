@@ -1506,6 +1506,91 @@ async function testCustomTextReachesPreview(browser) {
   await context.close();
 }
 
+/**
+ * Urdu and Arabic in the configurator, all the way to the AR model.
+ *
+ * Nastaliq is among the hardest scripts to shape and has no working
+ * server-side path — Satori, which Next.js uses for images, has no full
+ * shaper. The way around it is to let the browser do the shaping, which it does
+ * correctly and has already done for the preview: the same canvas that renders
+ * the wording feeds the GLB. So these checks are about that chain holding, and
+ * about the metrics, since Nastaliq needs roughly twice the line height of a
+ * Latin face and clipped its own descenders at the shared value.
+ */
+async function testUrduAndArabic(browser) {
+  const context = await browser.newContext({ viewport: { width: 520, height: 1100 } });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+    await page.locator("[role=tab]", { hasText: /^Make it yours$/ }).click();
+
+    for (const [voice, text, expectFamily] of [
+      ["Urdu", "پیاری دیوار", /nastaliq/i],
+      ["Arabic", "بسم الله الرحمن الرحيم", /amiri|naskh/i],
+    ]) {
+      await page.getByRole("button", { name: new RegExp(voice) }).click();
+      await page.locator("[role=tabpanel]:not([hidden]) textarea").fill(text);
+      await page.waitForTimeout(1200);
+
+      const state = await page.evaluate(async () => {
+        await document.fonts.ready;
+        const para = document.querySelector("[role=tabpanel]:not([hidden]) p");
+        const field = document.querySelector("[role=tabpanel]:not([hidden]) textarea");
+        const box = para.parentElement;
+        const pr = para.getBoundingClientRect();
+        const br = box.getBoundingClientRect();
+        const cs = getComputedStyle(para);
+        return {
+          family: cs.fontFamily,
+          fieldDir: field.getAttribute("dir"),
+          paraDir: para.getAttribute("dir"),
+          lineRatio: parseFloat(cs.lineHeight) / parseFloat(cs.fontSize),
+          clipped:
+            pr.top < br.top - 1 ||
+            pr.bottom > br.bottom + 1 ||
+            pr.right > br.right + 1 ||
+            pr.left < br.left - 1,
+        };
+      });
+
+      record("scripts", `${voice} uses its own face, not a fallback`, expectFamily.test(state.family), state.family.slice(0, 60));
+      record("scripts", `${voice} sets direction on the field and the preview`, state.fieldDir === "auto" && state.paraDir === "auto", `field=${state.fieldDir} preview=${state.paraDir}`);
+      record("scripts", `${voice} text stays inside the preview`, !state.clipped);
+      // Latin faces sit at 1.22. An RTL face falling back to that is the bug
+      // this catches: Nastaliq clips its own descenders there.
+      record("scripts", `${voice} gets more line height than a Latin face`, state.lineRatio > 1.5, `ratio ${state.lineRatio.toFixed(2)}`);
+    }
+
+    // The last script typed must reach the 3D model at the piece's real size.
+    await page.locator("[role=tab]", { hasText: /^On your wall$/ }).click();
+    await page
+      .waitForFunction(() => document.querySelector("model-viewer")?.loaded === true, null, {
+        timeout: 20000,
+      })
+      .catch(() => {});
+    const model = await page.evaluate(() => {
+      const mv = document.querySelector("model-viewer");
+      const d = mv?.getDimensions?.();
+      return {
+        custom: (mv?.src ?? "").startsWith("data:model/gltf-binary"),
+        widthM: d ? Number(d.x.toFixed(3)) : null,
+        heightM: d ? Number(d.y.toFixed(3)) : null,
+      };
+    });
+    record(
+      "scripts",
+      "an Arabic-script piece reaches the 3D model at true size",
+      Boolean(model.custom) &&
+        Math.abs((model.widthM ?? 0) - 0.9) < 0.005 &&
+        Math.abs((model.heightM ?? 0) - 1.2) < 0.005,
+      `custom=${model.custom} ${model.widthM} x ${model.heightM} m`,
+    );
+  } catch (err) {
+    record("scripts", "urdu and arabic group completed without throwing", false, String(err).slice(0, 110));
+  }
+  await context.close();
+}
+
 async function testReducedMotion(browser) {
   const context = await browser.newContext({
     viewport: { width: 1280, height: 800 },
@@ -1608,6 +1693,7 @@ async function main() {
   await testAndroidArTiers(browser);
   await testArFailureRecovery(browser);
   await testCustomTextReachesPreview(browser);
+  await testUrduAndArabic(browser);
   await testReducedMotion(browser);
   await testRateLimit(browser);
   await browser.close();
