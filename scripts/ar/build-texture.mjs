@@ -15,15 +15,21 @@
  * UV coordinate that lands on flat colour, which is what keeps the edges from
  * showing a smeared slice of the artwork.
  *
- * KNOWN LIMIT, and the reason this is not the end state. These pieces are cut
- * letters with the wall showing between them, so the honest AR model is a plane
- * with an alpha-masked texture and no panel at all. That needs the geometry
- * switched from a box to a plane, alphaMode MASK in the GLB, and an
- * opacityThreshold on the USDZ shader — and Quick Look's handling of cutout
- * alpha cannot be confirmed without an iPhone. Doing it unverified is precisely
- * how the empty-USDZ bug above happened. It is scoped as Phase 10 work
- * alongside the outstanding device QA. Until then AR answers "how big is this
- * on my wall", which is what it is measured against.
+ * Two textures come out of this, because the two platforms are at different
+ * stages of the same migration.
+ *
+ * `alpha` is a transparent PNG of the piece alone. These are cut letters with
+ * the wall showing between them, so that is the honest texture: paired with a
+ * plane and alphaMode MASK it puts the letters on the visitor's real wall with
+ * nothing behind them. model-viewer's renderer and the WebXR path both handle
+ * cutout alpha, and it is verifiable without a phone.
+ *
+ * `opaque` is the artwork composited onto its wall tone with a thin margin —
+ * what both platforms used until now. The USDZ keeps it, because Quick Look's
+ * handling of cutout alpha cannot be confirmed without an iPhone and shipping it
+ * unverified is exactly how the empty-USDZ bug above happened. iOS therefore
+ * still answers "how big is this on my wall" while Android answers "what does it
+ * look like on my wall", and the split is deliberate rather than an oversight.
  *
  * The stated size is treated as the FINISHED piece — what actually hangs on the
  * wall. Scale claims then need no asterisk.
@@ -69,15 +75,35 @@ export async function buildArTexture({ sourcePath, maxEdge = 1024, wall, aspect 
     })
     .toBuffer();
 
-  const buffer = await sharp({
+  const opaque = await sharp({
     create: { width, height, channels: 3, background: wall.colour },
   })
     .composite([{ input: artwork, left: margin, top: margin }])
     .jpeg({ quality: 88, mozjpeg: true })
     .toBuffer();
 
-  // A point centred in the top margin, safely on flat wall colour.
+  // The same layout with nothing behind it. The margin is kept so a piece does
+  // not sit hard against the edge of its own plane.
+  const alpha = await sharp({
+    create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  })
+    .composite([{ input: artwork, left: margin, top: margin }])
+    /**
+     * Indexed palette, 256 colours.
+     *
+     * The texture is embedded in every size's GLB, so its weight is multiplied
+     * by four per artwork. Measured against the unquantised PNG: a gradient
+     * mirror set drops from 268 KB to 71 KB for a mean channel difference of
+     * 0.13 out of 255. Dropping to 128 colours saves another 35 KB and starts
+     * banding the gradients — worst-case difference of 53 — so 256 is where the
+     * line is.
+     */
+    .png({ compressionLevel: 9, palette: true, colours: 256 })
+    .toBuffer();
+
+  // A point centred in the top margin, safely on flat wall colour. Only the
+  // box geometry needs it; a plane samples the whole texture.
   const frameUv = [0.5, margin / 2 / height];
 
-  return { buffer, width, height, frameUv };
+  return { opaque, alpha, width, height, frameUv };
 }

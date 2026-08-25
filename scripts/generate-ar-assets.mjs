@@ -100,7 +100,8 @@ async function main() {
       const { widthCm, heightCm } = resolveSize(tier, art.orientation);
 
       const glb = await buildGlb({
-        textureBuffer: texture.buffer,
+        // Alpha PNG: the plane shows the letters and the wall between them.
+        textureBuffer: texture.alpha,
         widthCm,
         heightCm,
         depthCm: DEPTH_CM,
@@ -108,7 +109,8 @@ async function main() {
         name: primName(art.title),
       });
       const usdz = buildUsdz({
-        textureBuffer: texture.buffer,
+        // Opaque, until Quick Look's cutout alpha is confirmed on a device.
+        textureBuffer: texture.opaque,
         widthCm,
         heightCm,
         depthCm: DEPTH_CM,

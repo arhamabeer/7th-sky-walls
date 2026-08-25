@@ -8,7 +8,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 57232,
+        "glbBytes": 55700,
         "usdzBytes": 60923
       },
       "m": {
@@ -17,7 +17,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 57232,
+        "glbBytes": 55696,
         "usdzBytes": 60923
       },
       "l": {
@@ -26,7 +26,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 57232,
+        "glbBytes": 55696,
         "usdzBytes": 60923
       },
       "xl": {
@@ -35,7 +35,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 57228,
+        "glbBytes": 55692,
         "usdzBytes": 60923
       }
     }
@@ -49,7 +49,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 67532,
+        "glbBytes": 67632,
         "usdzBytes": 71216
       },
       "m": {
@@ -58,7 +58,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 67532,
+        "glbBytes": 67628,
         "usdzBytes": 71216
       },
       "l": {
@@ -67,7 +67,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 67532,
+        "glbBytes": 67628,
         "usdzBytes": 71216
       },
       "xl": {
@@ -76,7 +76,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 67528,
+        "glbBytes": 67624,
         "usdzBytes": 71216
       }
     }
@@ -90,7 +90,7 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 59348,
+        "glbBytes": 64832,
         "usdzBytes": 63015
       },
       "m": {
@@ -99,7 +99,7 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 59344,
+        "glbBytes": 64828,
         "usdzBytes": 63015
       },
       "l": {
@@ -108,7 +108,7 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 59344,
+        "glbBytes": 64828,
         "usdzBytes": 63015
       },
       "xl": {
@@ -117,7 +117,7 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 59340,
+        "glbBytes": 64824,
         "usdzBytes": 63015
       }
     }
@@ -131,7 +131,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 61896,
+        "glbBytes": 59772,
         "usdzBytes": 65572
       },
       "m": {
@@ -140,7 +140,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 61896,
+        "glbBytes": 59768,
         "usdzBytes": 65572
       },
       "l": {
@@ -149,7 +149,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 61896,
+        "glbBytes": 59768,
         "usdzBytes": 65572
       },
       "xl": {
@@ -158,7 +158,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 61892,
+        "glbBytes": 59764,
         "usdzBytes": 65572
       }
     }
@@ -172,7 +172,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51076,
+        "glbBytes": 44672,
         "usdzBytes": 54724
       },
       "m": {
@@ -181,7 +181,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51076,
+        "glbBytes": 44668,
         "usdzBytes": 54724
       },
       "l": {
@@ -190,7 +190,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 51076,
+        "glbBytes": 44668,
         "usdzBytes": 54724
       },
       "xl": {
@@ -199,7 +199,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 51072,
+        "glbBytes": 44664,
         "usdzBytes": 54724
       }
     }
@@ -213,7 +213,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 29384,
+        "glbBytes": 24976,
         "usdzBytes": 33047
       },
       "m": {
@@ -222,7 +222,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 29380,
+        "glbBytes": 24976,
         "usdzBytes": 33047
       },
       "l": {
@@ -231,7 +231,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 29380,
+        "glbBytes": 24976,
         "usdzBytes": 33047
       },
       "xl": {
@@ -240,7 +240,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 29376,
+        "glbBytes": 24972,
         "usdzBytes": 33047
       }
     }
@@ -254,7 +254,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 31216,
+        "glbBytes": 26512,
         "usdzBytes": 34871
       },
       "m": {
@@ -263,7 +263,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 31212,
+        "glbBytes": 26512,
         "usdzBytes": 34871
       },
       "l": {
@@ -272,7 +272,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 31212,
+        "glbBytes": 26512,
         "usdzBytes": 34871
       },
       "xl": {
@@ -281,7 +281,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 31208,
+        "glbBytes": 26508,
         "usdzBytes": 34871
       }
     }
@@ -295,7 +295,7 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 33260,
+        "glbBytes": 36724,
         "usdzBytes": 36910
       },
       "m": {
@@ -304,7 +304,7 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 33232,
+        "glbBytes": 36696,
         "usdzBytes": 36910
       },
       "l": {
@@ -313,7 +313,7 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 33224,
+        "glbBytes": 36688,
         "usdzBytes": 36910
       },
       "xl": {
@@ -322,7 +322,7 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 33200,
+        "glbBytes": 36664,
         "usdzBytes": 36910
       }
     }
@@ -336,7 +336,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 61288,
+        "glbBytes": 63816,
         "usdzBytes": 64954
       },
       "m": {
@@ -345,7 +345,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 61284,
+        "glbBytes": 63816,
         "usdzBytes": 64954
       },
       "l": {
@@ -354,7 +354,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 61284,
+        "glbBytes": 63816,
         "usdzBytes": 64954
       },
       "xl": {
@@ -363,7 +363,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 61280,
+        "glbBytes": 63812,
         "usdzBytes": 64954
       }
     }
@@ -377,7 +377,7 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 51808,
+        "glbBytes": 53776,
         "usdzBytes": 55473
       },
       "m": {
@@ -386,7 +386,7 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51780,
+        "glbBytes": 53748,
         "usdzBytes": 55473
       },
       "l": {
@@ -395,7 +395,7 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51772,
+        "glbBytes": 53740,
         "usdzBytes": 55473
       },
       "xl": {
@@ -404,7 +404,7 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 51748,
+        "glbBytes": 53716,
         "usdzBytes": 55473
       }
     }
@@ -418,7 +418,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 61272,
+        "glbBytes": 63800,
         "usdzBytes": 64962
       },
       "m": {
@@ -427,7 +427,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 61268,
+        "glbBytes": 63800,
         "usdzBytes": 64962
       },
       "l": {
@@ -436,7 +436,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 61268,
+        "glbBytes": 63800,
         "usdzBytes": 64962
       },
       "xl": {
@@ -445,7 +445,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 61264,
+        "glbBytes": 63796,
         "usdzBytes": 64962
       }
     }
@@ -459,7 +459,7 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 51808,
+        "glbBytes": 53776,
         "usdzBytes": 55473
       },
       "m": {
@@ -468,7 +468,7 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51780,
+        "glbBytes": 53748,
         "usdzBytes": 55473
       },
       "l": {
@@ -477,7 +477,7 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51772,
+        "glbBytes": 53740,
         "usdzBytes": 55473
       },
       "xl": {
@@ -486,7 +486,7 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 51748,
+        "glbBytes": 53716,
         "usdzBytes": 55473
       }
     }
@@ -500,7 +500,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 49188,
+        "glbBytes": 47648,
         "usdzBytes": 52861
       },
       "m": {
@@ -509,7 +509,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 49188,
+        "glbBytes": 47644,
         "usdzBytes": 52861
       },
       "l": {
@@ -518,7 +518,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 49188,
+        "glbBytes": 47644,
         "usdzBytes": 52861
       },
       "xl": {
@@ -527,7 +527,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 49184,
+        "glbBytes": 47640,
         "usdzBytes": 52861
       }
     }
@@ -541,7 +541,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 49060,
+        "glbBytes": 50840,
         "usdzBytes": 52719
       },
       "m": {
@@ -550,7 +550,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 49060,
+        "glbBytes": 50836,
         "usdzBytes": 52719
       },
       "l": {
@@ -559,7 +559,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 49060,
+        "glbBytes": 50836,
         "usdzBytes": 52719
       },
       "xl": {
@@ -568,7 +568,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 49056,
+        "glbBytes": 50832,
         "usdzBytes": 52719
       }
     }
@@ -582,7 +582,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 48528,
+        "glbBytes": 47912,
         "usdzBytes": 52193
       },
       "m": {
@@ -591,7 +591,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 48524,
+        "glbBytes": 47912,
         "usdzBytes": 52193
       },
       "l": {
@@ -600,7 +600,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 48524,
+        "glbBytes": 47912,
         "usdzBytes": 52193
       },
       "xl": {
@@ -609,7 +609,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 48520,
+        "glbBytes": 47908,
         "usdzBytes": 52193
       }
     }
@@ -623,7 +623,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 39012,
+        "glbBytes": 41740,
         "usdzBytes": 42680
       },
       "m": {
@@ -632,7 +632,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 39008,
+        "glbBytes": 41740,
         "usdzBytes": 42680
       },
       "l": {
@@ -641,7 +641,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 39008,
+        "glbBytes": 41740,
         "usdzBytes": 42680
       },
       "xl": {
@@ -650,7 +650,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 39004,
+        "glbBytes": 41736,
         "usdzBytes": 42680
       }
     }
@@ -664,7 +664,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 24952,
+        "glbBytes": 28572,
         "usdzBytes": 28639
       },
       "m": {
@@ -673,7 +673,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 24952,
+        "glbBytes": 28568,
         "usdzBytes": 28639
       },
       "l": {
@@ -682,7 +682,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 24952,
+        "glbBytes": 28568,
         "usdzBytes": 28639
       },
       "xl": {
@@ -691,7 +691,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 24948,
+        "glbBytes": 28564,
         "usdzBytes": 28639
       }
     }
@@ -705,7 +705,7 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 29828,
+        "glbBytes": 32204,
         "usdzBytes": 33503
       },
       "m": {
@@ -714,7 +714,7 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 29824,
+        "glbBytes": 32200,
         "usdzBytes": 33503
       },
       "l": {
@@ -723,7 +723,7 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 29824,
+        "glbBytes": 32200,
         "usdzBytes": 33503
       },
       "xl": {
@@ -732,7 +732,7 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 29820,
+        "glbBytes": 32196,
         "usdzBytes": 33503
       }
     }
@@ -746,7 +746,7 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 25172,
+        "glbBytes": 26132,
         "usdzBytes": 28853
       },
       "m": {
@@ -755,7 +755,7 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 25168,
+        "glbBytes": 26132,
         "usdzBytes": 28853
       },
       "l": {
@@ -764,7 +764,7 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 25168,
+        "glbBytes": 26132,
         "usdzBytes": 28853
       },
       "xl": {
@@ -773,7 +773,7 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 25164,
+        "glbBytes": 26128,
         "usdzBytes": 28853
       }
     }
@@ -787,7 +787,7 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 24576,
+        "glbBytes": 26020,
         "usdzBytes": 28242
       },
       "m": {
@@ -796,7 +796,7 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 24548,
+        "glbBytes": 25992,
         "usdzBytes": 28242
       },
       "l": {
@@ -805,7 +805,7 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 24540,
+        "glbBytes": 25984,
         "usdzBytes": 28242
       },
       "xl": {
@@ -814,7 +814,7 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 24516,
+        "glbBytes": 25960,
         "usdzBytes": 28242
       }
     }
@@ -828,7 +828,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 27900,
+        "glbBytes": 27732,
         "usdzBytes": 31561
       },
       "m": {
@@ -837,7 +837,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 27896,
+        "glbBytes": 27732,
         "usdzBytes": 31561
       },
       "l": {
@@ -846,7 +846,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 27896,
+        "glbBytes": 27732,
         "usdzBytes": 31561
       },
       "xl": {
@@ -855,7 +855,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 27892,
+        "glbBytes": 27728,
         "usdzBytes": 31561
       }
     }
@@ -869,7 +869,7 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 17912,
+        "glbBytes": 18316,
         "usdzBytes": 21572
       },
       "m": {
@@ -878,7 +878,7 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 17884,
+        "glbBytes": 18288,
         "usdzBytes": 21572
       },
       "l": {
@@ -887,7 +887,7 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 17876,
+        "glbBytes": 18280,
         "usdzBytes": 21572
       },
       "xl": {
@@ -896,7 +896,7 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 17852,
+        "glbBytes": 18256,
         "usdzBytes": 21572
       }
     }
@@ -910,7 +910,7 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 32080,
+        "glbBytes": 32572,
         "usdzBytes": 35746
       },
       "m": {
@@ -919,7 +919,7 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 32076,
+        "glbBytes": 32568,
         "usdzBytes": 35746
       },
       "l": {
@@ -928,7 +928,7 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 32076,
+        "glbBytes": 32568,
         "usdzBytes": 35746
       },
       "xl": {
@@ -937,7 +937,7 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 32072,
+        "glbBytes": 32564,
         "usdzBytes": 35746
       }
     }
@@ -951,7 +951,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 28520,
+        "glbBytes": 28820,
         "usdzBytes": 32176
       },
       "m": {
@@ -960,7 +960,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 28520,
+        "glbBytes": 28816,
         "usdzBytes": 32176
       },
       "l": {
@@ -969,7 +969,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 28520,
+        "glbBytes": 28816,
         "usdzBytes": 32176
       },
       "xl": {
@@ -978,7 +978,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 28516,
+        "glbBytes": 28812,
         "usdzBytes": 32176
       }
     }
@@ -992,7 +992,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 50180,
+        "glbBytes": 79688,
         "usdzBytes": 53850
       },
       "m": {
@@ -1001,7 +1001,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 50180,
+        "glbBytes": 79684,
         "usdzBytes": 53850
       },
       "l": {
@@ -1010,7 +1010,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 50180,
+        "glbBytes": 79684,
         "usdzBytes": 53850
       },
       "xl": {
@@ -1019,7 +1019,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 50176,
+        "glbBytes": 79680,
         "usdzBytes": 53850
       }
     }
@@ -1033,7 +1033,7 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 36680,
+        "glbBytes": 70312,
         "usdzBytes": 40356
       },
       "m": {
@@ -1042,7 +1042,7 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 36676,
+        "glbBytes": 70312,
         "usdzBytes": 40356
       },
       "l": {
@@ -1051,7 +1051,7 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 36676,
+        "glbBytes": 70312,
         "usdzBytes": 40356
       },
       "xl": {
@@ -1060,7 +1060,7 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 36672,
+        "glbBytes": 70308,
         "usdzBytes": 40356
       }
     }
@@ -1074,7 +1074,7 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 36308,
+        "glbBytes": 39200,
         "usdzBytes": 39975
       },
       "m": {
@@ -1083,7 +1083,7 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 36280,
+        "glbBytes": 39172,
         "usdzBytes": 39975
       },
       "l": {
@@ -1092,7 +1092,7 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 36272,
+        "glbBytes": 39164,
         "usdzBytes": 39975
       },
       "xl": {
@@ -1101,7 +1101,7 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 36248,
+        "glbBytes": 39140,
         "usdzBytes": 39975
       }
     }
@@ -1115,7 +1115,7 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 22524,
+        "glbBytes": 27904,
         "usdzBytes": 26192
       },
       "m": {
@@ -1124,7 +1124,7 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 22520,
+        "glbBytes": 27900,
         "usdzBytes": 26192
       },
       "l": {
@@ -1133,7 +1133,7 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 22520,
+        "glbBytes": 27900,
         "usdzBytes": 26192
       },
       "xl": {
@@ -1142,7 +1142,7 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 22516,
+        "glbBytes": 27896,
         "usdzBytes": 26192
       }
     }

@@ -33,6 +33,32 @@ import { Document, NodeIO } from "@gltf-transform/core";
  * Winding is counter-clockwise viewed from outside, matching glTF's front-face
  * convention.
  */
+/**
+ * A single quad at the piece's real size, facing +Z with its back at z = 0.
+ *
+ * What the GLB uses now. These are cut letters with the wall showing between
+ * them, so an alpha-masked plane is the honest model: on someone's wall the
+ * letters appear and the wall stays visible, instead of a rectangular panel
+ * carrying a picture of the piece.
+ *
+ * Double-sided in the material, because in AR a visitor can walk past the piece
+ * and a single-sided plane vanishes from behind.
+ *
+ * The USDZ keeps `boxGeometry` below until Quick Look's handling of cutout
+ * alpha is confirmed on a device.
+ */
+export function planeGeometry(width, height) {
+  const x = width / 2;
+  const y = height / 2;
+  return {
+    positions: [-x, -y, 0, x, -y, 0, x, y, 0, -x, y, 0],
+    normals: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+    // UV origin is top-left in glTF, so v runs opposite to y.
+    uvs: [0, 1, 1, 1, 1, 0, 0, 0],
+    indices: [0, 1, 2, 0, 2, 3],
+  };
+}
+
 export function boxGeometry(width, height, depth, frameUv) {
   const x = width / 2;
   const y = height / 2;
@@ -98,18 +124,28 @@ export async function buildGlb({
   const texture = doc
     .createTexture("artwork")
     .setImage(new Uint8Array(textureBuffer))
-    .setMimeType("image/jpeg");
+    .setMimeType("image/png");
 
   const material = doc
     .createMaterial("artwork")
-    // Printed matte media: no metalness, high roughness, so the piece does not
-    // read as a glossy screen under AR lighting.
+    // Matte cut acrylic or sprayed board: no metalness, high roughness, so the
+    // piece does not read as a glossy screen under AR lighting.
     .setBaseColorTexture(texture)
     .setMetallicFactor(0)
     .setRoughnessFactor(0.85)
-    .setDoubleSided(false);
+    // MASK rather than BLEND: a cutout needs no depth sorting, which is what
+    // keeps it correct from any angle in an AR session.
+    .setAlphaMode("MASK")
+    .setAlphaCutoff(0.5)
+    // A visitor can walk past a piece on a wall, and a single-sided plane
+    // disappears from behind.
+    .setDoubleSided(true);
 
-  const geo = boxGeometry(widthCm / 100, heightCm / 100, depthCm / 100, frameUv);
+  // depthCm and frameUv are accepted for signature compatibility with the USDZ
+  // builder, which still models a box. A plane has neither.
+  void depthCm;
+  void frameUv;
+  const geo = planeGeometry(widthCm / 100, heightCm / 100);
 
   const primitive = doc
     .createPrimitive()

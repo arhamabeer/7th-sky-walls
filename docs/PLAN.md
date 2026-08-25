@@ -381,16 +381,32 @@ Nine checks cover it, per script: the real face rather than a fallback,
 direction on the field and the preview, no clipping, more line height than a
 Latin face, and the model built at true size.
 
-### Phase 10 — frameless AR, then customer wording in AR
+### Phase 10 — frameless AR — ANDROID DONE, iOS AWAITING A DEVICE
 
-**First, and smaller than it sounds:** AR still models each piece as a panel
-carrying the artwork on its wall tone. For cut lettering the honest model is a
-plane with an alpha-masked texture and no panel at all, so the visitor's own
-wall shows between the letters. That needs `alphaMode: "MASK"` in the GLB, an
-`opacityThreshold` on the USDZ shader, and the geometry switched from a box to a
-plane — plus confirmation of how Quick Look handles cutout alpha, which takes an
-iPhone. It is deliberately not done unverified: that is exactly how the
-empty-USDZ bug happened, and it shipped nothing visible to every iPhone.
+**The GLB half is done.** Every pre-built model is now an alpha-masked plane
+rather than a panel, so on Android and in the 3D view the visitor's own wall
+shows between the letters. Verified rather than assumed: a word cloud renders as
+cut words with the wall visible around and between them, at 0.90 × 1.20 × 0.000
+metres for a portrait piece at Large — the zero depth being the signature of a
+plane, which the interaction suite now asserts because `check:ar` deliberately
+only validates width and height.
+
+Two textures come out of the pipeline now, one per platform. The GLB takes a
+transparent PNG; the USDZ keeps the opaque artwork-on-wall-tone texture it has
+always had. That split is deliberate: Quick Look's handling of cutout alpha
+cannot be confirmed without an iPhone, and shipping it unverified is exactly how
+the empty-USDZ bug happened. **iOS therefore still answers "how big is this on my
+wall" while Android answers "what does it look like on my wall".**
+
+The alpha texture is an indexed 256-colour PNG, because it is embedded in every
+size's GLB and so its weight is multiplied by four per artwork. Measured against
+the unquantised version: a gradient mirror set drops from 268 KB to 71 KB for a
+mean channel difference of 0.13 out of 255. At 128 colours the gradients band —
+worst case 53 — so 256 is where the line sits. Total AR assets stayed at 9.6 MB
+while gaining the honest model.
+
+**Remaining, and it needs the phone:** an `opacityThreshold` on the USDZ shader
+and the same plane geometry there. The device checklist covers what to look for.
 
 Confirmed in scope. No configurator text reaches AR today, in any script,
 because assets are built ahead of time and a customer's words are not known
