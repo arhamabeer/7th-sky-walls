@@ -4,6 +4,7 @@ import artworksJson from "@/content/artworks.json";
 import collectionsJson from "@/content/collections.json";
 import servicesJson from "@/content/services.json";
 import caseStudiesJson from "@/content/case-studies.json";
+import materialsJson from "@/content/materials.json";
 import blurJson from "@/content/blur.json";
 import arManifestJson from "@/content/ar-manifest.json";
 import {
@@ -15,11 +16,13 @@ import {
 import {
   artworkSchema,
   caseStudySchema,
+  materialSchema,
   collectionSchema,
   serviceSchema,
   type Artwork,
   type CaseStudy,
   type Collection,
+  type Material,
   type Orientation,
   type Service,
   type SizeId,
@@ -59,6 +62,7 @@ const artworks: Artwork[] = parseAll(artworkSchema, artworksJson, "artwork");
 const collections: Collection[] = parseAll(collectionSchema, collectionsJson, "collection");
 const services: Service[] = parseAll(serviceSchema, servicesJson, "service");
 const caseStudies: CaseStudy[] = parseAll(caseStudySchema, caseStudiesJson, "case study");
+const materials: Material[] = parseAll(materialSchema, materialsJson, "material");
 
 // Referential integrity: every artwork must point at a real collection.
 for (const a of artworks) {
@@ -153,6 +157,10 @@ export function getServices(): Service[] {
 
 export function getCaseStudies(): CaseStudy[] {
   return caseStudies;
+}
+
+export function getMaterials(): Material[] {
+  return materials;
 }
 
 export function getVenues(): VenueInfo[] {

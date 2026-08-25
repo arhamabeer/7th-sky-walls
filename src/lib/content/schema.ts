@@ -89,6 +89,17 @@ export const serviceSchema = z.object({
 });
 export type Service = z.infer<typeof serviceSchema>;
 
+export const materialSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  /** Technical specification, stated plainly. */
+  spec: z.string(),
+  /** Why this material rather than another — the reasoning, not the sales pitch. */
+  why: z.string().min(40),
+  bestFor: z.string(),
+});
+export type Material = z.infer<typeof materialSchema>;
+
 export const caseStudySchema = z.object({
   slug: z.string(),
   title: z.string(),

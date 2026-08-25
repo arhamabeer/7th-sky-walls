@@ -108,8 +108,24 @@ export const copy = {
     ],
   },
   about: {
+    eyebrow: "The studio",
     title: "About",
-    subtitle: "We believe a wall is the largest canvas a business owns.",
+    subtitle: "A wall is the largest canvas a business owns.",
+    facts: [
+      { label: "Founded", value: "2024" },
+      { label: "Produced", value: "In-house" },
+      { label: "Installed by", value: "Our own team" },
+    ],
+    materialsEyebrow: "Materials",
+    materialsTitle: "What we print on, and why",
+    materialsSubtitle:
+      "Commercial walls are not living-room walls. These are the four surfaces we work in, with the reasoning rather than the sales pitch — including the fire rating and cleanability a facilities manager will ask about first.",
+    caseStudiesEyebrow: "Recent work",
+    placeholderNote:
+      "Illustrative example — real project stories and photography are being prepared.",
+    ctaTitle: "Come and see the work",
+    ctaSubtitle:
+      "Send us your floor plan or a photo of the wall, or visit the studio in",
     storyTitle: "Why we exist",
     story: [
       "Most commercial spaces treat walls as an afterthought — a coat of paint and a clock. We started this studio because we kept walking into offices, cafés and campuses that felt unfinished, and we knew exactly what was missing.",
