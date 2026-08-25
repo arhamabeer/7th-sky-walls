@@ -15,6 +15,7 @@ import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ArtworkGrid } from "@/components/ui/artwork-grid";
 import { HeroWall } from "@/components/home/hero-wall";
+import { WallPreviewShowcase } from "@/components/home/wall-preview-showcase";
 import { Reveal } from "@/components/motion/reveal";
 import { staggerDelay } from "@/components/motion/stagger";
 
@@ -45,6 +46,8 @@ export default function HomePage() {
   const featured = getFeaturedArtworks().slice(0, 6);
   const venues = getVenues();
   const artworks = allArtworks;
+  // A confident, office-appropriate piece for the wall-preview demonstration.
+  const showcasePiece = allArtworks.find((a) => a.slug === "meridian-seven");
 
   return (
     <>
@@ -135,6 +138,17 @@ export default function HomePage() {
           <ArtworkGrid artworks={featured} className="mt-10" />
         </Container>
       </section>
+
+      {showcasePiece && (
+        <WallPreviewShowcase
+          artwork={showcasePiece}
+          eyebrow={copy.home.previewEyebrow}
+          title={copy.home.previewTitle}
+          subtitle={copy.home.previewSubtitle}
+          steps={copy.home.previewSteps}
+          ctaLabel={copy.home.previewCta}
+        />
+      )}
 
       {/* Venues */}
       <section className="py-20 sm:py-28">

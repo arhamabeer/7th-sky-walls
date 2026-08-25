@@ -64,6 +64,24 @@ function Piece({ piece }: { piece: ScenePiece }) {
     );
   }
 
+  if (piece.style === "counter") {
+    // A body with a wider overhanging top, which is what makes a block read as
+    // a reception desk rather than a plinth.
+    const topPct = (6 / piece.heightCm) * 100;
+    return (
+      <div aria-hidden className="absolute" style={base}>
+        <div
+          className="absolute inset-x-[3%] bottom-0 rounded-sm bg-muted/32"
+          style={{ top: `${topPct}%` }}
+        />
+        <div
+          className="absolute inset-x-0 top-0 rounded-sm bg-muted/48"
+          style={{ height: `${topPct}%` }}
+        />
+      </div>
+    );
+  }
+
   if (piece.style === "seating" && piece.seatHeightCm) {
     const seatTopPct = 100 - (piece.seatHeightCm / piece.heightCm) * 100;
     return (

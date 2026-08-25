@@ -18,8 +18,14 @@ export interface ScenePiece {
    * a backrest, which is what makes a sofa read as a sofa.
    */
   seatHeightCm?: number;
-  /** Legs only, e.g. a table — drawn as a top slab on thin supports. */
-  style?: "solid" | "seating" | "table";
+  /**
+   * How the piece is drawn:
+   *  - `solid`   a plain block, e.g. a plinth
+   *  - `seating` a seat pad with a backrest above it
+   *  - `table`   a top slab on thin legs, so the eye reads through to the wall
+   *  - `counter` a body with a wider overhanging top, e.g. a reception desk
+   */
+  style?: "solid" | "seating" | "table" | "counter";
 }
 
 export interface RoomScene {
@@ -48,8 +54,8 @@ export const ROOM_SCENES: RoomScene[] = [
     reference: "a 110 cm reception desk",
     focusXCm: 285,
     pieces: [
-      { xCenterCm: 285, widthCm: 190, heightCm: 110, style: "solid" },
-      { xCenterCm: 400, widthCm: 55, heightCm: 45, seatHeightCm: 45, style: "seating" },
+      { xCenterCm: 285, widthCm: 190, heightCm: 110, style: "counter" },
+      { xCenterCm: 405, widthCm: 52, heightCm: 92, seatHeightCm: 45, style: "seating" },
     ],
   },
   {

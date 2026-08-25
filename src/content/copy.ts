@@ -36,6 +36,25 @@ export const copy = {
     venuesEyebrow: "Venue verticals",
     venuesTitle: "Designed for every space",
     venuesSubtitle: "Browse the portfolio by the space you're transforming.",
+    previewEyebrow: "Before you commit",
+    previewTitle: "See it on your wall, at its real size",
+    previewSubtitle:
+      "Getting the size wrong is the expensive mistake with large-format art. So we made it impossible to guess: every piece can be checked against furniture you already know, and placed on your own wall through your phone's camera.",
+    previewSteps: [
+      {
+        title: "Pick a size",
+        text: "Four standard sizes per piece, all in the same proportions — nothing is cropped to fit.",
+      },
+      {
+        title: "Check it against a room you recognise",
+        text: "An office reception, a café, a classroom, a lobby — each with real furniture heights as the reference.",
+      },
+      {
+        title: "Then put it on your actual wall",
+        text: "Point your phone at the wall and the piece appears at true size. It cannot be resized, so what you see is what arrives.",
+      },
+    ],
+    previewCta: "Try it on a piece",
     ctaTitle: "Have a wall in mind?",
     ctaSubtitle: "Tell us about your space — we'll respond with ideas within one working day.",
   },
