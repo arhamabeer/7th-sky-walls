@@ -150,3 +150,19 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/**
+ * model-viewer's built-in progress bar, removed.
+ *
+ * It hides itself by adding a class once loading finishes, and that never
+ * happened here: the element is upgraded lazily and `src` is assigned as a
+ * property afterwards, so the terminal progress event arrives before anything
+ * is listening for it. The result was a grey bar sitting across the top of the
+ * AR panel permanently, on every device that renders the model.
+ *
+ * Nothing is lost by removing it. The models average 29 KB and the artwork is
+ * shown as a poster until the model is ready, so there is no wait to report.
+ */
+model-viewer::part(default-progress-bar) {
+  display: none;
+}

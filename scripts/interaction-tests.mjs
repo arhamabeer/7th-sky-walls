@@ -396,6 +396,36 @@ async function testArPanel(page, vp) {
   // horizontal anchoring, so wall placement on iOS depends on ios-src.
   record(vp.name, "a pre-built USDZ is supplied for iOS", Boolean(attrs.iosSrc));
 
+  /**
+   * model-viewer's own progress bar has to stay out of the panel. It hides
+   * itself by adding a class when loading completes, and that never fired here
+   * — the element upgrades lazily and gets its `src` as a property afterwards,
+   * so the terminal progress event landed before anything was listening. The
+   * bar then sat across the top of the panel permanently. A stylesheet rule
+   * removes it; this is what notices if the rule goes.
+   */
+  await page
+    .waitForFunction(() => document.querySelector("model-viewer")?.loaded === true, null, {
+      timeout: 8000,
+    })
+    .catch(() => {});
+  const progressBar = await page.evaluate(() => {
+    const mv = document.querySelector("model-viewer");
+    const bar = mv?.shadowRoot?.querySelector("div.bar");
+    if (!bar) return { loaded: mv?.loaded ?? false, visible: false };
+    const rect = bar.getBoundingClientRect();
+    return {
+      loaded: mv.loaded,
+      visible: getComputedStyle(bar).display !== "none" && rect.height > 0,
+    };
+  });
+  record(
+    vp.name,
+    "no leftover progress bar once the model has loaded",
+    progressBar.loaded && !progressBar.visible,
+    `loaded=${progressBar.loaded} barVisible=${progressBar.visible}`,
+  );
+
   // Assets must actually be served, and with types the platforms accept.
   const assets = await page.evaluate(async () => {
     const check = async (url) => {
