@@ -130,7 +130,6 @@ export default async function ArtworkPage({
             imageAlt={artwork.alt}
             imageWidth={artwork.image.width}
             imageHeight={artwork.image.height}
-            orientation={artwork.orientation}
             blurDataURL={blur}
             sizes={sizeOptions}
             defaultSizeId={artwork.defaultSize}

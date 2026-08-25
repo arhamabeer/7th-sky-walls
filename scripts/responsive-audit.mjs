@@ -265,7 +265,14 @@ async function main() {
   const consoleErrors = [];
   let checks = 0;
 
-  for (const vp of viewports) {
+  /**
+   * Viewports are audited a few at a time. Serially, 33 viewports across 11
+   * pages is several hundred page loads and the run stops being something you
+   * do after every change — which is when a check stops earning its place.
+   */
+  const CONCURRENCY = 4;
+
+  const auditViewport = async (vp) => {
     const context = await browser.newContext({
       viewport: { width: vp.width, height: vp.height },
       deviceScaleFactor: vp.dpr,
@@ -309,7 +316,18 @@ async function main() {
       }
     }
     await context.close();
-  }
+  };
+
+  // A simple worker pool: each worker pulls the next viewport off the queue.
+  const queue = [...viewports];
+  await Promise.all(
+    Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
+      for (let vp = queue.shift(); vp; vp = queue.shift()) {
+        await auditViewport(vp);
+      }
+    }),
+  );
+
   await browser.close();
 
   // Report, grouped by issue kind so patterns are obvious.

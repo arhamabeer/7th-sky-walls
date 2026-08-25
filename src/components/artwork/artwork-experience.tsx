@@ -11,7 +11,6 @@ import {
   type TextArtConfig,
 } from "@/components/artwork/text-art-configurator";
 import { LinkButton } from "@/components/ui/link-button";
-import { aspectClass } from "@/components/ui/aspect";
 import { cn } from "@/lib/utils";
 
 export interface SizeOption {
@@ -39,7 +38,6 @@ export function ArtworkExperience({
   imageAlt,
   imageWidth,
   imageHeight,
-  orientation,
   blurDataURL,
   sizes,
   defaultSizeId,
@@ -59,7 +57,6 @@ export function ArtworkExperience({
    *  the artwork's real proportions instead of letterboxing it. */
   imageWidth: number;
   imageHeight: number;
-  orientation: string;
   blurDataURL?: string;
   sizes: SizeOption[];
   defaultSizeId: string;
@@ -265,24 +262,26 @@ export function ArtworkExperience({
           aria-labelledby={`${tabsId}-tab-${activeView}`}
         >
           {activeView === "artwork" ? (
+            /* Height is capped rather than driven purely by aspect ratio.
+               Below the two-column breakpoint a 3:4 piece at full width runs
+               past a tablet screen, so the title and details sat below a
+               scroll of image. */
             <button
               ref={openerRef}
               type="button"
               onClick={() => setZoomed(true)}
               aria-label={`View ${title} full screen`}
-              className={cn(
-                "group relative block w-full overflow-hidden rounded-xl bg-line",
-                aspectClass(orientation),
-              )}
+              className="group relative flex max-h-[72svh] w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8"
             >
               <Image
                 src={imageSrc}
                 alt={imageAlt}
-                fill
+                width={imageWidth}
+                height={imageHeight}
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 fetchPriority="high"
                 loading="eager"
-                className="object-cover"
+                className="h-auto max-h-[64svh] w-auto max-w-full object-contain shadow-[0_14px_34px_-16px_rgba(25,21,16,0.5)]"
                 {...(blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {})}
               />
               <span
