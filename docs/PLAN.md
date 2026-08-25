@@ -305,14 +305,75 @@ the wall — so the answer is either "it fits" or a specific statement of by how
 much it does not. Hanging conventions are stated rather than assumed, and the
 arrangement travels to the inquiry written out in full.
 
+## Confirmed on 2026-08-25, awaiting go-ahead
+
+Nine queued questions were answered (see [QUESTIONS.md](QUESTIONS.md)). Six
+confirmed what already exists; three add work. Two of those are small and
+belong to Phase 8. The other two are new phases, because Urdu was promoted from
+the post-launch backlog into the build.
+
+### Phase 8 additions — small, no new phase needed
+
+1. **Client error reporting to an internal route.** The boundaries log a digest
+   and nothing collects it, so a failure a visitor hits is invisible. Decision
+   was an own endpoint rather than a third-party service: no paid dependency, no
+   external processor of visitor data, and the existing rate limiter guards it.
+2. **The inquiry form must stop reporting success when it cannot deliver.**
+   Direct channels carry inquiries until Resend is configured before production.
+   Until then a submitted form is written to the server log and still tells the
+   visitor it was sent, which loses inquiries silently — the one failure mode
+   that must not reach launch.
+
+### Phase 9 — Urdu and Arabic in the configurator
+
+Confirmed: both scripts, in the faces each is actually written in.
+
+| Script | Face | Notes |
+| --- | --- | --- |
+| Urdu | Noto Nastaliq Urdu | 400–700 plus variable, `arabic` subset |
+| Arabic | Amiri, or Noto Naskh Arabic | Quranic and classical wording belongs in Naskh |
+
+Both `preload: false`. An Arabic Nastaliq subset runs to roughly 150–250 KB,
+which must never touch the initial load — it downloads when the configurator is
+opened and that face chosen, and not before.
+
+Work: the two faces, `dir="auto"` through the preview so mixed Urdu and English
+resolves per-paragraph without a manual direction toggle, line breaking and
+type-fit sizing checked against Nastaliq's much greater line height, and the
+chosen script carried into the inquiry so the studio receives the words in the
+script they were typed in.
+
+### Phase 10 — customer wording in AR
+
+Confirmed in scope. No configurator text reaches AR today, in any script,
+because assets are built ahead of time and a customer's words are not known
+then.
+
+**The 3D is the easy half.** Nastaliq is among the hardest scripts to shape, and
+the obvious server-side renderers do not do it: Satori, which Next.js uses for
+images, has no full shaper, so rendering Nastaliq in a function would mean
+headless Chromium or hand-wired HarfBuzz.
+
+Proposed instead: let the browser shape it. It already does this correctly and
+has already loaded the face for the preview. Compose the texture on a canvas
+with `fillText`, which goes through the same text stack, and build the GLB and
+USDZ from that — the USDZ packer is pure JavaScript over fflate and runs
+client-side unchanged, baked rotation and vertical anchoring included.
+
+**Verification gates this phase, not planning.** Whether iOS Quick Look accepts
+a `blob:` URL as `ios-src` is unknown and decides the architecture: if it does,
+this needs no server at all; if it does not, the generated USDZ is POSTed to a
+small route that serves it back with `model/vnd.usdz+zip`. That question gets
+answered on a real iPhone before the phase is committed to, alongside the
+existing device QA.
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.
 
 - Admin panel for self-managed artwork uploads
-- Customized artwork in AR (server-side USDZ generation)
-- Urdu localization (`next-intl`, `dir="rtl"`, Noto Nastaliq Urdu) — the
-  configurator would need a Nastaliq face and RTL handling in its preview
+- Full Urdu site localization (`next-intl`, `dir="rtl"` throughout) — distinct
+  from Phase 9, which puts Urdu into the artwork rather than the interface
 - Paid iOS in-page AR via an App Clip-injected WebXR provider, if drag-on-wall
   AR on iPhone becomes a hard requirement
 - Long-form venue and style guides for search

@@ -2,75 +2,130 @@
 
 Decisions needing the project owner. Raised while working autonomously —
 nothing here blocked progress, because a sensible default was chosen and is
-noted for each. Reviewing these is the fastest way to move the build toward
-launch.
+noted for each.
 
-## Open
+All nine queued questions were answered on 2026-08-25. What is left is not a
+decision but material: the repo URL, the real business details, and the email
+credentials, each noted below with who does what.
 
-### 1. Real business details
-`src/config/site.config.ts` still has TODO markers on the canonical domain,
-legal name, street address, geo coordinates, phone, WhatsApp number, inquiry
-email, social URLs and founding year.
+## Answered — waiting on material from the studio
 
-**In use:** `7th-sky-walls.vercel.app`, `hello@example.com`,
-`+92 300 0000000`, a Karachi placeholder address.
-**Why it matters:** these appear in canonical URLs, JSON-LD and the sitemap, so
-a placeholder domain tells search engines the wrong address for every page.
+### 1. Real business details — the studio will edit them directly
+`src/config/site.config.ts` keeps its TODO markers and its placeholder values
+(`7th-sky-walls.vercel.app`, `hello@example.com`, `+92 300 0000000`, a Karachi
+placeholder address) until the studio edits them.
 
-### 2. GitHub remote
-Deferred by you. Local branches `main`, `phase-1-foundation` and
-`phase-2-portfolio` hold all work; nothing has been pushed. Needs a repo URL,
-or `gh` CLI installed and authenticated.
+That file is the only place any of it lives, verified rather than assumed: a
+swap to a 44-character name and a different palette leaves no trace of the old
+brand across fourteen routes including the sitemap, robots and manifest. See
+`npm run check:brand`.
 
-### 3. Email delivery credentials
-Without `RESEND_API_KEY` and `INQUIRY_FROM_EMAIL`, a submitted inquiry is
-written to the server log and the form still reports success.
-`assertDeliveryConfigured()` exists so a health check can fail loudly instead.
-The sending domain also needs verifying with Resend.
+**One caution when editing it.** Do not use PowerShell's `Set-Content` or
+`-replace` on this file. It rewrites em-dashes and accented characters as
+mojibake, and a case-insensitive replace has already turned `legalName` into
+`legalname` once. Any editor is fine; so is `git diff` afterwards.
 
-### 4. Calligraphy typefaces, including Urdu
-The text configurator offers three Latin faces. If calligraphy pieces should
-accept Urdu or Arabic wording, that needs a Nastaliq face (Noto Nastaliq Urdu
-is the obvious candidate) and right-to-left handling in the preview.
+### 2. GitHub remote — the studio will create a private repo and send the URL
+Create it empty — no README and no `.gitignore`, or the first push conflicts.
+Then the remote gets added and all four branches pushed.
 
-**In use:** Latin only — Fraunces, Cormorant Garamond, Manrope.
+`gh` CLI is not installed on this machine, so the push will use whatever git
+credentials Windows has cached for `arhamabeer`. Whether those exist cannot be
+known without trying; if the push fails on authentication it will be reported
+rather than worked around.
 
-### 5. Frame finishes
-Four are offered: floating hardwood, slim aluminium, gallery wrap, matte
-black. Are these the finishes actually produced, and are the descriptions
-accurate?
+### 3. Email delivery — direct channels now, Resend before production
+Decision: WhatsApp and email links carry inquiries for now, and a Resend
+account is set up before production.
 
-**Related limit:** AR models carry each artwork's default finish only.
-Generating one per finish would quadruple the asset matrix. If seeing a
-specific frame in AR matters, say so and it can be scoped.
+**This leaves one failure mode that must not survive to launch.** Without
+`RESEND_API_KEY` and `INQUIRY_FROM_EMAIL`, a submitted inquiry is written to the
+server log and the form still tells the visitor it was sent. A form that
+silently swallows an inquiry is worse than no form. So the form no longer
+reports success when delivery is unconfigured in production — it says plainly
+that the studio should be reached on WhatsApp or by email, and offers both.
+Development still logs, because that is how the form is testable.
 
-### 6. Standard size chart
-Four tiers derived from a long edge: 60, 80, 120, 160 cm (panoramic pieces use
-120, 150, 200, 250). Every size of a piece shares one aspect ratio, so nothing
-is cropped to fit — but that also means these are the only sizes without
-moving to made-to-measure.
+`assertDeliveryConfigured()` exists for a deploy-time health check.
 
-### 7. Materials and lead times
-`materials.json` states 370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium
-composite and Class B fire-rated wall covering. The services carry typical
-timings — concepts in five working days, installs in three to six weeks. Both
-are stated publicly and should match what the studio can actually deliver.
+## Answered — settled
 
-### 8. Case studies
-Three placeholder projects are on the About and space pages, each visibly
-marked as illustrative. They should be replaced with real work, or removed.
+### 4. Calligraphy typefaces, including Urdu — **yes, Urdu and Arabic both**
+Two faces, both confirmed available through `next/font/google` with an `arabic`
+subset:
 
-### 9. Error reporting service
-The error boundaries log the failure and its digest, which is what correlates a
-browser report to the server log — but nothing collects those logs, so a
-failure a visitor hits is invisible unless they mention it. Vercel shows
-server-side runtime logs already; client-side errors need a service. Sentry is
-the usual choice and has a free tier that would comfortably cover this site's
-traffic. It is a paid dependency and an external processor of visitor data, so
-it is the studio's call rather than mine. Wiring one in is a small change
-either way — the boundaries are already the place it hooks into.
+| Script | Face | Why |
+| --- | --- | --- |
+| Urdu | Noto Nastaliq Urdu (400–700, variable) | Urdu is written in Nastaliq; anything else reads wrong to an Urdu reader |
+| Arabic | Amiri (400/700, italic) or Noto Naskh Arabic | Quranic and classical Arabic wording belongs in Naskh, not Nastaliq |
 
-## Resolved
+Both stay `preload: false`, so nothing downloads until the configurator is
+opened and that face chosen. Arabic subsets are large — a Nastaliq subset runs
+to roughly 150–250 KB — which is exactly why it must not touch the initial load.
+
+### 5. Frame finishes and AR — **default finish only, unchanged**
+AR answers "how big will this be on my wall", and size is what it is built to
+carry. Frame colour is decided on screen, where the colour is accurate; under
+AR lighting it would not be. The asset matrix stays at 96 pairs / 5.7 MB rather
+than 384 pairs / ~23 MB.
+
+### 6. Standard size chart — **confirmed as is**
+60, 80, 120, 160 cm on the long edge; panoramic pieces 120, 150, 200, 250. Every
+size of a piece shares one aspect ratio, so nothing is cropped to fit. Made to
+measure stays available through the inquiry, which every artwork page already
+says.
+
+### 7. Materials and lead times — **confirmed as is**
+370 gsm canvas, 310 gsm cotton rag, 3 mm aluminium composite, Class B
+fire-rated wall covering; concepts in five working days, installs in three to
+six weeks. These are stated publicly and a facilities manager will quote them
+back, so they are now confirmed rather than assumed.
+
+### 8. Case studies — **keep the placeholders, keep the label**
+Three illustrative projects stay on the About and space pages, each carrying its
+visible "illustrative example" note, until real project stories and photography
+arrive. Setting `isPlaceholder: false` in `case-studies.json` removes the note.
+
+The note stays until then. A placeholder that does not announce itself is a
+false claim about work the studio has done.
+
+### 9. Error reporting — **own endpoint, no third party**
+Decision: client-side failures POST to an internal route rather than to Sentry
+or any external service. No paid dependency, no external processor of visitor
+data, nothing to add to a privacy policy, and the existing rate limiter guards
+the endpoint.
+
+Accepted trade-off: no grouping, no alerting, no email, and stack traces stay
+minified. Reading them means looking at Vercel's runtime logs, whose retention
+depends on the plan. The boundaries are the hook point either way, so moving to
+a service later stays a small change.
+
+### 10. Custom text in AR — **yes, in scope**
+Raised as a follow-up once Urdu was confirmed, and confirmed: a customer should
+be able to set their own wording and then see it on their own wall at true size.
+
+Currently no configurator text reaches AR at all, in any script, because AR
+assets are built ahead of time and a customer's words are not known then.
+
+**The hard part is not the 3D, it is the text.** Nastaliq is among the most
+demanding scripts to shape, and the obvious server-side renderers do not do it
+properly — Satori, which Next.js uses for images, has no full shaper. Rendering
+Nastaliq server-side would mean either headless Chromium in a function or
+wiring HarfBuzz by hand.
+
+The way around it is to let the browser shape the text, since it already does
+this perfectly and has already loaded the font for the preview: draw the
+composed texture to a canvas with `fillText`, which goes through the same text
+stack, and build the GLB and USDZ from that. The USDZ packer is pure JavaScript
+over fflate and can run client-side unchanged, rotation and alignment included.
+
+**One thing must be verified before this is committed to:** whether iOS Quick
+Look will open a `blob:` URL given as `ios-src`. If it will not, the generated
+USDZ has to be POSTed to a small route that serves it back from a real URL with
+`model/vnd.usdz+zip` — still far lighter than generating it server-side. This
+verification comes first; the phase is not planned around an assumption.
+
+## Resolved earlier
 
 - **Tier 2 AR (custom WebXR session).** Research established that
   model-viewer's own WebXR path already does wall placement at fixed scale on
