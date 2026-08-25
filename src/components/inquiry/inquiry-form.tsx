@@ -58,7 +58,11 @@ export function InquiryForm({
   const inputClass = (name: string) =>
     cn(
       "mt-1.5 block min-h-12 w-full rounded-lg border bg-background px-4 py-3 text-base",
-      "focus:border-ink focus:outline-none focus:ring-2 focus:ring-accent/40",
+      // No outline-none here. The global :focus-visible outline is the site's
+      // focus indicator at 4.69:1; the accent/40 ring it used to be replaced
+      // with measured 1.73:1, under the 3:1 that WCAG 2.2 asks of an indicator,
+      // so fields looked focused to nobody who needed the cue.
+      "focus:border-ink",
       fieldError(name) ? "border-accent" : "border-line",
     );
 

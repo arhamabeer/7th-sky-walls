@@ -152,7 +152,8 @@ export function TextArtConfigurator({
             rows={3}
             maxLength={160}
             placeholder={"One line per line break\nUp to five lines"}
-            className="mt-1.5 block min-h-24 w-full resize-y rounded-lg border border-line bg-background px-4 py-3 text-base leading-7 focus:border-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
+            // Global :focus-visible outline left intact — see inquiry-form.
+            className="mt-1.5 block min-h-24 w-full resize-y rounded-lg border border-line bg-background px-4 py-3 text-base leading-7 focus:border-ink"
           />
           <p className="mt-1 text-xs text-muted">
             {text.length}/160 characters, up to five lines. Type is sized to fit.

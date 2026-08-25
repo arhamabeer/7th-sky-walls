@@ -122,8 +122,10 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
     return `/contact${params.toString() ? `?${params.toString()}` : ""}`;
   })();
 
+  // The global :focus-visible outline is left in place — see inquiry-form for
+  // why the accent/40 ring it used to carry was not an adequate indicator.
   const numberInput =
-    "mt-1.5 block min-h-12 w-full rounded-lg border border-line bg-background px-4 py-3 text-base focus:border-ink focus:outline-none focus:ring-2 focus:ring-accent/40";
+    "mt-1.5 block min-h-12 w-full rounded-lg border border-line bg-background px-4 py-3 text-base focus:border-ink";
 
   const optionClass = (active: boolean) =>
     cn(
