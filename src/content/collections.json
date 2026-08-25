@@ -46,5 +46,13 @@
     "tagline": "The wall behind the handshake",
     "story": "A reception wall does the same job as a business card and gets looked at a thousand times more often. Cut lettering is the only treatment that survives that scrutiny: a printed panel shows its edges within a year, and a vinyl wordmark shows them within a month. Brushed aluminium faces and matte acrylic are the two we recommend most, and both can be lit from behind where the wall allows it.",
     "bestFor": "Reception and lobby walls, meeting-room fronts, and any wall that appears in photographs of the company."
+  },
+  {
+    "id": "mirror-acrylic",
+    "name": "Mirror Acrylic",
+    "description": "Mirror-faced acrylic in gold, silver or black — modular sets the buyer arranges, and single names cut in gold.",
+    "tagline": "Cut in mirror, arranged by you",
+    "story": "Mirror acrylic is the finish this market asks for by name, and it behaves unlike a painted face: it takes the colour of whatever is opposite it, so a set on a wall facing a window changes through the day and a set in a corridor stays quiet. Most of these are sold as sets of six to twenty-two components rather than one panel, which is the point — the arrangement is the customer's, and the gallery wall planner exists to settle it before anything is cut. Edges are flame-polished, because a mirror face with a saw-cut edge announces itself from across a room.",
+    "bestFor": "Reception walls, restaurant and café features, hotel corridors, and any wall where the light changes through the day."
   }
 ]

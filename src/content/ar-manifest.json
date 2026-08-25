@@ -8,8 +8,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 56560,
-        "usdzBytes": 60250
+        "glbBytes": 57232,
+        "usdzBytes": 60923
       },
       "m": {
         "glb": "/ar/idea-bulb/m.glb",
@@ -17,8 +17,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 56560,
-        "usdzBytes": 60250
+        "glbBytes": 57232,
+        "usdzBytes": 60923
       },
       "l": {
         "glb": "/ar/idea-bulb/l.glb",
@@ -26,8 +26,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 56560,
-        "usdzBytes": 60250
+        "glbBytes": 57232,
+        "usdzBytes": 60923
       },
       "xl": {
         "glb": "/ar/idea-bulb/xl.glb",
@@ -35,8 +35,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 56556,
-        "usdzBytes": 60250
+        "glbBytes": 57228,
+        "usdzBytes": 60923
       }
     }
   },
@@ -49,8 +49,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 71052,
-        "usdzBytes": 74737
+        "glbBytes": 67532,
+        "usdzBytes": 71216
       },
       "m": {
         "glb": "/ar/growth-arrow/m.glb",
@@ -58,8 +58,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 71052,
-        "usdzBytes": 74737
+        "glbBytes": 67532,
+        "usdzBytes": 71216
       },
       "l": {
         "glb": "/ar/growth-arrow/l.glb",
@@ -67,8 +67,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 71052,
-        "usdzBytes": 74737
+        "glbBytes": 67532,
+        "usdzBytes": 71216
       },
       "xl": {
         "glb": "/ar/growth-arrow/xl.glb",
@@ -76,8 +76,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 71048,
-        "usdzBytes": 74737
+        "glbBytes": 67528,
+        "usdzBytes": 71216
       }
     }
   },
@@ -90,8 +90,8 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51452,
-        "usdzBytes": 55122
+        "glbBytes": 59348,
+        "usdzBytes": 63015
       },
       "m": {
         "glb": "/ar/collective/m.glb",
@@ -99,8 +99,8 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51448,
-        "usdzBytes": 55122
+        "glbBytes": 59344,
+        "usdzBytes": 63015
       },
       "l": {
         "glb": "/ar/collective/l.glb",
@@ -108,8 +108,8 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 51448,
-        "usdzBytes": 55122
+        "glbBytes": 59344,
+        "usdzBytes": 63015
       },
       "xl": {
         "glb": "/ar/collective/xl.glb",
@@ -117,8 +117,8 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 51444,
-        "usdzBytes": 55122
+        "glbBytes": 59340,
+        "usdzBytes": 63015
       }
     }
   },
@@ -131,8 +131,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 62960,
-        "usdzBytes": 66635
+        "glbBytes": 61896,
+        "usdzBytes": 65572
       },
       "m": {
         "glb": "/ar/deep-work/m.glb",
@@ -140,8 +140,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 62960,
-        "usdzBytes": 66635
+        "glbBytes": 61896,
+        "usdzBytes": 65572
       },
       "l": {
         "glb": "/ar/deep-work/l.glb",
@@ -149,8 +149,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 62960,
-        "usdzBytes": 66635
+        "glbBytes": 61896,
+        "usdzBytes": 65572
       },
       "xl": {
         "glb": "/ar/deep-work/xl.glb",
@@ -158,8 +158,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 62956,
-        "usdzBytes": 66635
+        "glbBytes": 61892,
+        "usdzBytes": 65572
       }
     }
   },
@@ -213,8 +213,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 31984,
-        "usdzBytes": 35649
+        "glbBytes": 29384,
+        "usdzBytes": 33047
       },
       "m": {
         "glb": "/ar/begin-anyway/m.glb",
@@ -222,8 +222,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 31980,
-        "usdzBytes": 35649
+        "glbBytes": 29380,
+        "usdzBytes": 33047
       },
       "l": {
         "glb": "/ar/begin-anyway/l.glb",
@@ -231,8 +231,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 31980,
-        "usdzBytes": 35649
+        "glbBytes": 29380,
+        "usdzBytes": 33047
       },
       "xl": {
         "glb": "/ar/begin-anyway/xl.glb",
@@ -240,8 +240,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 31976,
-        "usdzBytes": 35649
+        "glbBytes": 29376,
+        "usdzBytes": 33047
       }
     }
   },
@@ -254,8 +254,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 22256,
-        "usdzBytes": 25913
+        "glbBytes": 31216,
+        "usdzBytes": 34871
       },
       "m": {
         "glb": "/ar/ship-then-fix/m.glb",
@@ -263,8 +263,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 22252,
-        "usdzBytes": 25913
+        "glbBytes": 31212,
+        "usdzBytes": 34871
       },
       "l": {
         "glb": "/ar/ship-then-fix/l.glb",
@@ -272,8 +272,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 22252,
-        "usdzBytes": 25913
+        "glbBytes": 31212,
+        "usdzBytes": 34871
       },
       "xl": {
         "glb": "/ar/ship-then-fix/xl.glb",
@@ -281,8 +281,8 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 22248,
-        "usdzBytes": 25913
+        "glbBytes": 31208,
+        "usdzBytes": 34871
       }
     }
   },
@@ -295,8 +295,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 23372,
-        "usdzBytes": 27016
+        "glbBytes": 33260,
+        "usdzBytes": 36910
       },
       "m": {
         "glb": "/ar/ask-better-questions/m.glb",
@@ -304,8 +304,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 23344,
-        "usdzBytes": 27016
+        "glbBytes": 33232,
+        "usdzBytes": 36910
       },
       "l": {
         "glb": "/ar/ask-better-questions/l.glb",
@@ -313,8 +313,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 23336,
-        "usdzBytes": 27016
+        "glbBytes": 33224,
+        "usdzBytes": 36910
       },
       "xl": {
         "glb": "/ar/ask-better-questions/xl.glb",
@@ -322,8 +322,8 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 23312,
-        "usdzBytes": 27016
+        "glbBytes": 33200,
+        "usdzBytes": 36910
       }
     }
   },
@@ -336,8 +336,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 61336,
-        "usdzBytes": 65002
+        "glbBytes": 61288,
+        "usdzBytes": 64954
       },
       "m": {
         "glb": "/ar/bright-ideas/m.glb",
@@ -345,8 +345,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 61332,
-        "usdzBytes": 65002
+        "glbBytes": 61284,
+        "usdzBytes": 64954
       },
       "l": {
         "glb": "/ar/bright-ideas/l.glb",
@@ -354,8 +354,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 61332,
-        "usdzBytes": 65002
+        "glbBytes": 61284,
+        "usdzBytes": 64954
       },
       "xl": {
         "glb": "/ar/bright-ideas/xl.glb",
@@ -363,8 +363,8 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 61328,
-        "usdzBytes": 65002
+        "glbBytes": 61280,
+        "usdzBytes": 64954
       }
     }
   },
@@ -377,8 +377,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 52008,
-        "usdzBytes": 55673
+        "glbBytes": 51808,
+        "usdzBytes": 55473
       },
       "m": {
         "glb": "/ar/hanging-goals/m.glb",
@@ -386,8 +386,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51980,
-        "usdzBytes": 55673
+        "glbBytes": 51780,
+        "usdzBytes": 55473
       },
       "l": {
         "glb": "/ar/hanging-goals/l.glb",
@@ -395,8 +395,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51972,
-        "usdzBytes": 55673
+        "glbBytes": 51772,
+        "usdzBytes": 55473
       },
       "xl": {
         "glb": "/ar/hanging-goals/xl.glb",
@@ -404,8 +404,8 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 51948,
-        "usdzBytes": 55673
+        "glbBytes": 51748,
+        "usdzBytes": 55473
       }
     }
   },
@@ -418,8 +418,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 61320,
-        "usdzBytes": 65010
+        "glbBytes": 61272,
+        "usdzBytes": 64962
       },
       "m": {
         "glb": "/ar/lit/m.glb",
@@ -427,8 +427,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 61316,
-        "usdzBytes": 65010
+        "glbBytes": 61268,
+        "usdzBytes": 64962
       },
       "l": {
         "glb": "/ar/lit/l.glb",
@@ -436,8 +436,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 61316,
-        "usdzBytes": 65010
+        "glbBytes": 61268,
+        "usdzBytes": 64962
       },
       "xl": {
         "glb": "/ar/lit/xl.glb",
@@ -445,8 +445,8 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 61312,
-        "usdzBytes": 65010
+        "glbBytes": 61264,
+        "usdzBytes": 64962
       }
     }
   },
@@ -459,8 +459,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 52008,
-        "usdzBytes": 55673
+        "glbBytes": 51808,
+        "usdzBytes": 55473
       },
       "m": {
         "glb": "/ar/six-questions/m.glb",
@@ -468,8 +468,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51980,
-        "usdzBytes": 55673
+        "glbBytes": 51780,
+        "usdzBytes": 55473
       },
       "l": {
         "glb": "/ar/six-questions/l.glb",
@@ -477,8 +477,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51972,
-        "usdzBytes": 55673
+        "glbBytes": 51772,
+        "usdzBytes": 55473
       },
       "xl": {
         "glb": "/ar/six-questions/xl.glb",
@@ -486,8 +486,8 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 51948,
-        "usdzBytes": 55673
+        "glbBytes": 51748,
+        "usdzBytes": 55473
       }
     }
   },
@@ -500,8 +500,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 49340,
-        "usdzBytes": 53014
+        "glbBytes": 49188,
+        "usdzBytes": 52861
       },
       "m": {
         "glb": "/ar/house-rules/m.glb",
@@ -509,8 +509,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 49340,
-        "usdzBytes": 53014
+        "glbBytes": 49188,
+        "usdzBytes": 52861
       },
       "l": {
         "glb": "/ar/house-rules/l.glb",
@@ -518,8 +518,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 49340,
-        "usdzBytes": 53014
+        "glbBytes": 49188,
+        "usdzBytes": 52861
       },
       "xl": {
         "glb": "/ar/house-rules/xl.glb",
@@ -527,8 +527,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 49336,
-        "usdzBytes": 53014
+        "glbBytes": 49184,
+        "usdzBytes": 52861
       }
     }
   },
@@ -541,8 +541,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 45724,
-        "usdzBytes": 49380
+        "glbBytes": 49060,
+        "usdzBytes": 52719
       },
       "m": {
         "glb": "/ar/what-we-stand-for/m.glb",
@@ -550,8 +550,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 45724,
-        "usdzBytes": 49380
+        "glbBytes": 49060,
+        "usdzBytes": 52719
       },
       "l": {
         "glb": "/ar/what-we-stand-for/l.glb",
@@ -559,8 +559,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 45724,
-        "usdzBytes": 49380
+        "glbBytes": 49060,
+        "usdzBytes": 52719
       },
       "xl": {
         "glb": "/ar/what-we-stand-for/xl.glb",
@@ -568,8 +568,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 45720,
-        "usdzBytes": 49380
+        "glbBytes": 49056,
+        "usdzBytes": 52719
       }
     }
   },
@@ -582,8 +582,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 48304,
-        "usdzBytes": 51972
+        "glbBytes": 48528,
+        "usdzBytes": 52193
       },
       "m": {
         "glb": "/ar/team-charter/m.glb",
@@ -591,8 +591,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 48300,
-        "usdzBytes": 51972
+        "glbBytes": 48524,
+        "usdzBytes": 52193
       },
       "l": {
         "glb": "/ar/team-charter/l.glb",
@@ -600,8 +600,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 48300,
-        "usdzBytes": 51972
+        "glbBytes": 48524,
+        "usdzBytes": 52193
       },
       "xl": {
         "glb": "/ar/team-charter/xl.glb",
@@ -609,8 +609,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 48296,
-        "usdzBytes": 51972
+        "glbBytes": 48520,
+        "usdzBytes": 52193
       }
     }
   },
@@ -623,8 +623,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 36556,
-        "usdzBytes": 40230
+        "glbBytes": 39012,
+        "usdzBytes": 42680
       },
       "m": {
         "glb": "/ar/how-we-work/m.glb",
@@ -632,8 +632,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 36552,
-        "usdzBytes": 40230
+        "glbBytes": 39008,
+        "usdzBytes": 42680
       },
       "l": {
         "glb": "/ar/how-we-work/l.glb",
@@ -641,8 +641,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 36552,
-        "usdzBytes": 40230
+        "glbBytes": 39008,
+        "usdzBytes": 42680
       },
       "xl": {
         "glb": "/ar/how-we-work/xl.glb",
@@ -650,8 +650,8 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 36548,
-        "usdzBytes": 40230
+        "glbBytes": 39004,
+        "usdzBytes": 42680
       }
     }
   },
@@ -664,8 +664,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 27872,
-        "usdzBytes": 31562
+        "glbBytes": 24952,
+        "usdzBytes": 28639
       },
       "m": {
         "glb": "/ar/sabr/m.glb",
@@ -673,8 +673,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 27872,
-        "usdzBytes": 31562
+        "glbBytes": 24952,
+        "usdzBytes": 28639
       },
       "l": {
         "glb": "/ar/sabr/l.glb",
@@ -682,8 +682,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 27872,
-        "usdzBytes": 31562
+        "glbBytes": 24952,
+        "usdzBytes": 28639
       },
       "xl": {
         "glb": "/ar/sabr/xl.glb",
@@ -691,8 +691,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 27868,
-        "usdzBytes": 31562
+        "glbBytes": 24948,
+        "usdzBytes": 28639
       }
     }
   },
@@ -705,8 +705,8 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 31244,
-        "usdzBytes": 34918
+        "glbBytes": 29828,
+        "usdzBytes": 33503
       },
       "m": {
         "glb": "/ar/bismillah/m.glb",
@@ -714,8 +714,8 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 31240,
-        "usdzBytes": 34918
+        "glbBytes": 29824,
+        "usdzBytes": 33503
       },
       "l": {
         "glb": "/ar/bismillah/l.glb",
@@ -723,8 +723,8 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 31240,
-        "usdzBytes": 34918
+        "glbBytes": 29824,
+        "usdzBytes": 33503
       },
       "xl": {
         "glb": "/ar/bismillah/xl.glb",
@@ -732,8 +732,8 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 31236,
-        "usdzBytes": 34918
+        "glbBytes": 29820,
+        "usdzBytes": 33503
       }
     }
   },
@@ -746,8 +746,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 29828,
-        "usdzBytes": 33514
+        "glbBytes": 25172,
+        "usdzBytes": 28853
       },
       "m": {
         "glb": "/ar/shukr/m.glb",
@@ -755,8 +755,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 29824,
-        "usdzBytes": 33514
+        "glbBytes": 25168,
+        "usdzBytes": 28853
       },
       "l": {
         "glb": "/ar/shukr/l.glb",
@@ -764,8 +764,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 29824,
-        "usdzBytes": 33514
+        "glbBytes": 25168,
+        "usdzBytes": 28853
       },
       "xl": {
         "glb": "/ar/shukr/xl.glb",
@@ -773,8 +773,8 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 29820,
-        "usdzBytes": 33514
+        "glbBytes": 25164,
+        "usdzBytes": 28853
       }
     }
   },
@@ -787,8 +787,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 26696,
-        "usdzBytes": 30361
+        "glbBytes": 24576,
+        "usdzBytes": 28242
       },
       "m": {
         "glb": "/ar/alhamdulillah/m.glb",
@@ -796,8 +796,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 26668,
-        "usdzBytes": 30361
+        "glbBytes": 24548,
+        "usdzBytes": 28242
       },
       "l": {
         "glb": "/ar/alhamdulillah/l.glb",
@@ -805,8 +805,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 26660,
-        "usdzBytes": 30361
+        "glbBytes": 24540,
+        "usdzBytes": 28242
       },
       "xl": {
         "glb": "/ar/alhamdulillah/xl.glb",
@@ -814,8 +814,8 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 26636,
-        "usdzBytes": 30361
+        "glbBytes": 24516,
+        "usdzBytes": 28242
       }
     }
   },
@@ -910,8 +910,8 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 31376,
-        "usdzBytes": 35043
+        "glbBytes": 32080,
+        "usdzBytes": 35746
       },
       "m": {
         "glb": "/ar/entrance-mark/m.glb",
@@ -919,8 +919,8 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 31372,
-        "usdzBytes": 35043
+        "glbBytes": 32076,
+        "usdzBytes": 35746
       },
       "l": {
         "glb": "/ar/entrance-mark/l.glb",
@@ -928,8 +928,8 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 31372,
-        "usdzBytes": 35043
+        "glbBytes": 32076,
+        "usdzBytes": 35746
       },
       "xl": {
         "glb": "/ar/entrance-mark/xl.glb",
@@ -937,8 +937,8 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 31368,
-        "usdzBytes": 35043
+        "glbBytes": 32072,
+        "usdzBytes": 35746
       }
     }
   },
@@ -951,8 +951,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 27208,
-        "usdzBytes": 30857
+        "glbBytes": 28520,
+        "usdzBytes": 32176
       },
       "m": {
         "glb": "/ar/meeting-room-front/m.glb",
@@ -960,8 +960,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 27208,
-        "usdzBytes": 30857
+        "glbBytes": 28520,
+        "usdzBytes": 32176
       },
       "l": {
         "glb": "/ar/meeting-room-front/l.glb",
@@ -969,8 +969,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 27208,
-        "usdzBytes": 30857
+        "glbBytes": 28520,
+        "usdzBytes": 32176
       },
       "xl": {
         "glb": "/ar/meeting-room-front/xl.glb",
@@ -978,8 +978,172 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 27204,
-        "usdzBytes": 30857
+        "glbBytes": 28516,
+        "usdzBytes": 32176
+      }
+    }
+  },
+  "hexagon-set": {
+    "wall": "light wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/hexagon-set/s.glb",
+        "usdz": "/ar/hexagon-set/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 50180,
+        "usdzBytes": 53850
+      },
+      "m": {
+        "glb": "/ar/hexagon-set/m.glb",
+        "usdz": "/ar/hexagon-set/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 50180,
+        "usdzBytes": 53850
+      },
+      "l": {
+        "glb": "/ar/hexagon-set/l.glb",
+        "usdz": "/ar/hexagon-set/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 50180,
+        "usdzBytes": 53850
+      },
+      "xl": {
+        "glb": "/ar/hexagon-set/xl.glb",
+        "usdz": "/ar/hexagon-set/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 50176,
+        "usdzBytes": 53850
+      }
+    }
+  },
+  "ring-set": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/ring-set/s.glb",
+        "usdz": "/ar/ring-set/s.usdz",
+        "widthCm": 60,
+        "heightCm": 45,
+        "depthCm": 3.5,
+        "glbBytes": 36680,
+        "usdzBytes": 40356
+      },
+      "m": {
+        "glb": "/ar/ring-set/m.glb",
+        "usdz": "/ar/ring-set/m.usdz",
+        "widthCm": 80,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 36676,
+        "usdzBytes": 40356
+      },
+      "l": {
+        "glb": "/ar/ring-set/l.glb",
+        "usdz": "/ar/ring-set/l.usdz",
+        "widthCm": 120,
+        "heightCm": 90,
+        "depthCm": 3.5,
+        "glbBytes": 36676,
+        "usdzBytes": 40356
+      },
+      "xl": {
+        "glb": "/ar/ring-set/xl.glb",
+        "usdz": "/ar/ring-set/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 36672,
+        "usdzBytes": 40356
+      }
+    }
+  },
+  "facet-border": {
+    "wall": "accent wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/facet-border/s.glb",
+        "usdz": "/ar/facet-border/s.usdz",
+        "widthCm": 120,
+        "heightCm": 48,
+        "depthCm": 3.5,
+        "glbBytes": 36308,
+        "usdzBytes": 39975
+      },
+      "m": {
+        "glb": "/ar/facet-border/m.glb",
+        "usdz": "/ar/facet-border/m.usdz",
+        "widthCm": 150,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 36280,
+        "usdzBytes": 39975
+      },
+      "l": {
+        "glb": "/ar/facet-border/l.glb",
+        "usdz": "/ar/facet-border/l.usdz",
+        "widthCm": 200,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 36272,
+        "usdzBytes": 39975
+      },
+      "xl": {
+        "glb": "/ar/facet-border/xl.glb",
+        "usdz": "/ar/facet-border/xl.usdz",
+        "widthCm": 250,
+        "heightCm": 100,
+        "depthCm": 3.5,
+        "glbBytes": 36248,
+        "usdzBytes": 39975
+      }
+    }
+  },
+  "name-in-gold": {
+    "wall": "dark wall",
+    "sizes": {
+      "s": {
+        "glb": "/ar/name-in-gold/s.glb",
+        "usdz": "/ar/name-in-gold/s.usdz",
+        "widthCm": 60,
+        "heightCm": 60,
+        "depthCm": 3.5,
+        "glbBytes": 22524,
+        "usdzBytes": 26192
+      },
+      "m": {
+        "glb": "/ar/name-in-gold/m.glb",
+        "usdz": "/ar/name-in-gold/m.usdz",
+        "widthCm": 80,
+        "heightCm": 80,
+        "depthCm": 3.5,
+        "glbBytes": 22520,
+        "usdzBytes": 26192
+      },
+      "l": {
+        "glb": "/ar/name-in-gold/l.glb",
+        "usdz": "/ar/name-in-gold/l.usdz",
+        "widthCm": 120,
+        "heightCm": 120,
+        "depthCm": 3.5,
+        "glbBytes": 22520,
+        "usdzBytes": 26192
+      },
+      "xl": {
+        "glb": "/ar/name-in-gold/xl.glb",
+        "usdz": "/ar/name-in-gold/xl.usdz",
+        "widthCm": 160,
+        "heightCm": 160,
+        "depthCm": 3.5,
+        "glbBytes": 22516,
+        "usdzBytes": 26192
       }
     }
   }

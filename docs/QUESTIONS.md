@@ -8,6 +8,39 @@ All nine queued questions were answered on 2026-08-25. What is left is not a
 decision but material: the repo URL, the real business details, and the email
 credentials, each noted below with who does what.
 
+## Open
+
+### 11. Which product line is this site for?
+Two references have arrived and they point at different markets.
+
+The photographs sent first are **commercial dimensional lettering**: an IDEA
+lightbulb built from cut words, THINK OUTSIDE THE BOX with a noughts-and-crosses
+grid, outline bulbs on wires. Office walls, single statement pieces, matte
+finishes. That is what the catalogue was rebuilt around, and it matches the
+brief's B2B targets — offices, cafés, hotels, restaurants, schools, universities.
+
+The pyariwalls collection linked afterwards is **residential decorative mirror
+acrylic**: hexagon and butterfly mirror sets of six to twenty-two pieces, leaf
+and sunflower mirrors, gold Islamic name plaques. Homes, modular sets,
+reflective finishes.
+
+What was taken from it, because it applies to both: mirror acrylic was missing
+from the materials list entirely despite being the finish this market asks for
+by name, and every piece in the catalogue was a single panel when sets are how
+this market buys. A Mirror Acrylic collection now covers geometric sets and a
+gold mirror name piece, all of which suit a reception, restaurant or hotel wall.
+
+What was **not** taken: butterflies, florals and sunflower mirrors. They are
+residential decor, and putting them beside a B2B services page that talks about
+fire ratings and facilities managers would make the site read as unsure what it
+sells.
+
+**Needed:** is this studio commercial-only, or does it also sell residential
+decor? If both, they want separating — either two clearly-labelled parts of the
+portfolio or a second venue, because the buyers, the sizes and the language are
+different. Nothing is blocked meanwhile; the catalogue currently reads as
+commercial with a mirror range that works for both.
+
 ## Re-opened
 
 ### 7a. Materials and lead times — answered, but for the wrong product
