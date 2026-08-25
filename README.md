@@ -35,7 +35,7 @@ everything else works.
 | --- | --- |
 | `npm run verify` | Build, serve, check the hero arrangement, then audit 31 viewports across 16 pages. Refuses to audit a stale build. |
 | `npm run serve` | Serve the production build for the checks that need one. Frees the port first and refuses to serve anything but the build on disk. |
-| `npm run test:interaction` | 231 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
+| `npm run test:interaction` | 234 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path. Needs a server running. |
 | `npm run lighthouse` | SEO, best practices and accessibility gated at 90 across eleven routes. Needs a server running. |
 | `npm run lighthouse:detail <report>` | Read a saved report and show what is costing time. |
 | `npm run check:images` | Every artwork file matches its declared dimensions. |

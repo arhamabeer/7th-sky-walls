@@ -22,7 +22,7 @@ npm run lighthouse
 | `check:images` | Every artwork file on disk matches the dimensions the site declares. A mismatch causes layout shift and letterboxed renders. |
 | `check:ar` | All 96 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires. |
 | `verify` | Production build, hero wall arrangement, and the responsive audit across 31 viewports — desktop, laptop, tablet and phone, portrait and landscape. |
-| `test:interaction` | 204 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts. |
+| `test:interaction` | 234 behavioural checks across mobile, tablet, desktop, reduced-motion and rate-limit contexts, including the keyboard path and the modal focus traps. |
 | `lighthouse` | SEO, best practices and accessibility at 90+ on eleven routes. All three currently sit at 100. |
 | `check:brand` | Swaps in a 44-character studio name and a different palette, rebuilds, and confirms no trace of the real brand survives and the header still contains its contents at 320–430px. Restores the real config either way. Two builds, so run it before launch and after touching the header, footer or config shape — not on every change. |
 
