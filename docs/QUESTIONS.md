@@ -8,9 +8,9 @@ All nine queued questions were answered on 2026-08-25. What is left is not a
 decision but material: the repo URL, the real business details, and the email
 credentials, each noted below with who does what.
 
-## Open
+## Answered — scope
 
-### 11. Which product line is this site for?
+### 11. Which product line is this site for? — **commercial only**
 Two references have arrived and they point at different markets.
 
 The photographs sent first are **commercial dimensional lettering**: an IDEA
@@ -35,11 +35,20 @@ residential decor, and putting them beside a B2B services page that talks about
 fire ratings and facilities managers would make the site read as unsure what it
 sells.
 
-**Needed:** is this studio commercial-only, or does it also sell residential
-decor? If both, they want separating — either two clearly-labelled parts of the
-portfolio or a second venue, because the buyers, the sizes and the language are
-different. Nothing is blocked meanwhile; the catalogue currently reads as
-commercial with a mirror range that works for both.
+**Answered 2026-08-25: commercial only. Residential decor is out of scope for
+now.**
+
+So the catalogue stays as it is — the mirror range was kept because a hexagon
+set or a gold name reads correctly on a reception, restaurant or hotel wall, and
+the butterflies, florals and sunflower mirrors were never brought in. One piece
+of copy was corrected: the gold mirror name piece offered "a family name", which
+is a residential framing; it now offers a company or restaurant name, or Arabic
+wording in Naskh.
+
+If residential is ever added it should be separated rather than mixed — the
+buyers, the sizes and the language are all different, and a services page
+discussing fire ratings beside butterfly mirrors reads as a studio unsure what
+it sells.
 
 ## Re-opened
 
