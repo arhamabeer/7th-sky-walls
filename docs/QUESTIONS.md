@@ -112,6 +112,34 @@ were confirmed against printing, not against cutting, spraying and hanging
 letters. Everything else stands on material science rather than on an assumption
 about this studio.
 
+### 7b. Are printed wall coverings still a service? — **claim removed, needs a yes or no**
+Opened 2026-08-26 while sweeping the last of the print-era copy.
+
+Three places still described the previous product line, and one of them made a
+claim a procurement officer would rely on. The services page offered "printed
+wall coverings" and "archival large-format production" with a "choice of canvas,
+acrylic, aluminum or fine-art paper", and the school page said "our wall
+coverings are Class B fire-rated" — for a product with no entry in
+`materials.json` at all, and a rating that contradicts what the materials page
+now says. The office and café pages compared their materials against canvas.
+
+All of it is rewritten against the researched material facts, and the fire
+sentence on the school page now says what `materials.json` says: PVC foam is
+self-extinguishing and thin gauges reach Class A under ASTM E84.
+
+**The question that is left:** printed wall coverings and murals were listed as
+one service. Murals are kept — they appear in the site's own strapline and need
+no sheet material. The wall-covering claim is removed rather than corrected,
+because correcting it would mean inventing a spec and a fire rating.
+
+- If the studio does offer printed wall coverings, they need an entry in
+  `materials.json` with a real spec and real fire data, like every other
+  material.
+- If not, nothing further is needed — the copy no longer mentions them.
+
+Deleting a possible revenue line quietly would have been the wrong call, which is
+why it is written down here rather than only in the commit.
+
 ## Answered — waiting on material from the studio
 
 ### 1. Real business details — the studio will edit them directly

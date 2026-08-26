@@ -432,6 +432,47 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The last of the print-era copy, including a fire claim — 2026-08-26
+
+The catalogue and the materials list were rebuilt for cut dimensional lettering.
+The services and venue copy was not swept with them, so the site went on
+describing a printing business in six places — and one of them was a claim a
+procurement officer would rely on.
+
+- **The school page said "our wall coverings are Class B fire-rated."** There is
+  no wall covering in `materials.json`, and the rating contradicted the page the
+  same site links to for material facts. It now says what the materials page says:
+  PVC foam is self-extinguishing and thin gauges reach Class A under ASTM E84.
+  The same page recommended "aluminium composite or wall covering rather than
+  stretched canvas" at pupil height, against two products that are not offered
+  and one that is not stocked; it now recommends PVC foam or aluminium over MDF,
+  which is what the material research actually supports.
+- **The services page** offered "archival large-format production" and a "choice
+  of canvas, acrylic, aluminum or fine-art paper", and listed "printed wall
+  coverings" alongside murals. Rewritten to in-house cutting, routing and
+  finishing, and to the four materials the site documents. Murals are kept — they
+  are in the site's own strapline and need no sheet material — but the
+  wall-covering claim is removed rather than corrected, because correcting it
+  would mean inventing a spec and a fire rating. Logged as question 7b so a
+  possible revenue line is not deleted silently.
+- **"Hand-embellished finishes available"** is a print-era upsell. Replaced with
+  "Urdu, Arabic or Latin script", which the studio genuinely does since Phase 9.
+- **The office and café pages** compared their materials against canvas. They now
+  compare against materials the site stocks, using the reasoning from
+  `materials.json`: a matte acrylic face under downlights, and PVC's indifference
+  to humidity where MDF's is not.
+- **The "Produce" process step** said "printed and finished in-house on archival
+  materials". It appears on the services page and, since this week, on the printed
+  specification sheet.
+- **`artworkSurface: "Canvas / fine-art paper"`** in the artwork JSON-LD. Removed
+  rather than replaced: these pieces mount to the wall itself, so there is no
+  supporting sheet to name, and an absent optional property beats a false one.
+
+Two more stale counts went with them — `materials.json` described PVC as "the
+best fire performer of the five" and aluminium as "longest-lived of the five"
+while holding six materials. Both are now count-free, for the same reason the
+"four surfaces" copy was.
+
 ### The error sink was the one untested route — 2026-08-26
 
 `/api/report` is how the studio learns that a visitor's AR panel or configurator
