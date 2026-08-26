@@ -432,6 +432,38 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### Three more stale facts, and a gate for the class — 2026-08-26
+
+The dominant defect in this codebase is one fact written down in two places. Four
+have been fixed today — the material count, the fire rating, the hanging height,
+the mounting — so the remaining candidates were hunted deliberately rather than
+waited for.
+
+- **"Six curated series", twice,** on the home page and the collections page,
+  while `collections.json` holds seven. Mirror Acrylic was added and the sentence
+  was not. The count is gone rather than corrected, which is the same fix the
+  "four surfaces" copy got and for the same reason.
+- **The AR device checklist opened by naming a piece that does not exist.** "Use
+  **Minaret Dawn** or **Begin Anyway** for the first run" — Minaret Dawn belonged
+  to the catalogue the product-category rebuild replaced. A checklist whose first
+  instruction names something missing is a checklist nobody finishes. It now says
+  Sabr, and says why: the brass flourish sits beneath the word, so a flipped model
+  is obvious without reading anything, which is the point on a phone held at arm's
+  length. Every other factual claim in that document was checked at the same time
+  and all of them hold — Sabr and Idea are both portrait, Ask Better Questions is
+  the panorama, Idea is the word cloud, Name in Gold takes custom wording.
+- **The About page hardcoded "Founded 2024"** while `site.config` holds
+  `foundingYear`, which is what the LocalBusiness structured data reads. They
+  agreed — but the launch checklist asks the studio to set the real year in the
+  config, so the page would have gone on telling visitors 2024 while telling
+  search engines something else.
+
+`check:slug-refs` now covers titles in the docs as well as slugs in the code.
+Only **bold** phrases are checked, because that is how these documents mark
+something to open or click; matching every capitalised phrase in a design document
+against the catalogue finds nothing but false positives. Putting "Minaret Dawn"
+back fails it by name.
+
 ### Five pieces were overruled about their own mounting — 2026-08-26
 
 `defaultMountFor` infers a mounting from a piece's material, which is the right
