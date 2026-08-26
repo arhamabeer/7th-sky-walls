@@ -1,6 +1,7 @@
 {
   "idea-bulb": {
     "wall": "dark wall",
+    "source": "/artworks/idea-bulb.e5b493c1.png",
     "sizes": {
       "s": {
         "glb": "/ar/idea-bulb/s.glb",
@@ -42,6 +43,7 @@
   },
   "growth-arrow": {
     "wall": "dark wall",
+    "source": "/artworks/growth-arrow.c3379fc0.png",
     "sizes": {
       "s": {
         "glb": "/ar/growth-arrow/s.glb",
@@ -83,6 +85,7 @@
   },
   "collective": {
     "wall": "light wall",
+    "source": "/artworks/collective.e1020e16.png",
     "sizes": {
       "s": {
         "glb": "/ar/collective/s.glb",
@@ -124,6 +127,7 @@
   },
   "deep-work": {
     "wall": "dark wall",
+    "source": "/artworks/deep-work.656c3354.png",
     "sizes": {
       "s": {
         "glb": "/ar/deep-work/s.glb",
@@ -165,6 +169,7 @@
   },
   "outside-the-box": {
     "wall": "dark wall",
+    "source": "/artworks/outside-the-box.18367e77.png",
     "sizes": {
       "s": {
         "glb": "/ar/outside-the-box/s.glb",
@@ -206,6 +211,7 @@
   },
   "begin-anyway": {
     "wall": "accent wall",
+    "source": "/artworks/begin-anyway.80de07a1.png",
     "sizes": {
       "s": {
         "glb": "/ar/begin-anyway/s.glb",
@@ -247,6 +253,7 @@
   },
   "ship-then-fix": {
     "wall": "dark wall",
+    "source": "/artworks/ship-then-fix.8b732fad.png",
     "sizes": {
       "s": {
         "glb": "/ar/ship-then-fix/s.glb",
@@ -288,6 +295,7 @@
   },
   "ask-better-questions": {
     "wall": "light wall",
+    "source": "/artworks/ask-better-questions.f0aafb04.png",
     "sizes": {
       "s": {
         "glb": "/ar/ask-better-questions/s.glb",
@@ -329,6 +337,7 @@
   },
   "bright-ideas": {
     "wall": "light wall",
+    "source": "/artworks/bright-ideas.79ace620.png",
     "sizes": {
       "s": {
         "glb": "/ar/bright-ideas/s.glb",
@@ -336,8 +345,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 63816,
-        "usdzBytes": 64954
+        "glbBytes": 64344,
+        "usdzBytes": 64634
       },
       "m": {
         "glb": "/ar/bright-ideas/m.glb",
@@ -345,8 +354,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 63816,
-        "usdzBytes": 64954
+        "glbBytes": 64344,
+        "usdzBytes": 64634
       },
       "l": {
         "glb": "/ar/bright-ideas/l.glb",
@@ -354,8 +363,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 63816,
-        "usdzBytes": 64954
+        "glbBytes": 64344,
+        "usdzBytes": 64634
       },
       "xl": {
         "glb": "/ar/bright-ideas/xl.glb",
@@ -363,13 +372,14 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 63812,
-        "usdzBytes": 64954
+        "glbBytes": 64340,
+        "usdzBytes": 64634
       }
     }
   },
   "hanging-goals": {
     "wall": "light wall",
+    "source": "/artworks/hanging-goals.b9156e95.png",
     "sizes": {
       "s": {
         "glb": "/ar/hanging-goals/s.glb",
@@ -377,8 +387,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 53776,
-        "usdzBytes": 55473
+        "glbBytes": 51312,
+        "usdzBytes": 54985
       },
       "m": {
         "glb": "/ar/hanging-goals/m.glb",
@@ -386,8 +396,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 53748,
-        "usdzBytes": 55473
+        "glbBytes": 51284,
+        "usdzBytes": 54985
       },
       "l": {
         "glb": "/ar/hanging-goals/l.glb",
@@ -395,8 +405,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 53740,
-        "usdzBytes": 55473
+        "glbBytes": 51276,
+        "usdzBytes": 54985
       },
       "xl": {
         "glb": "/ar/hanging-goals/xl.glb",
@@ -404,13 +414,14 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 53716,
-        "usdzBytes": 55473
+        "glbBytes": 51252,
+        "usdzBytes": 54985
       }
     }
   },
   "lit": {
     "wall": "light wall",
+    "source": "/artworks/lit.e57dd36e.png",
     "sizes": {
       "s": {
         "glb": "/ar/lit/s.glb",
@@ -418,8 +429,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 63800,
-        "usdzBytes": 64962
+        "glbBytes": 60888,
+        "usdzBytes": 63660
       },
       "m": {
         "glb": "/ar/lit/m.glb",
@@ -427,8 +438,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 63800,
-        "usdzBytes": 64962
+        "glbBytes": 60888,
+        "usdzBytes": 63660
       },
       "l": {
         "glb": "/ar/lit/l.glb",
@@ -436,8 +447,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 63800,
-        "usdzBytes": 64962
+        "glbBytes": 60888,
+        "usdzBytes": 63660
       },
       "xl": {
         "glb": "/ar/lit/xl.glb",
@@ -445,13 +456,14 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 63796,
-        "usdzBytes": 64962
+        "glbBytes": 60884,
+        "usdzBytes": 63660
       }
     }
   },
   "six-questions": {
     "wall": "light wall",
+    "source": "/artworks/six-questions.bca8e736.png",
     "sizes": {
       "s": {
         "glb": "/ar/six-questions/s.glb",
@@ -459,8 +471,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 53776,
-        "usdzBytes": 55473
+        "glbBytes": 50424,
+        "usdzBytes": 53889
       },
       "m": {
         "glb": "/ar/six-questions/m.glb",
@@ -468,8 +480,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 53748,
-        "usdzBytes": 55473
+        "glbBytes": 50396,
+        "usdzBytes": 53889
       },
       "l": {
         "glb": "/ar/six-questions/l.glb",
@@ -477,8 +489,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 53740,
-        "usdzBytes": 55473
+        "glbBytes": 50388,
+        "usdzBytes": 53889
       },
       "xl": {
         "glb": "/ar/six-questions/xl.glb",
@@ -486,13 +498,14 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 53716,
-        "usdzBytes": 55473
+        "glbBytes": 50364,
+        "usdzBytes": 53889
       }
     }
   },
   "house-rules": {
     "wall": "dark wall",
+    "source": "/artworks/house-rules.4eecda8a.png",
     "sizes": {
       "s": {
         "glb": "/ar/house-rules/s.glb",
@@ -534,6 +547,7 @@
   },
   "what-we-stand-for": {
     "wall": "light wall",
+    "source": "/artworks/what-we-stand-for.fb2834cf.png",
     "sizes": {
       "s": {
         "glb": "/ar/what-we-stand-for/s.glb",
@@ -575,6 +589,7 @@
   },
   "team-charter": {
     "wall": "dark wall",
+    "source": "/artworks/team-charter.054c3793.png",
     "sizes": {
       "s": {
         "glb": "/ar/team-charter/s.glb",
@@ -616,6 +631,7 @@
   },
   "how-we-work": {
     "wall": "light wall",
+    "source": "/artworks/how-we-work.c4de672a.png",
     "sizes": {
       "s": {
         "glb": "/ar/how-we-work/s.glb",
@@ -657,6 +673,7 @@
   },
   "sabr": {
     "wall": "light wall",
+    "source": "/artworks/sabr.1c5e5a69.png",
     "sizes": {
       "s": {
         "glb": "/ar/sabr/s.glb",
@@ -698,6 +715,7 @@
   },
   "bismillah": {
     "wall": "light wall",
+    "source": "/artworks/bismillah.adc9541b.png",
     "sizes": {
       "s": {
         "glb": "/ar/bismillah/s.glb",
@@ -739,6 +757,7 @@
   },
   "shukr": {
     "wall": "dark wall",
+    "source": "/artworks/shukr.cea512df.png",
     "sizes": {
       "s": {
         "glb": "/ar/shukr/s.glb",
@@ -780,6 +799,7 @@
   },
   "alhamdulillah": {
     "wall": "light wall",
+    "source": "/artworks/alhamdulillah.7418a874.png",
     "sizes": {
       "s": {
         "glb": "/ar/alhamdulillah/s.glb",
@@ -821,6 +841,7 @@
   },
   "reception-mark": {
     "wall": "dark wall",
+    "source": "/artworks/reception-mark.f9562981.png",
     "sizes": {
       "s": {
         "glb": "/ar/reception-mark/s.glb",
@@ -862,6 +883,7 @@
   },
   "lobby-wordmark": {
     "wall": "dark wall",
+    "source": "/artworks/lobby-wordmark.ae972ade.png",
     "sizes": {
       "s": {
         "glb": "/ar/lobby-wordmark/s.glb",
@@ -903,6 +925,7 @@
   },
   "entrance-mark": {
     "wall": "light wall",
+    "source": "/artworks/entrance-mark.919da952.png",
     "sizes": {
       "s": {
         "glb": "/ar/entrance-mark/s.glb",
@@ -944,6 +967,7 @@
   },
   "meeting-room-front": {
     "wall": "light wall",
+    "source": "/artworks/meeting-room-front.3587a32c.png",
     "sizes": {
       "s": {
         "glb": "/ar/meeting-room-front/s.glb",
@@ -985,6 +1009,7 @@
   },
   "hexagon-set": {
     "wall": "light wall",
+    "source": "/artworks/hexagon-set.8d63f843.png",
     "sizes": {
       "s": {
         "glb": "/ar/hexagon-set/s.glb",
@@ -1026,6 +1051,7 @@
   },
   "ring-set": {
     "wall": "dark wall",
+    "source": "/artworks/ring-set.de33e3d0.png",
     "sizes": {
       "s": {
         "glb": "/ar/ring-set/s.glb",
@@ -1067,6 +1093,7 @@
   },
   "facet-border": {
     "wall": "accent wall",
+    "source": "/artworks/facet-border.856b19db.png",
     "sizes": {
       "s": {
         "glb": "/ar/facet-border/s.glb",
@@ -1108,6 +1135,7 @@
   },
   "name-in-gold": {
     "wall": "dark wall",
+    "source": "/artworks/name-in-gold.7b385e54.png",
     "sizes": {
       "s": {
         "glb": "/ar/name-in-gold/s.glb",

@@ -109,6 +109,25 @@ for (const art of artworks) {
     continue;
   }
 
+  /**
+   * The models must have been built from the artwork the site is serving.
+   *
+   * Everything else here validates geometry and packaging, which stay correct
+   * even when the texture inside is a previous version of the piece — so
+   * regenerating an artwork and forgetting `generate:ar` left four pieces
+   * showing the old image in AR with every check passing. The artwork's URL
+   * carries a hash of its bytes, so comparing URLs compares the images.
+   */
+  if (entry.source && entry.source !== art.image.src) {
+    fail(
+      art.slug,
+      `AR models were built from ${entry.source} but the site now serves ` +
+        `${art.image.src} — run \`npm run generate:ar\``,
+    );
+  } else if (!entry.source) {
+    fail(art.slug, "manifest records no source artwork; run `npm run generate:ar`");
+  }
+
   const manifestSizes = Object.keys(entry.sizes);
   const missing = art.sizes.filter((s) => !manifestSizes.includes(s));
   if (missing.length) fail(art.slug, `no AR assets for size(s) ${missing.join(", ")}`);

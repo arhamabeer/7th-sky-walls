@@ -93,7 +93,21 @@ async function main() {
     const dir = path.join(AR_DIR, art.slug);
     await mkdir(dir, { recursive: true });
 
-    const entry = { wall: wall.name, sizes: {} };
+    /**
+     * The artwork these models were built from, recorded so staleness is
+     * detectable.
+     *
+     * `check:ar` verifies that every model encodes its advertised size and is
+     * shaped the way Quick Look needs — but it cannot see whether the texture
+     * inside is the current artwork. Regenerate a piece and forget to run
+     * `generate:ar`, and its AR models go on showing the previous image with
+     * nothing failing. That happened this week to four pieces at once, and it was
+     * only noticed because their filenames changed.
+     *
+     * The artwork's URL already carries a hash of its bytes, so storing the URL
+     * is storing the hash, and the check is a string comparison.
+     */
+    const entry = { wall: wall.name, source: art.image.src, sizes: {} };
 
     for (const tier of SIZE_TIERS) {
       if (!art.sizes.includes(tier.id)) continue;

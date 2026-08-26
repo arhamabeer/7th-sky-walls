@@ -285,6 +285,21 @@ def "Materials"
  * including its use of assignment rather than accumulation on the final line —
  * matching the reference implementation matters more here than tidying it.
  */
+/**
+ * A fixed modification time for every entry.
+ *
+ * A zip records an mtime per file, and fflate defaults to the clock — so every
+ * `generate:ar` run produced 112 byte-different USDZ files whether or not any
+ * artwork had changed, about 5MB of churn per run. The GLB writer was already
+ * deterministic, which is what made a regeneration legible: with the USDZ noise
+ * gone, the sixteen GLBs that changed were exactly the four pieces that needed
+ * to change, and nothing else. That is the property worth having.
+ *
+ * The date itself is arbitrary and no consumer reads it; what matters is that it
+ * does not move.
+ */
+const FIXED_MTIME = new Date("2026-01-01T00:00:00Z");
+
 function packUsdz(files) {
   let offset = 0;
   const padded = {};
@@ -294,12 +309,16 @@ function packUsdz(files) {
     const headerSize = 34 + filename.length;
     offset += headerSize;
     const offsetMod64 = offset & 63;
+    const opts = { mtime: FIXED_MTIME };
 
     if (offsetMod64 !== 4) {
       const padLength = 64 - offsetMod64;
-      padded[filename] = [file, { extra: { 12345: new Uint8Array(padLength) } }];
+      padded[filename] = [
+        file,
+        { ...opts, extra: { 12345: new Uint8Array(padLength) } },
+      ];
     } else {
-      padded[filename] = file;
+      padded[filename] = [file, opts];
     }
     offset = file.length;
   }

@@ -24,7 +24,7 @@ npm run lighthouse
 | Command | What it proves |
 | --- | --- |
 | `check:images` | Every artwork file on disk matches the dimensions the site declares. A mismatch causes layout shift and letterboxed renders. |
-| `check:ar` | All 112 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires. |
+| `check:ar` | All 112 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires — and were built from the artwork the site currently serves. That last one matters because everything else stays true when the texture inside is a previous version of the piece, which is how four pieces showed the old image in AR with every check passing. |
 | `verify` | Production build, hero wall arrangement, the printable templates, image sizing, and the responsive audit across 31 viewports and 20 pages — desktop, laptop, tablet and phone, portrait and landscape. |
 | `test:interaction` | 344 behavioural checks across twelve contexts — mobile, tablet, desktop, the Android AR tiers, AR launch-failure recovery, custom wording, Urdu and Arabic, the configurator brief, the client error sink, the materials page, the hanging height, reduced motion and the rate limiter. |
 | `lighthouse` | SEO, best practices and accessibility at 90+ on thirteen routes. All three sit at 100 everywhere except the print template, which scores best practices 96 and is exempt from the SEO gate. Both are deliberate and explained below. |
