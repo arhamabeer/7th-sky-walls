@@ -3,7 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { getArtworks, getBlurDataURL, getCollections } from "@/lib/content";
+import {
+  getArtworks,
+  getBlurDataURL,
+  getCollections,
+  getOrientationAspect,
+} from "@/lib/content";
 import { wallColour } from "@/content/finishes";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
@@ -64,7 +69,14 @@ export default function CollectionsPage() {
                           alt={cover.alt}
                           width={cover.image.width}
                           height={cover.image.height}
-                          sizes="(min-width: 768px) 50vw, 100vw"
+                          /* An exact width, derived rather than declared as a
+                             vw. The box is h-56 with p-6, so the image is
+                             capped at 176px tall and its painted width is that
+                             height times the piece's aspect — 132px for a
+                             portrait, 235px for a landscape — and it does not
+                             change with the viewport at all. A vw value here
+                             fetched a 1080px file for a 132px image. */
+                          sizes={`${Math.round(176 * getOrientationAspect(cover.orientation))}px`}
                           className="h-auto max-h-full w-auto max-w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />

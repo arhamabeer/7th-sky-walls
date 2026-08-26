@@ -125,7 +125,7 @@ export function HeroWall({
                     width: `${spot.width}%`,
                   }}
                 >
-                  <Frame artwork={artwork} sizes="18vw" anchor={spot.anchor} />
+                  <Frame artwork={artwork} sizes="12vw" anchor={spot.anchor} />
                 </div>
               );
             })}
@@ -147,7 +147,7 @@ export function HeroWall({
             >
               <Frame
                 artwork={artwork}
-                sizes="(min-width: 640px) 30vw, 38vw"
+                sizes={i === 1 ? "(min-width: 640px) 220px, 38vw" : "(min-width: 640px) 160px, 27vw"}
                 anchor={i === 1}
               />
             </div>

@@ -371,7 +371,7 @@ export function ArtworkExperience({
                 alt={imageAlt}
                 width={imageWidth}
                 height={imageHeight}
-                sizes="(min-width: 1024px) 50vw, 100vw"
+                sizes="(min-width: 1024px) 32vw, (min-width: 640px) 60vw, 82vw"
                 fetchPriority="high"
                 loading="eager"
                 // drop-shadow, not shadow. This is a transparent PNG of cut

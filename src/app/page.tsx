@@ -8,6 +8,7 @@ import {
   getBlurDataURL,
   getCollections,
   getFeaturedArtworks,
+  getOrientationAspect,
   getVenues,
 } from "@/lib/content";
 import { wallColour } from "@/content/finishes";
@@ -102,7 +103,12 @@ export default function HomePage() {
                           alt={cover.alt}
                           width={cover.image.width}
                           height={cover.image.height}
-                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          /* Derived, not declared: h-48 with p-5 caps the image
+                             at 152px tall, so its painted width is that height
+                             times the piece's aspect and never changes with the
+                             viewport. A single px value sized for the landscape
+                             case over-served every portrait one. */
+                          sizes={`${Math.round(152 * getOrientationAspect(cover.orientation))}px`}
                           className="h-auto max-h-full w-auto max-w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />
