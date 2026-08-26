@@ -432,6 +432,57 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The error sink was the one untested route — 2026-08-26
+
+`/api/report` is how the studio learns that a visitor's AR panel or configurator
+threw, and nothing asserted anything about it. Seven checks now do, and the first
+run found a defect: `typeof [] === "object"`, so a JSON array passed the body
+guard, every field read as `undefined`, and the endpoint wrote a log line saying
+nothing had gone wrong nowhere. An empty object did the same. Both are refused
+now, while a boundary name on its own is still accepted — knowing which panel
+threw is actionable even with no message. Removing either guard puts both bodies
+back to 204, which is how they were confirmed to be load-bearing.
+
+Writing those checks also produced a lesson about the checks themselves. The
+first version shared one address across every assertion, and the limiter allows
+five requests per address — so adding two checks made a sixth fail as
+rate-limited: a real result for the wrong question. Each functional assertion now
+uses its own address from the reserved documentation range, with one address held
+constant for the flood test that actually wants to exhaust a bucket.
+
+Separately, `reportError` was sending the full `window.location.search`, which
+quietly broke the module's own promise to collect no form contents: a
+configurator link carries the visitor's own wording in `?text=`. It now sends the
+path plus the parameter *names* — which is what a diagnosis needs — and none of
+the values.
+
+### The configurator brief was quietly making things up — 2026-08-26
+
+`describeConfig` turns a configurator link into the sentence the visitor sees
+prefilled in their message and the studio quotes from. Three defects, none of
+which anything asserted:
+
+- **"ink ink".** The default ink is named "Ink", and the wording was
+  `${name} ink` — so the single most common brief on the site read "Set in
+  monumental lettering, ink ink, ivory ground."
+- **Invented settings.** `getTypeface`, `getInk`, `getGround` and `getMount` all
+  fall back to their first entry for an unknown id, which is right for rendering
+  a preview and wrong for writing down what somebody asked for. A stale or
+  hand-edited link produced a brief asserting choices nobody made. Unrecognised
+  ids are now dropped.
+- **An uncapped `text`.** The link builder capped wording at 200 characters; the
+  reader accepted whatever arrived. A forwarded URL with 5000 characters prefilled
+  all 5000 into the message field — past the 4000 the schema allows — leaving a
+  form that could not be submitted until the visitor deleted a thousand characters
+  by hand. The sibling `plan` parameter had been capped at 600 all along, which is
+  what made the omission visible. The limit now lives in
+  `src/lib/inquiry/config-link.ts`, imported by both ends: it cannot sit beside
+  the reader, because the reader imports the `server-only` content layer and the
+  writer is a client component — the build rejects that outright, which is how the
+  first attempt at sharing it failed.
+
+Six checks cover it now, and reinstating all three defects fails three of them.
+
 ### The paper-rectangle bug, sixth and last instance — 2026-08-26
 
 The artwork page's own hero image — the largest, most-looked-at image on the

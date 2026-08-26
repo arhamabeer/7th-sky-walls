@@ -16,6 +16,7 @@ import { renderCustomArt } from "@/components/artwork/render-custom-art";
 import { getGround } from "@/components/artwork/text-art-options";
 import { buildCustomGlb } from "@/components/ar/build-glb-client";
 import { wallColour, type WallToneId } from "@/content/finishes";
+import { MAX_CONFIG_TEXT } from "@/lib/inquiry/config-link";
 import { whatsappLink } from "@/config/site.config";
 import { artworkInquiryMessage, copy } from "@/content/copy";
 import { cn } from "@/lib/utils";
@@ -141,7 +142,10 @@ export function ArtworkExperience({
   const customInquiryHref = (() => {
     const params = new URLSearchParams({ artwork: slug, size: sizeId });
     if (config) {
-      if (config.text.trim()) params.set("text", config.text.trim().slice(0, 200));
+      // Shared with the reader, so the two cannot cap at different numbers.
+      if (config.text.trim()) {
+        params.set("text", config.text.trim().slice(0, MAX_CONFIG_TEXT));
+      }
       params.set("typeface", config.typeface);
       params.set("ink", config.ink);
       params.set("ground", config.ground);
