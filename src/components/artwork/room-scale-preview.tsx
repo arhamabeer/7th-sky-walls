@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo } from "react";
 import { getScene, type ScenePiece } from "@/components/artwork/room-scenes";
+import { EYE_LEVEL_CM } from "@/content/hanging";
 import { cn } from "@/lib/utils";
 
 /**
@@ -28,8 +29,8 @@ const ROOM_WIDTH_CM = 440;
 const FLOOR_DEPTH_CM = 26;
 const CANVAS_HEIGHT_CM = WALL_HEIGHT_CM + FLOOR_DEPTH_CM;
 
-/** Gallery convention: hang so the artwork's centre sits at eye level. */
-const EYE_LEVEL_CM = 145;
+/* Eye level comes from content/hanging, which is the single place it is
+   declared — see the note there about the three numbers this replaced. */
 /** Interior-design convention: leave a gap between furniture and artwork. */
 const FURNITURE_CLEARANCE_CM = 22;
 /** Keep the top edge off the ceiling line. */
