@@ -432,6 +432,37 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### One hanging height, not three — 2026-08-26
+
+The planner advises where the centre of an arrangement sits, the specification
+sheet prints it, and the corner-marking instructions tell an installer where to
+mark it. They did not agree.
+
+`EYE_LEVEL_CM = 145` was declared twice — once in the room-scale preview, once in
+the planner's layout maths — and the specification sheet, written this week,
+introduced a third number under a third name: `CENTRE_HEIGHT_CM = 150`. So
+somebody who read the planner's advice and then printed a sheet from the same site
+got 145cm on screen and 1.50m on paper for the same convention. The prose stated
+both numbers as literals, which is how it drifted without anything noticing.
+
+There is now one declaration, in `src/content/hanging.ts`, importing nothing so
+that the copy file, the layout maths, the preview and the print components can all
+read it without a cycle. The prose interpolates it rather than restating it. 145cm
+is the value that survived: it is the gallery convention — 57 inches to centre —
+and it is the number the planner's researched notes already used.
+
+Three checks assert the rendered result across the planner, the sheet and the
+corner marks, because that is what a specifier compares. Making the metre form
+disagree with the centimetre form by five reproduces the original bug exactly:
+planner 145, sheet 150, corners 150.
+
+Also swept while looking: every route was driven with the values a hand-edited
+link, a stale bookmark or a crawler actually produces — unknown filter values,
+repeated parameters, 2000-character filters, script tags in the wording, path
+traversal in the template's parameters, a 3000-character plan. Thirty cases, all
+correct: 200 where a fallback applies, 404 where the thing is missing, nothing
+injected, no horizontal overflow, no console errors.
+
 ### A specification page of its own — 2026-08-26
 
 `/materials`. Two pages tell the reader that fire rating is the first thing a

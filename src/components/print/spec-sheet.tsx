@@ -1,5 +1,6 @@
 import { Sheet } from "@/components/print/sheet";
 import { copy } from "@/content/copy";
+import { EYE_LEVEL_CM, EYE_LEVEL_M } from "@/content/hanging";
 
 /**
  * A one-page specification for a single piece at a single size.
@@ -38,8 +39,9 @@ export interface SpecSheetProps {
   pageUrl: string;
 }
 
-/** Centre height of a hung piece, in centimetres. The gallery convention. */
-const CENTRE_HEIGHT_CM = 150;
+/* Centre height comes from content/hanging. This file declared its own 150
+   while the planner and the room preview both used 145, so the advice on screen
+   and the number on the printed sheet disagreed about the same convention. */
 /** A standard single doorway, for scale. */
 const DOOR_W = 90;
 const DOOR_H = 200;
@@ -72,7 +74,7 @@ export function SpecSheet({
     ["", `${widthIn} × ${heightIn} in`],
     [t.rows.mounting, mountLabel],
     [t.rows.material, materials.map((m) => m.name).join(" · ")],
-    [t.rows.hungAt, `${(CENTRE_HEIGHT_CM / 100).toFixed(2)} m to centre`],
+    [t.rows.hungAt, `${EYE_LEVEL_M} m to centre`],
   ];
   if (venues.length > 0) {
     rows.push([t.rows.suitedTo, venues.join(", ")]);
@@ -223,8 +225,8 @@ function ScaleElevation({ widthCm, heightCm }: { widthCm: number; heightCm: numb
   const gap = 30;
   const pieceX = DOOR_W + gap;
   const totalW = pieceX + widthCm;
-  const pieceBottom = CENTRE_HEIGHT_CM - heightCm / 2;
-  const pieceTop = CENTRE_HEIGHT_CM + heightCm / 2;
+  const pieceBottom = EYE_LEVEL_CM - heightCm / 2;
+  const pieceTop = EYE_LEVEL_CM + heightCm / 2;
   const wallH = Math.max(DOOR_H + 30, pieceTop + 18);
 
   // Line weights and type size in centimetres of wall, so they stay legible
@@ -239,7 +241,7 @@ function ScaleElevation({ widthCm, heightCm }: { widthCm: number; heightCm: numb
         style={{ width: "100%", height: `${ELEVATION_EM}em` }}
         preserveAspectRatio="xMidYMax meet"
         role="img"
-        aria-label={`Elevation: the piece at ${widthCm} by ${heightCm} centimetres, hung with its centre ${CENTRE_HEIGHT_CM} centimetres above the floor, beside a ${DOOR_W} by ${DOOR_H} centimetre doorway.`}
+        aria-label={`Elevation: the piece at ${widthCm} by ${heightCm} centimetres, hung with its centre ${EYE_LEVEL_CM} centimetres above the floor, beside a ${DOOR_W} by ${DOOR_H} centimetre doorway.`}
       >
         <line
           x1={0}
@@ -273,9 +275,9 @@ function ScaleElevation({ widthCm, heightCm }: { widthCm: number; heightCm: numb
             number installers actually work to. */}
         <line
           x1={pieceX - gap * 0.6}
-          y1={wallH - CENTRE_HEIGHT_CM}
+          y1={wallH - EYE_LEVEL_CM}
           x2={totalW}
-          y2={wallH - CENTRE_HEIGHT_CM}
+          y2={wallH - EYE_LEVEL_CM}
           stroke="#14161a"
           strokeWidth={stroke * 0.7}
           strokeDasharray={`${stroke * 4} ${stroke * 3}`}
@@ -310,7 +312,7 @@ function ScaleElevation({ widthCm, heightCm }: { widthCm: number; heightCm: numb
       </svg>
       <figcaption className="mt-[0.35em] text-[0.8em] leading-tight text-black/60">
         {copy.template.elevationCaption} {copy.template.centreLineLabel}{" "}
-        {(CENTRE_HEIGHT_CM / 100).toFixed(2)} m.
+        {EYE_LEVEL_M} m.
       </figcaption>
     </figure>
   );

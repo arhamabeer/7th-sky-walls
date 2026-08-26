@@ -53,8 +53,11 @@ export const ARRANGEMENTS: Arrangement[] = [
 
 /** Gap between pieces. Tighter than this and a wall reads as cluttered. */
 const GAP_CM = 12;
-/** Gallery convention: the centre of the arrangement sits at eye level. */
-export const EYE_LEVEL_CM = 145;
+/* Imported and re-exported: the maths below uses it, and the planner's own
+   components already import it from here. The value belongs to content/hanging,
+   which is the single place it is declared. */
+import { EYE_LEVEL_CM } from "@/content/hanging";
+export { EYE_LEVEL_CM };
 
 export interface LayoutResult {
   placed: PlacedPiece[];

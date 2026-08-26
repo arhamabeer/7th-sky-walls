@@ -1,4 +1,5 @@
 import { site } from "@/config/site.config";
+import { EYE_LEVEL_CM, EYE_LEVEL_M } from "@/content/hanging";
 
 /**
  * All user-facing UI copy, centralized. Brand-identifying strings are
@@ -89,7 +90,7 @@ export const copy = {
     notes: [
       {
         title: "Eye level, not wall centre",
-        text: "The centre of an arrangement sits at about 145 cm — where a standing adult looks. Centring on the wall instead is the single most common mistake, and it always reads as slightly too high.",
+        text: `The centre of an arrangement sits at about ${EYE_LEVEL_CM} cm — where a standing adult looks. Centring on the wall instead is the single most common mistake, and it always reads as slightly too high.`,
       },
       {
         title: "Gaps of 10–15 cm",
@@ -238,7 +239,7 @@ export const copy = {
     centreLineLabel: "Centre line",
     cornerHowTo: [
       "Check the 10 cm bar with a ruler before anything goes on the wall.",
-      "Mark the wall's centre line at 1.50 m, then measure half the width each way from it.",
+      `Mark the wall's centre line at ${EYE_LEVEL_M} m, then measure half the width each way from it.`,
       "Tape each sheet so its printed lines sit on those marks. The line is the edge of the piece.",
       "Stand back before you commit — that is the point of the exercise.",
     ],

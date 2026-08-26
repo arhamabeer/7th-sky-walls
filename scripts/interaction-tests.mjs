@@ -2172,6 +2172,60 @@ async function testErrorSink() {
   );
 }
 
+
+/**
+ * One hanging height, everywhere.
+ *
+ * The planner advises a centre height, the specification sheet prints one, and
+ * the corner-marking instructions tell an installer to mark one. They disagreed:
+ * the planner and the room preview each declared their own 145, and the sheet
+ * introduced 150 under a different name — so somebody following the planner's
+ * advice and then printing from it got two numbers for the same convention.
+ *
+ * They all read one constant now, and the prose interpolates it rather than
+ * restating it. This asserts the rendered result, because that is what a
+ * specifier actually compares.
+ */
+async function testOneHangingHeight() {
+  const vp = "hanging-height";
+  const text = async (path) => (await fetch(`${BASE}${path}`).then((r) => r.text()));
+
+  const planner = (await text("/planner")).match(/sits at about (\d+)\s*cm/)?.[1];
+  const sheet = (await text("/portfolio/sabr/template")).match(/([\d.]+)\s*m to centre/)?.[1];
+  const corners = (await text("/portfolio/sabr/template?mode=corners")).match(
+    /centre line at ([\d.]+)\s*m/,
+  )?.[1];
+
+  const found = { planner, sheet, corners };
+  const asCm = {
+    planner: planner ? Number(planner) : null,
+    sheet: sheet ? Math.round(Number(sheet) * 100) : null,
+    corners: corners ? Math.round(Number(corners) * 100) : null,
+  };
+  const values = Object.values(asCm);
+
+  record(
+    vp,
+    "every page states a hanging height",
+    values.every((v) => typeof v === "number" && v > 0),
+    JSON.stringify(found),
+  );
+  record(
+    vp,
+    "the planner, the spec sheet and the corner marks agree on it",
+    new Set(values).size === 1,
+    Object.entries(asCm).map(([k, v]) => `${k}=${v}cm`).join(" "),
+  );
+  // A sanity bound rather than a hardcoded number: the gallery convention is
+  // 57-60 inches, and a value outside that is a typo whichever way it drifted.
+  record(
+    vp,
+    "the agreed height is inside the gallery convention",
+    values.every((v) => v >= 140 && v <= 155),
+    `${asCm.planner} cm`,
+  );
+}
+
 async function main() {
   const browser = await chromium.launch({
     // The camera preview needs a stream; without these getUserMedia is denied
@@ -2231,6 +2285,7 @@ async function main() {
   await testReducedMotion(browser);
   await testConfiguratorBrief();
   await testErrorSink();
+  await testOneHangingHeight();
   await testRateLimit(browser);
   await browser.close();
 
