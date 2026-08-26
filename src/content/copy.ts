@@ -282,7 +282,7 @@ export const copy = {
     title: "About",
     subtitle: "A wall is the largest canvas a business owns.",
     facts: [
-      { label: "Founded", value: "2024" },
+      { label: "Founded", value: String(site.foundingYear) },
       { label: "Produced", value: "In-house" },
       { label: "Installed by", value: "Our own team" },
     ],
