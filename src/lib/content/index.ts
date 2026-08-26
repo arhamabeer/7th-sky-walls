@@ -13,6 +13,7 @@ import {
   SIZE_TIERS,
   resolveSize,
 } from "@/content/catalog";
+import { defaultMountFor } from "@/content/finishes";
 import {
   artworkSchema,
   caseStudySchema,
@@ -70,6 +71,61 @@ const venues: VenueInfo[] = parseAll(venueSchema, venuesJson, "venue");
 for (const a of artworks) {
   if (!collections.some((c) => c.id === a.collection)) {
     throw new Error(`Artwork "${a.slug}" references unknown collection "${a.collection}"`);
+  }
+}
+
+/**
+ * An artwork's material strings are free text, and two places look them up by
+ * exact name: the specification sheet, for the spec and the fire behaviour, and
+ * the venue pages. A string that matches nothing does not fail — it silently
+ * prints a specification with no material spec and no fire line on it, which is
+ * the one column that page exists for. So it fails here instead, at build time,
+ * where a typo costs a red build rather than a wrong document in a client's hand.
+ *
+ * Mounting strings are excluded: they name a MountStyle, which the check below
+ * covers, and they deliberately do not equal a material name.
+ */
+const MOUNTING_WORDS = /standoff|flush|backer/i;
+for (const a of artworks) {
+  for (const named of a.materials) {
+    if (MOUNTING_WORDS.test(named)) continue;
+    if (!materials.some((m) => m.name === named)) {
+      throw new Error(
+        `Artwork "${a.slug}" names material "${named}", which is not in materials.json — ` +
+          `its spec and fire behaviour would be missing from the printed specification.`,
+      );
+    }
+  }
+}
+
+/**
+ * A piece that names its mounting must resolve to that mounting.
+ *
+ * `defaultMountFor` infers a mounting from the material for a piece that does not
+ * say, and that inference used to run first — so five of twenty-eight pieces were
+ * overruled about their own specification. Three MDF pieces asking for a backer
+ * panel and two mirror pieces asking to sit flush all resolved to a 12mm standoff,
+ * and the printed sheet named one on its material row and the other on its
+ * mounting row, two lines apart.
+ */
+for (const a of artworks) {
+  const text = a.materials.join(" ");
+  const numbered = text.match(/(\d+)\s*mm\s+standoff/i);
+  const expected = numbered
+    ? Number(numbered[1])
+    : /flush/i.test(text)
+      ? 0
+      : /backer/i.test(text)
+        ? 18
+        : null;
+  if (expected === null) continue;
+  const resolved = defaultMountFor(a.materials);
+  if (resolved.standoffMm !== expected) {
+    throw new Error(
+      `Artwork "${a.slug}" names a ${expected}mm mounting in "${text}" but resolves to ` +
+        `"${resolved.name}" (${resolved.standoffMm}mm). The artwork page and the printed ` +
+        `specification would disagree with each other.`,
+    );
   }
 }
 

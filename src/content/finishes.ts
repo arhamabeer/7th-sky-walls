@@ -23,7 +23,19 @@ export interface MountStyle {
   blurRatio: number;
   /** Shadow strength. Deeper standoffs throw a softer, wider, weaker shadow. */
   shadowOpacity: number;
-  /** Matches artworks whose materials name this mounting. */
+  /**
+   * Matches an artwork that names this mounting outright.
+   *
+   * Checked before `match`, and the reason both exist. `match` infers a mounting
+   * from the material, which is right for a piece that does not say — but five of
+   * twenty-eight pieces did say, and inference overruled them. Three MDF pieces
+   * asking for a backer panel and two mirror pieces asking to sit flush all
+   * resolved to a 12mm standoff, so the printed specification sheet named the
+   * backer panel on its material row and the standoff on its mounting row, two
+   * lines apart, on the page a client forwards for sign-off.
+   */
+  states: RegExp;
+  /** Infers a mounting from the material, for a piece that does not name one. */
   match: RegExp;
 }
 
@@ -37,6 +49,7 @@ export const MOUNTS: MountStyle[] = [
     shadowRatio: 0.006,
     blurRatio: 0.008,
     shadowOpacity: 0.4,
+    states: /flush/i,
     match: /pla|pvc/i,
   },
   {
@@ -48,6 +61,7 @@ export const MOUNTS: MountStyle[] = [
     shadowRatio: 0.016,
     blurRatio: 0.02,
     shadowOpacity: 0.34,
+    states: /\b12\s*mm\s+standoff/i,
     match: /acrylic/i,
   },
   {
@@ -59,6 +73,7 @@ export const MOUNTS: MountStyle[] = [
     shadowRatio: 0.03,
     blurRatio: 0.038,
     shadowOpacity: 0.28,
+    states: /\b25\s*mm\s+standoff/i,
     match: /aluminium|aluminum/i,
   },
   {
@@ -70,12 +85,16 @@ export const MOUNTS: MountStyle[] = [
     shadowRatio: 0.012,
     blurRatio: 0.016,
     shadowOpacity: 0.36,
+    states: /backer/i,
     match: /^$/,
   },
 ];
 
 export function defaultMountFor(materials: string[] = []): MountStyle {
   const text = materials.join(" ");
+  // What the piece says wins over what its material implies.
+  const stated = MOUNTS.find((m) => m.states.test(text));
+  if (stated) return stated;
   return (
     MOUNTS.find((m) => m.match.source !== "^$" && m.match.test(text)) ??
     MOUNTS[1]
