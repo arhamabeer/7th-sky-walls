@@ -7,6 +7,7 @@ import caseStudiesJson from "@/content/case-studies.json";
 import materialsJson from "@/content/materials.json";
 import venuesJson from "@/content/venues.json";
 import blurJson from "@/content/blur.json";
+import inkBoundsJson from "@/content/ink-bounds.json";
 import arManifestJson from "@/content/ar-manifest.json";
 import {
   ORIENTATION_ASPECT,
@@ -41,6 +42,7 @@ import {
  */
 
 const blurMap = blurJson as Record<string, string>;
+const inkBoundsMap = inkBoundsJson as Record<string, InkBounds>;
 
 function parseAll<S extends z.ZodTypeAny>(
   schema: S,
@@ -164,6 +166,30 @@ export function getAdjacentArtworks(slug: string): {
     previous: artworks[(index - 1 + artworks.length) % artworks.length],
     next: artworks[(index + 1) % artworks.length],
   };
+}
+
+/**
+ * The rectangle of an artwork's image that carries ink, as fractions of it.
+ *
+ * These are cut letters on a transparent ground, so a piece with a short word
+ * leaves large empty margins — and the printable true-size template tiles the
+ * whole rectangle. Measured across every piece and size, 31% of those sheets have
+ * no ink on them at all; the worst is 29 blank sheets out of 35. The template uses
+ * this to leave them out.
+ *
+ * Written by `npm run generate:placeholders`, which measures the alpha channel
+ * while the pixels are already in hand.
+ */
+export interface InkBounds {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+/** Falls back to the whole rectangle, which prints everything rather than nothing. */
+export function getInkBounds(slug: string): InkBounds {
+  return inkBoundsMap[slug] ?? { left: 0, top: 0, right: 1, bottom: 1 };
 }
 
 /** Base64 blur placeholder for an artwork image, if generated. */

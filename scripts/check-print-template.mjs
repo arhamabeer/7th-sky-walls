@@ -37,6 +37,8 @@ const CASES = [
   { slug: "ask-better-questions", mode: "spec", paper: "a4", size: "xl" },
   { slug: "ask-better-questions", mode: "full", paper: "a4", size: "s" },
   { slug: "ask-better-questions", mode: "corners", paper: "letter", size: "m" },
+  // A short word in the middle of a square: 29 of its 35 tiles are blank.
+  { slug: "name-in-gold", mode: "full", paper: "a4", size: "l" },
 ];
 
 let fails = 0;
@@ -186,6 +188,57 @@ for (const c of CASES) {
   }
   if (pages !== geo.count) fail(`PDF has ${pages} pages, ${geo.count} sheets rendered`);
   else ok(`PDF ${pages} page(s), one per sheet`);
+
+  /**
+   * Blank sheets must not print, and the count must be honest.
+   *
+   * A piece is cut letters on a bare wall, so a short word leaves large empty
+   * margins and tiling the rectangle printed them as blank sheets — 31% of them
+   * across the catalogue, and 29 of 35 for Name in Gold.
+   *
+   * What matters as much as the saving is that the number on the button is the
+   * number that comes out of the printer. A count computed in two places is a
+   * count that will eventually disagree with itself, which is exactly what
+   * happened while this was being built: the chip advertised the unfiltered grid
+   * while the button beside it printed the filtered set.
+   */
+  if (c.mode === "full") {
+    const counts = await page.evaluate(() => {
+      const chip = [...document.querySelectorAll("main a")]
+        .map((a) => a.textContent.replace(/\s+/g, " "))
+        .find((t) => /Full template/.test(t));
+      const advertised = Number(String(chip).match(/(\d+)\s*sheets?/)?.[1] ?? 0);
+      const labels = [...document.querySelectorAll(".tpl-sheet p")].map((n) => n.textContent);
+      const joined = labels.join(" ").replace(/\s+/g, " ");
+      const grid = joined.match(/Row \d+ of (\d+) . Column \d+ of (\d+)/);
+      return {
+        advertised,
+        rendered: document.querySelectorAll(".tpl-sheet").length,
+        omitted: Number(joined.match(/(\d+) blank sheets omitted/)?.[1] ?? 0),
+        gridTotal: grid ? Number(grid[1]) * Number(grid[2]) : 0,
+      };
+    });
+
+    if (counts.advertised !== counts.rendered) {
+      fail(
+        `the button advertises ${counts.advertised} sheets but ${counts.rendered} render — ` +
+          `the count is being worked out twice`,
+      );
+    } else ok(`the advertised count is the printed count (${counts.rendered})`);
+
+    // Whatever was left out has to add back up to the grid, or something other
+    // than blank margins is being dropped.
+    if (counts.gridTotal > 0 && counts.rendered + counts.omitted !== counts.gridTotal) {
+      fail(
+        `${counts.rendered} printed plus ${counts.omitted} omitted is not the ` +
+          `${counts.gridTotal}-tile grid — sheets are going missing unaccounted for`,
+      );
+    } else {
+      ok(
+        `printed and omitted account for the whole grid (${counts.rendered} + ${counts.omitted} of ${counts.gridTotal})`,
+      );
+    }
+  }
 
   // --- the tiled template has to actually carry the piece ---
   //

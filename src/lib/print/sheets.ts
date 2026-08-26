@@ -138,12 +138,42 @@ export interface Tile {
   lastRow: boolean;
 }
 
-export function tiles(layout: TileLayout): Tile[] {
-  const out: Tile[] = [];
+/** The part of a piece that carries ink, as fractions of its rectangle. */
+export interface InkArea {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+/**
+ * The tiles worth printing, and how many were left out.
+ *
+ * A piece is cut letters on a bare wall, so a short word in the middle of a large
+ * rectangle leaves big empty margins — and tiling the rectangle prints those
+ * margins as blank sheets. Measured across every piece and size, 31% of the sheets
+ * had no ink on them at all, and Name in Gold at Large was 29 blank out of 35:
+ * somebody feeding 35 sheets through a printer for six sheets of content.
+ *
+ * Omitted tiles keep their row and column numbers in the labels of the ones that
+ * remain, so the arrangement is still unambiguous — "row 4 of 5, column 3 of 7"
+ * says where a sheet goes whether or not its neighbours were printed.
+ *
+ * Without an ink area every tile is returned, which prints everything rather than
+ * nothing: the wrong direction to fail in is a template missing a piece of the
+ * artwork.
+ */
+export function tiles(
+  layout: TileLayout,
+  pieceWidthMm?: number,
+  pieceHeightMm?: number,
+  ink?: InkArea,
+): { printed: Tile[]; skipped: number } {
+  const all: Tile[] = [];
   for (let row = 0; row < layout.rows; row += 1) {
     for (let col = 0; col < layout.cols; col += 1) {
-      out.push({
-        index: out.length,
+      all.push({
+        index: all.length,
         row,
         col,
         offsetXMm: col * layout.windowWidthMm,
@@ -153,7 +183,24 @@ export function tiles(layout: TileLayout): Tile[] {
       });
     }
   }
-  return out;
+
+  if (!ink || !pieceWidthMm || !pieceHeightMm) return { printed: all, skipped: 0 };
+
+  const printed = all.filter((tile) => {
+    const x0 = tile.offsetXMm / pieceWidthMm;
+    const x1 = (tile.offsetXMm + layout.windowWidthMm) / pieceWidthMm;
+    const y0 = tile.offsetYMm / pieceHeightMm;
+    const y1 = (tile.offsetYMm + layout.windowHeightMm) / pieceHeightMm;
+    // Overlap, not containment: a tile catching any part of the inked area has
+    // something on it.
+    return x1 > ink.left && x0 < ink.right && y1 > ink.top && y0 < ink.bottom;
+  });
+
+  // A piece with no ink cannot happen, but printing nothing would be the worst
+  // possible answer if it did.
+  if (printed.length === 0) return { printed: all, skipped: 0 };
+
+  return { printed, skipped: all.length - printed.length };
 }
 
 export const PRINT_MODES = ["spec", "corners", "full"] as const;
@@ -169,10 +216,15 @@ export function isPrintMode(value: unknown): value is PrintMode {
  * smallest piece to 63 for the largest, which is exactly why it is not the
  * default and why the count is on the button.
  */
-export function sheetCount(mode: PrintMode, layout: TileLayout): number {
+export function sheetCount(
+  mode: PrintMode,
+  layout: TileLayout,
+  /** Passed for `full`, so the count on the button is the count that prints. */
+  tiled?: { printed: Tile[] },
+): number {
   if (mode === "spec") return 1;
   if (mode === "corners") return layout.sheets === 1 ? 1 : 4;
-  return layout.sheets;
+  return tiled ? tiled.printed.length : layout.sheets;
 }
 
 /** The four corners, in reading order, with the label each sheet carries. */
