@@ -432,6 +432,32 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The planner did not follow its own advice — 2026-08-27
+
+The planner prints three rules beside itself. Two it kept and one it ignored.
+
+Its notes said an arrangement spanning more than about two thirds of a wall loses
+its impact. The planner said nothing at all until 85%, so an arrangement covering
+80% of a wall was called a mistake by the advice printed next to it and accepted
+in silence by the tool. There are two different things to say there, so there are
+two notes now: a gentle one from two thirds, quoting the share the arrangement
+actually takes, and the firmer existing one once the clear wall runs out. Removing
+the new band fails the check that exists for it.
+
+The gap was consistent — 12cm, inside the 10-15cm the notes recommend — but
+nothing kept them that way. Both figures, and the two-thirds share, now come from
+`content/hanging.ts` alongside the eye level, and the notes interpolate them rather
+than restating them. That module now holds every number describing how a piece
+meets a wall, which is the third time this week that one fact written in two
+places has been the defect.
+
+Also checked and correct, so it is written down rather than looked at again: the
+AR analytics event names against what the documents promise, the camera preview's
+paper dimensions (A4 21 × 29.7, US Letter 21.6 × 27.9), that all four size tiers
+of a piece share its proportions so nothing is cropped to fit, and that
+`ar-scale="fixed"` is set so the claim that a placed piece cannot be resized is
+true.
+
 ### The camera preview's scale was never checked — 2026-08-27
 
 The camera overlay is the AR tier every device can reach, and its whole claim is

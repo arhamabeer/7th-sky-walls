@@ -51,13 +51,17 @@ export const ARRANGEMENTS: Arrangement[] = [
   },
 ];
 
-/** Gap between pieces. Tighter than this and a wall reads as cluttered. */
-const GAP_CM = 12;
-/* Imported and re-exported: the maths below uses it, and the planner's own
-   components already import it from here. The value belongs to content/hanging,
-   which is the single place it is declared. */
-import { EYE_LEVEL_CM } from "@/content/hanging";
+/* Imported and re-exported: the maths below uses these, and the planner's own
+   components already import them from here. The values belong to
+   content/hanging, which is the single place each is declared. */
+import {
+  COMFORTABLE_WALL_SHARE,
+  EYE_LEVEL_CM,
+  PIECE_GAP_CM,
+} from "@/content/hanging";
 export { EYE_LEVEL_CM };
+
+const GAP_CM = PIECE_GAP_CM;
 
 export interface LayoutResult {
   placed: PlacedPiece[];
@@ -147,9 +151,23 @@ export function planLayout(
       `The lowest piece would sit ${Math.abs(Math.round(bottom))} cm below the floor. Fewer rows or smaller pieces will fix it.`,
     );
   }
+  /**
+   * Two notes rather than one, because there are two different things to say.
+   *
+   * At 85% the arrangement has almost no clear wall left, which is a practical
+   * problem. Between two thirds and that, it fits comfortably and is simply
+   * bigger than the proportion the planner's own advice recommends — and until
+   * now the tool said nothing at all in that band, so an arrangement covering
+   * 80% of a wall was called a mistake by the notes beside it and accepted in
+   * silence by the planner.
+   */
   if (!problems.length && spanWidthCm > wallWidthCm * 0.85) {
     problems.push(
       `It fits, but only just — ${Math.round(wallWidthCm - spanWidthCm)} cm of clear wall in total. Arrangements usually look better with more breathing room.`,
+    );
+  } else if (!problems.length && spanWidthCm > wallWidthCm * COMFORTABLE_WALL_SHARE) {
+    problems.push(
+      `This spans ${Math.round((spanWidthCm / wallWidthCm) * 100)}% of the wall. Past about two thirds an arrangement starts to lose its impact — fewer pieces at larger sizes usually reads better.`,
     );
   }
 

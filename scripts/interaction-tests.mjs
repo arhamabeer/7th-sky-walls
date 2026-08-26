@@ -766,6 +766,44 @@ async function testWallPlanner(page, vp) {
     narrowProblems[0]?.slice(0, 80) ?? "no problem reported",
   );
 
+  /**
+   * The planner has to follow its own advice.
+   *
+   * Its notes say an arrangement past about two thirds of a wall loses its
+   * impact, and the planner said nothing at all until 85% — so an arrangement
+   * covering 80% of a wall was called a mistake by the advice printed beside it
+   * and accepted in silence by the tool. Two bands now: a gentle note from two
+   * thirds, and the firmer one when the clear wall runs out.
+   */
+  const noteFor = async (wallCm) => {
+    await page.fill('main input[type="number"]', String(wallCm));
+    await page.waitForTimeout(450);
+    return (
+      await page.evaluate(() =>
+        [...document.querySelectorAll("main [role=status]")].map((n) => n.textContent.trim()),
+      )
+    )[0] ?? "";
+  };
+
+  const roomy = await noteFor(520);
+  record(vp.name, "a comfortable arrangement is left alone", roomy === "", roomy.slice(0, 70) || "no note");
+
+  const twoThirds = await noteFor(250);
+  record(
+    vp.name,
+    "past two thirds of the wall the planner says so, with the share",
+    /two thirds/i.test(twoThirds) && /\d+% of the wall/.test(twoThirds),
+    twoThirds.slice(0, 90) || "no note",
+  );
+
+  const tight = await noteFor(180);
+  record(
+    vp.name,
+    "and when the clear wall runs out it says that instead",
+    /only just/i.test(tight) && /\d+ cm of clear wall/.test(tight),
+    tight.slice(0, 90) || "no note",
+  );
+
   await page.fill('main input[type="number"]', "320");
   await page.waitForTimeout(400);
 

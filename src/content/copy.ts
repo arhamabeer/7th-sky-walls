@@ -1,5 +1,10 @@
 import { site } from "@/config/site.config";
-import { EYE_LEVEL_CM, EYE_LEVEL_M } from "@/content/hanging";
+import {
+  COMFORTABLE_WALL_PERCENT,
+  EYE_LEVEL_CM,
+  EYE_LEVEL_M,
+  PIECE_GAP_CM,
+} from "@/content/hanging";
 
 /**
  * All user-facing UI copy, centralized. Brand-identifying strings are
@@ -93,12 +98,12 @@ export const copy = {
         text: `The centre of an arrangement sits at about ${EYE_LEVEL_CM} cm — where a standing adult looks. Centring on the wall instead is the single most common mistake, and it always reads as slightly too high.`,
       },
       {
-        title: "Gaps of 10–15 cm",
-        text: "Closer than that and separate pieces start reading as one crowded block. Wider and the arrangement stops holding together.",
+        title: `Gaps of ${PIECE_GAP_CM} cm`,
+        text: "The working range is 10 to 15. Closer and separate pieces start reading as one crowded block; wider and the arrangement stops holding together. The planner spaces every arrangement at this figure.",
       },
       {
         title: "Leave the wall room",
-        text: "An arrangement spanning more than about two-thirds of a wall loses its impact. If it barely fits, fewer pieces at larger sizes usually looks better.",
+        text: `An arrangement spanning more than about ${COMFORTABLE_WALL_PERCENT}% of a wall loses its impact — the planner says so as soon as yours does. If it barely fits, fewer pieces at larger sizes usually looks better.`,
       },
     ],
   },
