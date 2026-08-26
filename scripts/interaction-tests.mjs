@@ -1885,6 +1885,195 @@ async function testReducedMotion(browser) {
   await context.close();
 }
 
+
+/**
+ * The configurator brief.
+ *
+ * What a configurator link turns into on the contact page is the sentence the
+ * studio quotes from, so it has to say what the visitor actually chose and
+ * nothing else. Three defects lived here undetected because nothing asserted it:
+ * the ink named "Ink" produced "ink ink" in the most common brief of all,
+ * unrecognised option ids resolved to the default option and asserted choices
+ * nobody made, and `text` was uncapped while its sibling `plan` was capped —
+ * so a forwarded URL could prefill past the schema's own message limit and leave
+ * a form that refused to submit.
+ *
+ * Plain fetches rather than a browser: this is server-rendered output, and the
+ * assertions are about what the HTML says.
+ */
+async function testConfiguratorBrief() {
+  const vp = "brief";
+  const html = async (query) => {
+    const res = await fetch(`${BASE}/contact?${query}`);
+    return { status: res.status, body: await res.text() };
+  };
+  // The brief is rendered into the form's default message; the flight-data copy
+  // in the same document is the reliable place to read it back from.
+  const brief = (body) => {
+    const m = body.match(/I(?:&#x27;|')ve configured[^\<]*/);
+    return m ? m[0].replace(/&#x27;/g, "'") : "";
+  };
+
+  const full = await html(
+    "artwork=sabr&size=l&typeface=display&ink=ink&ground=ivory&finish=standoff-12",
+  );
+  const text = brief(full.body);
+  record(vp, "a configurator link becomes a readable brief", /configured Sabr/.test(text), text.slice(0, 90));
+  record(
+    vp,
+    "the brief names the size, mounting and every type setting",
+    /90 × 120 cm/.test(text) &&
+      /standoff/.test(text) &&
+      /monumental lettering/.test(text) &&
+      /ivory ground/.test(text),
+    text.slice(0, 110),
+  );
+  record(
+    vp,
+    'the ink named "Ink" does not read as "ink ink"',
+    !/ink ink/i.test(text) && /Set in/.test(text),
+    text.slice(text.indexOf("Set in"), text.indexOf("Set in") + 60),
+  );
+
+  // A non-default ink still has to be labelled as an ink.
+  const brass = brief((await html("artwork=sabr&ink=brass")).body);
+  record(vp, "a named colour is still labelled as ink", /brass ink/.test(brass), brass.slice(0, 60));
+
+  /**
+   * The option getters fall back to their first entry, which is right for
+   * rendering a preview and wrong for writing down what somebody asked for.
+   */
+  const bogus = await html("artwork=sabr&typeface=NONSENSE&ink=NONSENSE&ground=NONSENSE&finish=NONSENSE");
+  const bogusBrief = brief(bogus.body);
+  record(
+    vp,
+    "unrecognised options are dropped, not resolved to the defaults",
+    bogus.status === 200 && bogusBrief === "",
+    bogusBrief ? `invented: ${bogusBrief.slice(0, 70)}` : "nothing invented",
+  );
+
+  /**
+   * The schema caps a message at 4000. A prefill longer than that produces a form
+   * that cannot be submitted until the visitor deletes the excess by hand.
+   */
+  const long = "A".repeat(5000);
+  const capped = await html(`artwork=sabr&text=${long}`);
+  const run = capped.body.match(/A{50,}/)?.[0]?.length ?? 0;
+  record(
+    vp,
+    "an overlong wording parameter is capped before it reaches the form",
+    capped.status === 200 && run > 0 && run <= 200,
+    `${run} characters reached the page`,
+  );
+}
+
+
+/**
+ * The client error sink.
+ *
+ * The only way the studio learns that a visitor's AR panel or configurator threw,
+ * and until now the only untested route on the site. It is unauthenticated and it
+ * writes to the log, so the contract that matters is: accept a real report, refuse
+ * a malformed one, and refuse a flood — without ever becoming an error itself,
+ * because it is called from a page that is already showing one.
+ *
+ * A distinct IP per assertion, and one reserved for the flood. The bucket is
+ * five requests per address, so sharing one address across the functional checks
+ * meant the sixth of them failed as rate-limited — a real result for the wrong
+ * question, and the sort of coupling that makes a suite fail whenever a check is
+ * added beside it.
+ */
+async function testErrorSink() {
+  const vp = "error-sink";
+  // 198.51.100.0/24 is reserved for documentation, so these cannot collide with a
+  // real address. The third octet is randomised per run so two runs inside one
+  // ten-minute window do not inherit each other's buckets.
+  const block = Math.floor(Math.random() * 200) + 20;
+  let host = 0;
+  /** A fresh address per call, so no assertion inherits another's bucket. */
+  const freshIp = () => `198.51.${block}.${(host += 1)}`;
+  const post = (body, contentType = "application/json", ip = null) =>
+    fetch(`${BASE}/api/report`, {
+      method: "POST",
+      headers: { "content-type": contentType, "x-forwarded-for": ip ?? freshIp() },
+      body: typeof body === "string" ? body : JSON.stringify(body),
+    });
+
+  const good = await post({
+    boundary: "feature:wall-planner",
+    digest: "1234567890",
+    message: "Cannot read properties of undefined",
+    url: "/planner?wall",
+    stack: "at WallPlanner (planner.js:1:1)",
+  });
+  record(vp, "a well-formed report is accepted", good.status === 204, `HTTP ${good.status}`);
+
+  const notJson = await post("this is not json");
+  record(vp, "a body that is not JSON is refused", notJson.status === 400, `HTTP ${notJson.status}`);
+
+  // typeof [] === "object", so an array used to sail through and log a line
+  // that said nothing had gone wrong nowhere.
+  const array = await post("[1,2,3]");
+  record(vp, "a JSON array is refused", array.status === 400, `HTTP ${array.status}`);
+
+  const empty = await post({});
+  record(
+    vp,
+    "a report identifying nothing at all is refused",
+    empty.status === 400,
+    `HTTP ${empty.status}`,
+  );
+
+  // A boundary name on its own is a real report: knowing which panel threw is
+  // actionable even with no message.
+  const boundaryOnly = await post({ boundary: "feature:ar-panel" });
+  record(
+    vp,
+    "a boundary name alone is enough to be a report",
+    boundaryOnly.status === 204,
+    `HTTP ${boundaryOnly.status}`,
+  );
+
+  // Every field is length-bounded server-side. What matters here is that a huge
+  // or wrongly-typed payload is handled rather than thrown on — the clipping
+  // itself is only observable in the log.
+  const huge = await post({
+    boundary: "x".repeat(5000),
+    digest: 12345,
+    message: "y".repeat(50000),
+    url: null,
+    stack: { nested: true },
+  });
+  record(
+    vp,
+    "an oversized or wrongly-typed payload is absorbed, not thrown on",
+    huge.status === 204,
+    `HTTP ${huge.status}`,
+  );
+
+  /**
+   * An error loop in one browser must not be able to fill the log. Counted
+   * rather than assumed: a limiter that silently stopped limiting looks exactly
+   * like one that works.
+   */
+  const floodIp = freshIp();
+  let limitedAt = 0;
+  for (let attempt = 1; attempt <= 12 && !limitedAt; attempt += 1) {
+    const res = await post(
+      { boundary: "route", message: `flood ${attempt}` },
+      "application/json",
+      floodIp,
+    );
+    if (res.status === 429) limitedAt = attempt;
+  }
+  record(
+    vp,
+    "a flood of reports from one address is refused",
+    limitedAt > 0,
+    limitedAt ? `limited at attempt ${limitedAt}` : "never limited in 12 attempts",
+  );
+}
+
 async function main() {
   const browser = await chromium.launch({
     // The camera preview needs a stream; without these getUserMedia is denied
@@ -1941,6 +2130,8 @@ async function main() {
   await testCustomTextReachesPreview(browser);
   await testUrduAndArabic(browser);
   await testReducedMotion(browser);
+  await testConfiguratorBrief();
+  await testErrorSink();
   await testRateLimit(browser);
   await browser.close();
 

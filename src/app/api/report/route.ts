@@ -46,13 +46,16 @@ export async function POST(request: Request) {
   } catch {
     return new Response(null, { status: 400 });
   }
-  if (typeof body !== "object" || body === null) {
+  // Array.isArray, because `typeof [] === "object"` and an array passed this
+  // check happily — every field read as undefined, and the endpoint wrote a log
+  // line saying nothing had gone wrong nowhere.
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
     return new Response(null, { status: 400 });
   }
 
   const payload = body as Record<string, unknown>;
   const report = {
-    boundary: clip(payload.boundary, LIMITS.boundary) || "unknown",
+    boundary: clip(payload.boundary, LIMITS.boundary),
     digest: clip(payload.digest, LIMITS.digest),
     message: clip(payload.message, LIMITS.message),
     url: clip(payload.url, LIMITS.url),
@@ -60,8 +63,15 @@ export async function POST(request: Request) {
     userAgent: clip(head.get("user-agent"), 200),
   };
 
+  // Something has to identify the failure. A boundary name alone is enough —
+  // "the wall planner threw" is worth knowing — but a body with none of these is
+  // noise, and logging noise makes the real reports harder to find.
+  if (!report.boundary && !report.digest && !report.message && !report.stack) {
+    return new Response(null, { status: 400 });
+  }
+
   console.error(
-    `[client-error] boundary=${report.boundary} digest=${report.digest || "none"} ` +
+    `[client-error] boundary=${report.boundary || "unknown"} digest=${report.digest || "none"} ` +
       `url=${report.url}\n  ${report.message}\n  ua=${report.userAgent}` +
       (report.stack ? `\n  ${report.stack}` : ""),
   );

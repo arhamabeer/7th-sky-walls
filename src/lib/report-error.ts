@@ -6,6 +6,22 @@
  * that is already showing one. `keepalive` matters because the most interesting
  * failures are the ones where the visitor immediately leaves.
  */
+/**
+ * The path plus the *names* of any query parameters, and none of their values.
+ *
+ * The whole search string used to go into the report, which quietly broke this
+ * module's own promise to collect no form contents: a configurator link carries
+ * the visitor's own wording in `?text=`, and an inquiry link carries their
+ * configuration. The names are what the diagnosis actually needs — "this throws
+ * when `text` is present" — and the values add nothing a stack trace does not.
+ */
+function reportableUrl(): string {
+  const keys = [...new URLSearchParams(window.location.search).keys()].sort();
+  return keys.length
+    ? `${window.location.pathname}?${keys.join("&")}`
+    : window.location.pathname;
+}
+
 export function reportError(
   boundary: string,
   error: Error & { digest?: string },
@@ -16,7 +32,7 @@ export function reportError(
       boundary,
       digest: error.digest ?? "",
       message: String(error.message ?? error),
-      url: window.location.pathname + window.location.search,
+      url: reportableUrl(),
       stack: error.stack ?? "",
     });
     void fetch("/api/report", {
