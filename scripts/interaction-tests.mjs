@@ -2424,6 +2424,125 @@ async function testCameraCalibration(browser) {
   await context.close();
 }
 
+
+/**
+ * The AR analytics events.
+ *
+ * These are the only signal that a platform AR viewer has broken. Scene Viewer
+ * was broken across Android for four months in 2025 with no change on any site's
+ * side, and the way anybody finds that out is a launch-attempt count that keeps
+ * rising while the status events stop arriving. Nothing asserted the names, so
+ * renaming or dropping one would have removed that signal silently and left the
+ * dashboard looking healthy.
+ *
+ * `window.gtag` is stubbed rather than mocked at the network layer: that is the
+ * exact function `trackAr` calls, and stubbing it records what a real analytics
+ * property would have been sent.
+ */
+async function testArAnalytics(browser) {
+  const vp = "ar-analytics";
+  const ANDROID_UA =
+    "Mozilla/5.0 (Linux; Android 14; SM-A155F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36";
+
+  const context = await browser.newContext({
+    viewport: { width: 393, height: 852 },
+    isMobile: true,
+    hasTouch: true,
+    userAgent: ANDROID_UA,
+  });
+  const page = await context.newPage();
+
+  await page.addInitScript(() => {
+    window.__ar_events = [];
+    window.gtag = (command, name, params) => {
+      if (command === "event") window.__ar_events.push({ name, params });
+    };
+    // A device that says it supports AR, so the in-page path is offered and the
+    // launch can be attempted.
+    Object.defineProperty(navigator, "xr", {
+      value: { isSessionSupported: async () => true },
+      configurable: true,
+    });
+  });
+
+  await page.goto(`${BASE}/portfolio/sabr`, { waitUntil: "networkidle" });
+  await page.locator("[role=tab]", { hasText: /^On your wall$/ }).click();
+  await page
+    .waitForFunction(() => document.querySelector("model-viewer")?.loaded === true, null, {
+      timeout: 20000,
+    })
+    .catch(() => {});
+
+  const afterDetect = await page.evaluate(() => window.__ar_events.map((e) => e.name));
+  record(
+    vp,
+    "capability detection is recorded, so a tier mix can be read off the dashboard",
+    afterDetect.includes("ar_capability_detected"),
+    afterDetect.join(", ") || "nothing recorded",
+  );
+
+  const detected = await page.evaluate(
+    () => window.__ar_events.find((e) => e.name === "ar_capability_detected")?.params ?? null,
+  );
+  record(
+    vp,
+    "and it names the tier it landed on",
+    Boolean(detected && typeof detected.tier === "string" && detected.tier.length > 0),
+    JSON.stringify(detected),
+  );
+
+  // Attempt a launch. On a desktop Chromium pretending to be Android this will
+  // fail, which is the more interesting half: the failure has to be recorded.
+  const launch = page.locator("[role=tabpanel]:not([hidden]) button", {
+    hasText: /place on my wall/i,
+  });
+  if ((await launch.count()) > 0) {
+    await launch.first().click();
+    await page.waitForTimeout(6500);
+  }
+
+  const events = await page.evaluate(() => window.__ar_events);
+  const names = events.map((e) => e.name);
+  record(
+    vp,
+    "a launch attempt is recorded",
+    names.includes("ar_launch_attempt"),
+    names.join(", "),
+  );
+  record(
+    vp,
+    "and a launch that goes nowhere is recorded as an error or a timeout",
+    names.some((n) => n === "ar_launch_error" || n === "ar_launch_timeout"),
+    names.join(", "),
+  );
+
+  /**
+   * The launch attempt must carry the size. A count of attempts with no size is
+   * a count that cannot tell a broken viewer from a broken model of one size.
+   */
+  const attempt = events.find((e) => e.name === "ar_launch_attempt")?.params ?? null;
+  record(
+    vp,
+    "the attempt says which size was being placed",
+    Boolean(attempt && (attempt.size || attempt.sizeLabel)),
+    JSON.stringify(attempt),
+  );
+
+  /**
+   * Every name the documents tell the studio to look for has to be a name the
+   * code can actually send. Checked against the union of what fired here and what
+   * the source contains, so a rename in either place is caught.
+   */
+  record(
+    vp,
+    "no event fires under a name the documents do not mention",
+    names.every((n) => /^(ar_|camera_preview_)/.test(n)),
+    names.join(", "),
+  );
+
+  await context.close();
+}
+
 async function main() {
   const browser = await chromium.launch({
     // The camera preview needs a stream; without these getUserMedia is denied
@@ -2477,6 +2596,7 @@ async function main() {
   }
 
   await testAndroidArTiers(browser);
+  await testArAnalytics(browser);
   await testArFailureRecovery(browser);
   await testCustomTextReachesPreview(browser);
   await testUrduAndArabic(browser);

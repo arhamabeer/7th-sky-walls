@@ -1,12 +1,24 @@
 # Queued questions
 
-Decisions needing the project owner. Raised while working autonomously —
-nothing here blocked progress, because a sensible default was chosen and is
-noted for each.
+Decisions needing the project owner. Raised while working autonomously — nothing
+here blocked progress, because a sensible default was chosen and is noted for
+each.
 
-All nine queued questions were answered on 2026-08-25. What is left is not a
-decision but material: the repo URL, the real business details, and the email
-credentials, each noted below with who does what.
+## Waiting on you
+
+Scan this list; everything below it is already settled and kept for the record.
+
+| # | What | Why it needs you |
+| --- | --- | --- |
+| [7b](#7b-are-printed-wall-coverings-still-a-service--claim-removed-needs-a-yes-or-no) | Are printed wall coverings still a service? | The claim is removed rather than corrected, because correcting it would mean inventing a spec and a fire rating. If you do offer them they need a `materials.json` entry like every other material. |
+| [7a](#7a-materials-and-lead-times--researched-fire-behaviour-added) | Stocked thicknesses, and lead times | The material science is researched and stands on its own. The thicknesses actually stocked, and whether five working days to concept and three to six weeks to install survive fabrication rather than printing, are yours. |
+| [1](#1-real-business-details--the-studio-will-edit-them-directly) | The real business details | Every `TODO` in `src/config/site.config.ts` — domain, legal name, address, coordinates, phone, WhatsApp, inquiry email, socials, founding year. These reach canonical URLs, structured data and the sitemap. |
+| [3](#3-email-delivery--direct-channels-now-resend-before-production) | `RESEND_API_KEY` | Until it is set the form refuses to claim success and hands the visitor a prefilled WhatsApp or email message instead. That is honest, not delivery. |
+| [8](#8-case-studies--keep-the-placeholders-keep-the-label) | Real project stories and photography | The case studies say plainly that they are examples until then. |
+| — | An iPhone | The only thing [the AR checklist](AR-DEVICE-QA.md) cannot be run without, and the one deciding whether the iOS half of Phase 10 goes ahead. |
+
+Nothing in that list blocks anything else; each has a working default in place
+and the code says which.
 
 ## Answered — scope
 
