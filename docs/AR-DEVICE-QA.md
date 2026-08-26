@@ -108,10 +108,27 @@ which is pre-built, and the panel says so.
   usable and the AR button should still work.
 - **Repeat launches.** Launch AR, return, change size, launch again. The second
   launch must show the new size.
-- **Analytics.** Confirm `ar_launch_attempt`, `ar_status` and, where relevant,
-  `ar_launch_unavailable` events reach the analytics property. These are the
-  only signal that a platform viewer has broken — Scene Viewer was broken
+- **Analytics.** Confirm the AR events reach the analytics property. These are
+  the only signal that a platform viewer has broken — Scene Viewer was broken
   platform-wide for four months in 2025 with no change on any site's side.
+
+  | Event | What it tells you |
+  | --- | --- |
+  | `ar_capability_detected` | Which tier each visitor landed on, with the tier name. The mix is how you know what your traffic can actually do. |
+  | `ar_launch_attempt` | Somebody pressed the button, and at which size. |
+  | `ar_status` | model-viewer's own session status. |
+  | `ar_launch_error` | The launch threw. |
+  | `ar_launch_timeout` | The launch neither started nor threw within five seconds — the shape a broken platform viewer takes. |
+  | `ar_launch_unavailable` | The device could not offer AR at all. |
+  | `camera_preview_request` / `_started` / `_failed` / `_frozen` / `_calibrated` | The fallback tier, including how many people calibrate for true size. |
+
+  **The pair to watch is `ar_launch_attempt` against `ar_status`.** Attempts
+  rising while statuses stop arriving is what a platform-wide breakage looks
+  like from here; neither number alone shows it.
+
+  `npm run test:interaction` asserts these names fire, because a rename would
+  remove the signal while leaving the dashboard looking healthy — the failure
+  this list exists to catch.
 
 ## If orientation is wrong on iOS
 
