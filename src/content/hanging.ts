@@ -21,3 +21,28 @@ export const EYE_LEVEL_CM = 145;
 
 /** The same height in metres, to two places, for prose and for drawings. */
 export const EYE_LEVEL_M = (EYE_LEVEL_CM / 100).toFixed(2);
+
+/**
+ * Gap between pieces in an arrangement, in centimetres.
+ *
+ * 10-15cm is the working range: closer and separate pieces start reading as one
+ * crowded block, wider and the arrangement stops holding together. 12 is the
+ * middle of it. Here rather than in the planner's layout module because the
+ * planner's advice quotes the number, and the two had no way of staying in step.
+ */
+export const PIECE_GAP_CM = 12;
+
+/**
+ * How much of a wall an arrangement can take before it starts to lose its
+ * impact.
+ *
+ * Two thirds. The planner's notes said so and the planner itself said nothing
+ * until 85%, so an arrangement covering 80% of a wall was described as a mistake
+ * by the advice beside it and accepted in silence by the tool. Both read this
+ * now, and the planner warns at the figure it actually recommends — gently at
+ * this share, firmly when the clear wall runs out.
+ */
+export const COMFORTABLE_WALL_SHARE = 2 / 3;
+
+/** The same share as a whole-number percentage, for prose. */
+export const COMFORTABLE_WALL_PERCENT = Math.round(COMFORTABLE_WALL_SHARE * 100);
