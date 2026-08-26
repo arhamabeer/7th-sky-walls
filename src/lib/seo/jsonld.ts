@@ -86,7 +86,11 @@ export function visualArtworkJsonLd(artwork: Artwork): WithContext<VisualArtwork
     },
     artform: "Wall art",
     artMedium: artwork.materials.join(", "),
-    artworkSurface: "Canvas / fine-art paper",
+    // No artworkSurface. It said "Canvas / fine-art paper", left over from the
+    // previous product category, which the visible page has contradicted since
+    // the catalogue was rebuilt as cut lettering. These pieces mount to the wall
+    // itself, so there is no supporting sheet to name, and an absent optional
+    // property beats a false one.
     width: `${dims.widthCm} cm`,
     height: `${dims.heightCm} cm`,
     dateCreated: String(artwork.year),

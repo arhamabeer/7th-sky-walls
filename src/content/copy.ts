@@ -234,7 +234,7 @@ export const copy = {
     process: [
       { step: "Consult", text: "We visit or video-call, measure your walls and understand the mood you're after." },
       { step: "Design", text: "You receive digital mockups of the art in your actual space before anything is produced." },
-      { step: "Produce", text: "Printed and finished in-house on archival materials, built for commercial durability." },
+      { step: "Produce", text: "Cut, routed and finished in-house on commercial-grade materials, built to last a decade indoors." },
       { step: "Install", text: "Our team delivers and installs — leveled, secured and spotless." },
     ],
   },
