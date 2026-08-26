@@ -432,6 +432,39 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### Five pieces were overruled about their own mounting — 2026-08-26
+
+`defaultMountFor` infers a mounting from a piece's material, which is the right
+behaviour for a piece that does not say. Five of the twenty-eight did say, and the
+inference ran first anyway.
+
+Three MDF pieces asked for a backer panel; MDF matches none of the material
+regexes, so they fell through to the `MOUNTS[1]` default — a 12mm standoff. Two
+mirror pieces asked to sit flush, and `/acrylic/i` matched "Mirror acrylic" and
+gave them a 12mm standoff too.
+
+The consequence lands on the document a client forwards for sign-off: the printed
+specification named the backer panel on its material row and a 12mm standoff on
+its mounting row, two lines apart. On screen, a piece specified flush was
+previewed with a 12mm shadow.
+
+What a piece says now wins over what its material implies, and two build-time
+checks in the content layer keep the two from separating again:
+
+- Every material string an artwork names must exist in `materials.json`. Nothing
+  enforced that, and a mismatch does not fail loudly — it silently prints a
+  specification with no material spec and no fire behaviour on it, which is the
+  one column that page exists for.
+- Every piece that names a mounting must resolve to it. Restoring the
+  inference-first behaviour fails the build naming the piece and both numbers,
+  which is how both checks were confirmed to be load-bearing.
+
+Also here: the About page hardcoded "Founded 2024" while `site.config` holds
+`foundingYear`, which is what the LocalBusiness structured data reads. They agree
+today — but the launch checklist asks the studio to set the real year in the
+config, so the page would have gone on telling visitors 2024 while telling search
+engines something else. It reads the config now.
+
 ### One hanging height, not three — 2026-08-26
 
 The planner advises where the centre of an arrangement sits, the specification
