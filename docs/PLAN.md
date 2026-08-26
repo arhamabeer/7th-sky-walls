@@ -432,6 +432,54 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### Thirty-one per cent of the template's sheets were blank — 2026-08-27
+
+Noted as a follow-up when the printable templates landed, then measured, and the
+measurement was worse than the guess.
+
+A piece is cut letters on a bare wall, so a short word in the middle of a large
+rectangle leaves big empty margins — and tiling the rectangle printed those
+margins as blank sheets. Across every piece and every size: **933 of 2,982 tiled
+sheets had no ink on them at all, 31%.** The worst case was Name in Gold at Large,
+29 blank out of 35: somebody feeding thirty-five sheets through a printer for six
+sheets of content.
+
+`npm run generate:placeholders` now measures each piece's ink bounding box from
+its alpha channel while the pixels are already in hand, and writes it to
+`src/content/ink-bounds.json` beside the blur map. `tiles()` returns only the
+tiles that overlap that box, plus a count of what it left out.
+
+| Piece at Large | Was | Now |
+| --- | --- | --- |
+| Name in Gold | 35 | 6 |
+| Bismillah | 35 | 12 |
+| Sabr | 25 | 10 |
+| Lobby Wordmark | 40 | 20 |
+| Growth Arrow | 25 | 25 |
+
+Growth Arrow is the control: its ink fills its rectangle, so nothing is dropped.
+
+Details that make it safe rather than clever:
+
+- **Alpha above 8, not above 0.** The generators antialias, and one pixel at
+  1/255 opacity would stretch the box to the full canvas and make the whole
+  measurement silently useless.
+- **Overlap, not containment.** A tile catching any part of the inked area is
+  printed.
+- **No ink means print everything.** A piece with no ink cannot happen, but the
+  wrong way to fail is a template missing part of the artwork.
+- **Sheets are numbered by printed position**, because that is the number you can
+  count off the stack coming out of the printer, while the row and column say
+  where each one goes. The first sheet also states how many were omitted.
+
+The check that matters is not the saving but the honesty of the count: it is the
+number of sheets somebody is about to feed through a printer. Computing it twice
+is how it disagrees with itself, and that happened during the build — the chip
+advertised the unfiltered grid while the button beside it printed the filtered
+set. `check:print` now asserts that the advertised count is the printed count, and
+that printed plus omitted accounts for the whole grid. Reverting the filter fails
+it with all three numbers: "the button advertises 35 sheets but 6 render".
+
 ### The planner did not follow its own advice — 2026-08-27
 
 The planner prints three rules beside itself. Two it kept and one it ignored.

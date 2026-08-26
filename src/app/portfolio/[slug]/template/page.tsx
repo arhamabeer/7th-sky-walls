@@ -10,6 +10,7 @@ import {
   getArtworks,
   getCollectionById,
   getMaterials,
+  getInkBounds,
   getSizeDimensions,
   getVenueById,
 } from "@/lib/content";
@@ -22,6 +23,7 @@ import {
   isPrintMode,
   sheetCount,
   tileLayout,
+  tiles,
   type PrintMode,
 } from "@/lib/print/sheets";
 import { sheetCss, sheetMetrics } from "@/components/print/sheet";
@@ -103,7 +105,21 @@ export default async function TemplatePage({
   // fewer sheets.
   const orientation = mode === "spec" ? "portrait" : layout.orientation;
   const metrics = sheetMetrics(paper, orientation);
-  const sheets = sheetCount(mode, layout);
+  /**
+   * Which tiles are worth printing, and how many are not.
+   *
+   * Computed once here so the count on the button, the count in the labels and
+   * the sheets that actually render all come from the same call — the sheet count
+   * is the number somebody is about to feed through a printer, and it has to be
+   * the truth.
+   */
+  const tiled = tiles(
+    layout,
+    dims.widthCm * 10,
+    dims.heightCm * 10,
+    getInkBounds(artwork.slug),
+  );
+  const sheets = sheetCount(mode, layout, tiled);
 
   const materials = getMaterials();
   const pieceMaterials = artwork.materials.map((name) => {
@@ -150,14 +166,26 @@ export default async function TemplatePage({
                 </legend>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {PRINT_MODES.map((m) => {
+                    // Each mode's own layout, and for the tiled one its own blank-tile
+                    // filter — otherwise the chip advertises the unfiltered count while
+                    // the button beside it prints the filtered one.
+                    const modeLayout = tileLayout(
+                      dims.widthCm * 10,
+                      dims.heightCm * 10,
+                      paper,
+                      m === "full" ? LABEL_STRIP_MM : 0,
+                    );
                     const count = sheetCount(
                       m,
-                      tileLayout(
-                        dims.widthCm * 10,
-                        dims.heightCm * 10,
-                        paper,
-                        m === "full" ? LABEL_STRIP_MM : 0,
-                      ),
+                      modeLayout,
+                      m === "full"
+                        ? tiles(
+                            modeLayout,
+                            dims.widthCm * 10,
+                            dims.heightCm * 10,
+                            getInkBounds(artwork.slug),
+                          )
+                        : undefined,
                     );
                     return (
                       <Chip key={m} href={href({ mode: m })} active={m === mode} ariaCurrent>
@@ -308,6 +336,8 @@ export default async function TemplatePage({
             heightCm={dims.heightCm}
             imageSrc={artwork.image.src}
             studioName={site.name}
+            printed={tiled.printed}
+            skipped={tiled.skipped}
           />
         )}
       </div>

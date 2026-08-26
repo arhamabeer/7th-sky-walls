@@ -1,5 +1,5 @@
 import { CalibrationRuler, type SheetMetrics } from "@/components/print/sheet";
-import { LABEL_STRIP_MM, tiles, type TileLayout } from "@/lib/print/sheets";
+import { LABEL_STRIP_MM, type Tile, type TileLayout } from "@/lib/print/sheets";
 import { copy } from "@/content/copy";
 
 /**
@@ -32,6 +32,10 @@ export interface TiledSheetsProps {
   heightCm: number;
   imageSrc: string;
   studioName: string;
+  /** The tiles worth printing, chosen by the caller so the button count agrees. */
+  printed: Tile[];
+  /** How many blank tiles were left out, stated on the first sheet. */
+  skipped: number;
 }
 
 export function TiledSheets({
@@ -43,15 +47,17 @@ export function TiledSheets({
   heightCm,
   imageSrc,
   studioName,
+  printed,
+  skipped,
 }: TiledSheetsProps) {
-  const all = tiles(layout);
+  const all = printed;
   // Percentages of the sheet's printable area, which is what .tpl-inset is.
   const windowHeightPct = (layout.windowHeightMm / metrics.tileHeightMm) * 100;
   const stripHeightPct = (LABEL_STRIP_MM / metrics.tileHeightMm) * 100;
 
   return (
     <>
-      {all.map((tile) => (
+      {all.map((tile, n) => (
         <section key={tile.index} className="tpl-sheet">
           <div className="tpl-inset">
             <div
@@ -94,13 +100,19 @@ export function TiledSheets({
               style={{ height: `${stripHeightPct.toFixed(4)}%` }}
             >
               <div className="min-w-0 text-[0.85em] leading-tight text-black/70">
+                {/* Numbered by printed position, not by position in the grid.
+                    With blank tiles left out the two diverge, and the number that
+                    helps is the one you can count off the stack coming out of the
+                    printer. The row and column say where each sheet goes, so the
+                    arrangement stays unambiguous either way. */}
                 <p className="font-semibold text-black/85">
                   Row {tile.row + 1} of {layout.rows} · Column {tile.col + 1} of{" "}
-                  {layout.cols} · sheet {tile.index + 1} of {all.length}
+                  {layout.cols} · sheet {n + 1} of {all.length}
                 </p>
                 <p className="truncate">
                   {title} — {sizeLabel}, {widthCm} × {heightCm} cm · {studioName}
-                  {tile.index === 0 && ` · ${copy.template.trimNote}`}
+                  {n === 0 && ` · ${copy.template.trimNote}`}
+                  {n === 0 && skipped > 0 && ` · ${skipped} blank sheets omitted`}
                 </p>
               </div>
               <CalibrationRuler />
@@ -117,7 +129,7 @@ export function TiledSheets({
  * on the edges where the piece simply ends. Cutting an outer edge would be
  * cutting away wall, so it should not be marked as a cut.
  */
-function TrimMarks({ tile }: { tile: ReturnType<typeof tiles>[number] }) {
+function TrimMarks({ tile }: { tile: Tile }) {
   const dash = "border-black/45";
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0">

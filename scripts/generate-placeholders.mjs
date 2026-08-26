@@ -265,6 +265,59 @@ function svgOpen(w, h) {
  * Note: text is rasterised with the host's system fonts, so cards should be
  * regenerated on one machine and committed rather than built per environment.
  */
+/**
+ * The rectangle of the image that actually carries ink, as fractions of it.
+ *
+ * These are cut letters on a transparent ground, so a piece with a short word in
+ * the middle leaves large empty margins — and the printable true-size template
+ * tiles the whole rectangle, blank margins included. Measured across every piece
+ * and size, 31% of those sheets have no ink on them at all, and the worst case is
+ * Name in Gold at Large: 29 blank sheets out of 35. Somebody was feeding 35
+ * sheets through a printer for six sheets of content.
+ *
+ * Measured here because the pixels are already in hand, and stored rather than
+ * recomputed because reading a 1500x2000 alpha channel is not something to do
+ * while rendering a page.
+ *
+ * Alpha above 8 rather than above 0: the generators antialias, and a stray pixel
+ * at 1/255 opacity is not ink, but it would stretch the box to the full canvas
+ * and quietly make the whole measurement useless.
+ */
+async function measureInkBounds(buffer) {
+  const { data, info } = await sharp(buffer)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  let minX = info.width;
+  let minY = info.height;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let y = 0; y < info.height; y += 1) {
+    const row = y * info.width;
+    for (let x = 0; x < info.width; x += 1) {
+      if (data[(row + x) * info.channels + 3] <= 8) continue;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+
+  // A piece with no ink at all cannot happen, but returning the full rectangle
+  // is the safe answer if it ever does: it prints everything rather than nothing.
+  if (maxX < 0) return { left: 0, top: 0, right: 1, bottom: 1 };
+
+  const round = (n) => Math.round(n * 10000) / 10000;
+  return {
+    left: round(minX / info.width),
+    top: round(minY / info.height),
+    right: round((maxX + 1) / info.width),
+    bottom: round((maxY + 1) / info.height),
+  };
+}
+
 async function buildOgCard(art, collectionName, sourceFile, wall, outFile) {
   const W = 1200;
   const H = 630;
@@ -352,6 +405,7 @@ async function main() {
   await mkdir(OG_DIR, { recursive: true });
 
   const blur = {};
+  const inkBounds = {};
   let renamed = 0;
   /** Image hash to the piece that produced it, so a collision fails loudly. */
   const seenHashes = new Map();
@@ -417,6 +471,7 @@ async function main() {
     const onWall = await sharp(buffer).flatten({ background: wall });
     const tiny = await onWall.clone().resize(20).jpeg({ quality: 40 }).toBuffer();
     blur[art.slug] = `data:image/jpeg;base64,${tiny.toString("base64")}`;
+    inkBounds[art.slug] = await measureInkBounds(buffer);
 
     await buildOgCard(
       art,
@@ -432,6 +487,11 @@ async function main() {
   await writeFile(
     path.join(ROOT, "src", "content", "blur.json"),
     JSON.stringify(blur, null, 2) + "\n",
+  );
+
+  await writeFile(
+    path.join(ROOT, "src", "content", "ink-bounds.json"),
+    JSON.stringify(inkBounds, null, 2) + "\n",
   );
 
   // artworks.json is the source of truth for every consumer, so the new URLs

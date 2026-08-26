@@ -1,0 +1,170 @@
+{
+  "idea-bulb": {
+    "left": 0.1907,
+    "top": 0.0555,
+    "right": 0.8327,
+    "bottom": 0.9135
+  },
+  "growth-arrow": {
+    "left": 0.1647,
+    "top": 0.0565,
+    "right": 0.866,
+    "bottom": 0.9135
+  },
+  "collective": {
+    "left": 0.2572,
+    "top": 0.0561,
+    "right": 0.7694,
+    "bottom": 0.92
+  },
+  "deep-work": {
+    "left": 0.1673,
+    "top": 0.055,
+    "right": 0.8693,
+    "bottom": 0.9135
+  },
+  "outside-the-box": {
+    "left": 0.074,
+    "top": 0.0685,
+    "right": 0.816,
+    "bottom": 1
+  },
+  "begin-anyway": {
+    "left": 0.0807,
+    "top": 0.067,
+    "right": 0.9347,
+    "bottom": 0.333
+  },
+  "ship-then-fix": {
+    "left": 0.0825,
+    "top": 0.0647,
+    "right": 0.9345,
+    "bottom": 0.8067
+  },
+  "ask-better-questions": {
+    "left": 0.0808,
+    "top": 0.062,
+    "right": 0.9308,
+    "bottom": 0.791
+  },
+  "bright-ideas": {
+    "left": 0.015,
+    "top": 0,
+    "right": 0.998,
+    "bottom": 0.8453
+  },
+  "hanging-goals": {
+    "left": 0.0104,
+    "top": 0,
+    "right": 1,
+    "bottom": 0.931
+  },
+  "lit": {
+    "left": 0.015,
+    "top": 0,
+    "right": 0.998,
+    "bottom": 0.8453
+  },
+  "six-questions": {
+    "left": 0.0104,
+    "top": 0,
+    "right": 1,
+    "bottom": 0.931
+  },
+  "house-rules": {
+    "left": 0.0813,
+    "top": 0.1075,
+    "right": 0.9427,
+    "bottom": 0.883
+  },
+  "what-we-stand-for": {
+    "left": 0.082,
+    "top": 0.1075,
+    "right": 0.9453,
+    "bottom": 0.8855
+  },
+  "team-charter": {
+    "left": 0.0813,
+    "top": 0.1075,
+    "right": 0.9453,
+    "bottom": 0.8855
+  },
+  "how-we-work": {
+    "left": 0.081,
+    "top": 0.1073,
+    "right": 0.946,
+    "bottom": 0.8973
+  },
+  "sabr": {
+    "left": 0.0747,
+    "top": 0.321,
+    "right": 0.95,
+    "bottom": 0.644
+  },
+  "bismillah": {
+    "left": 0.0806,
+    "top": 0.3817,
+    "right": 0.9439,
+    "bottom": 0.6072
+  },
+  "shukr": {
+    "left": 0.0773,
+    "top": 0.36,
+    "right": 0.9473,
+    "bottom": 0.6165
+  },
+  "alhamdulillah": {
+    "left": 0.0824,
+    "top": 0.303,
+    "right": 0.942,
+    "bottom": 0.7
+  },
+  "reception-mark": {
+    "left": 0.101,
+    "top": 0.15,
+    "right": 0.9305,
+    "bottom": 0.728
+  },
+  "lobby-wordmark": {
+    "left": 0.266,
+    "top": 0.15,
+    "right": 0.7624,
+    "bottom": 0.748
+  },
+  "entrance-mark": {
+    "left": 0.0772,
+    "top": 0.15,
+    "right": 0.955,
+    "bottom": 0.7222
+  },
+  "meeting-room-front": {
+    "left": 0.0745,
+    "top": 0.15,
+    "right": 0.9535,
+    "bottom": 0.728
+  },
+  "hexagon-set": {
+    "left": 0.097,
+    "top": 0.13,
+    "right": 0.9245,
+    "bottom": 0.848
+  },
+  "ring-set": {
+    "left": 0.1365,
+    "top": 0.12,
+    "right": 0.886,
+    "bottom": 0.858
+  },
+  "facet-border": {
+    "left": 0.0968,
+    "top": 0.177,
+    "right": 0.9768,
+    "bottom": 0.779
+  },
+  "name-in-gold": {
+    "left": 0.1328,
+    "top": 0.4433,
+    "right": 0.8889,
+    "bottom": 0.58
+  }
+}
