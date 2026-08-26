@@ -432,6 +432,31 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The camera preview's scale was never checked — 2026-08-27
+
+The camera overlay is the AR tier every device can reach, and its whole claim is
+true size: the visitor stretches a dashed guide to match a real sheet of paper
+held against the wall, that gives pixels per centimetre, and the piece is drawn
+at its real dimensions in those pixels.
+
+Nothing checked the number. The existing camera checks cover that the overlay
+opens, traps page scroll, and says plainly that it is not tracked AR — all of
+which stays true while the piece is drawn at the wrong size, which is the one
+thing that panel exists to get right.
+
+Four checks now, and they are exact rather than approximate because the
+arithmetic is: a 210px guide across a 21cm A4 sheet is 10 pixels per centimetre,
+so a 90cm piece is 900px. They also assert that the piece is described as
+"approximate" *before* calibration rather than claiming a scale it does not have,
+that the label names the sheet it was calibrated against, and that choosing US
+Letter uses 21.6cm rather than A4's 21 — a 3% error is 2.6cm on a 90cm piece, and
+a sheet chooser that does not change the result is decoration.
+
+Confirmed by breaking it: calibrating against the sheet's *height* instead of its
+width — a slip that renders perfectly and looks plausible — draws the piece at
+636px instead of 900px, 29% small, and two of the four checks fail with both
+numbers in the message.
+
 ### Share cards, duplicate pieces, and an AR pipeline that could not be trusted — 2026-08-26
 
 Four defects found by looking at the share cards, which nothing had checked since
