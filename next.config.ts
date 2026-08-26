@@ -19,9 +19,18 @@ const nextConfig: NextConfig = {
      * Comparing whole frames instead reports a difference of 65-85, which is the
      * arbitrary RGB underneath transparent pixels and means nothing.
      *
-     * The cost is encode latency on the first request for each image and width:
-     * 0.5-2.1s, then cached. Browsers without AVIF fall through to WebP exactly
-     * as before.
+     * The cost is encode latency on the first request for each image and width.
+     * Measured against the deployment rather than guessed: a cold variant takes
+     * 0.87-1.6s end to end where a warm one takes 0.39s, so the encode adds
+     * roughly half a second to a second — once per variant per region, paid by
+     * whoever arrives first. Against that, every visitor after them gets about
+     * 40% of the WebP bytes: /portfolio went from 444KB of images to 215KB, which
+     * is a second of transfer saved on a 1.6Mbps connection, every visit.
+     *
+     * A per-visit saving against a once-per-region cost is worth taking. If field
+     * data ever says otherwise, removing this key is the whole revert.
+     *
+     * Browsers without AVIF fall through to WebP exactly as before.
      */
     formats: ["image/avif", "image/webp"],
   },

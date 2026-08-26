@@ -305,7 +305,25 @@ async function testArtworkPage(page, vp) {
   await page.locator("[role=tab]", { hasText: /^Artwork$/ }).click();
   await page.waitForTimeout(150);
   await page.locator("main button[aria-label*='full screen']").click();
-  await page.waitForTimeout(250);
+  /**
+   * Wait for the image to have a size rather than for a fixed 250ms.
+   *
+   * The ratio assertion below divides by the measured height, so an image
+   * measured before layout reports 0 and the check fails with "ratio 0" — which
+   * says nothing about the ratio. It only appeared on a loaded machine, which is
+   * exactly when a timing assumption breaks and exactly when it is least useful
+   * to be told a number that is really "not measured yet".
+   */
+  await page
+    .waitForFunction(
+      () => {
+        const img = document.querySelector("[role=dialog] img");
+        return Boolean(img && img.getBoundingClientRect().height > 0);
+      },
+      undefined,
+      { timeout: 10000 },
+    )
+    .catch(() => {});
   const opened = await page.evaluate(() => {
     const d = document.querySelector("[role=dialog]");
     const img = d?.querySelector("img");

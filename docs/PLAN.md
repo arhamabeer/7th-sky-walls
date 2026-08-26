@@ -432,6 +432,46 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### What AVIF actually cost, and what the audit was really waiting for — 2026-08-27
+
+Enabling AVIF broke the responsive audit, and chasing that turned up a real cost
+that had been guessed at rather than measured, plus two bugs in the audit itself.
+
+**The cost, measured against the deployment.** A cold AVIF variant on production
+takes 0.87-1.6s end to end where a warm one takes 0.39s, so the encode adds
+roughly half a second to a second — once per variant per region, paid by whoever
+arrives first. Against that, everyone after them gets about 40% of the WebP bytes:
+`/portfolio` went from 444KB of images to 215KB, a second of transfer saved on a
+1.6Mbps connection, on every visit. A per-visit saving against a
+once-per-region cost is worth taking, and the numbers are now in `next.config.ts`
+so the decision can be re-examined rather than re-argued.
+
+**Why it broke the audit.** Locally the optimizer encodes in-process and does not
+parallelise: a cold AVIF at 1080px takes about a second, and a page with thirteen
+pieces kept the network busy past `networkidle`'s patience. The audit failed with
+a navigation timeout on a page that curl serves in 35 milliseconds.
+
+Three things came out of fixing it, and two of them were my own mistakes:
+
+1. **`networkidle` was the wrong wait.** It waits for the network to go quiet,
+   and this audit measures layout. Playwright's own documentation advises against
+   it. Now `load`, which does not care how long an image optimizer takes.
+2. **Waiting for every image to be `complete` straight after navigation was
+   worse.** A lazy image below the fold is never complete until something scrolls
+   to it, so that waited out the full timeout on every page — twenty pages times
+   thirty-one viewports of it. The wait belongs after the scroll pass, which is
+   the first moment at which it is a reasonable thing to ask.
+3. **Warming the image cache first cost more than it saved.** 280 variants at
+   concurrency six took 5.6 minutes, and then Chromium crashed under the load.
+   Removed.
+
+What worked instead: the audit asks the optimizer for WebP. Not a shortcut around
+production — a separation of concerns. It measures overflow, touch targets,
+contrast, heading order and whether artwork sits in a shadowed box, none of which
+depends on the codec, and its image checks read widths and URLs rather than
+pixels. AVIF is verified on its own terms: alpha and fidelity against the encoder
+directly, and the format actually served against the deployment.
+
 ### Thirty-one per cent of the template's sheets were blank — 2026-08-27
 
 Noted as a follow-up when the printable templates landed, then measured, and the

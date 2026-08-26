@@ -371,6 +371,32 @@ async function main() {
         : undefined,
     });
     const page = await context.newPage();
+
+    /**
+     * Ask the image optimizer for WebP rather than AVIF.
+     *
+     * Not a shortcut around what production serves — a deliberate separation of
+     * concerns. This audit measures layout: overflow, touch targets, contrast,
+     * heading order, whether an artwork sits in a shadowed box. None of that
+     * depends on the codec, and the image checks read widths and URLs rather than
+     * pixels.
+     *
+     * What the codec does change is time. Next encodes on first request, and a
+     * cold AVIF variant takes about a second locally against roughly a third of
+     * that for WebP. Twenty pages across thirty-one viewports on a cold cache
+     * turned a four-minute run into one that stalled a navigation past its
+     * timeout, and warming the cache first cost 5.6 minutes to avoid it — slower
+     * than the problem.
+     *
+     * AVIF is covered on its own terms instead: `check:ar`-style assertions on
+     * alpha and fidelity were made against the encoder directly, and the format
+     * actually served is verified against the deployment.
+     */
+    await page.route("**/_next/image**", (route) => {
+      const headers = { ...route.request().headers() };
+      headers.accept = "image/webp,image/*,*/*;q=0.8";
+      route.continue({ headers });
+    });
     /**
      * Console errors are tagged with the page being loaded, so a page that is
      * *meant* to 404 does not report its own status as a broken resource while
@@ -398,8 +424,23 @@ async function main() {
     for (const pg of PAGES) {
       currentPage = pg.name;
       expectStatus = pg.expectStatus ?? 200;
+      /**
+       * `load`, then wait for the images explicitly — not `networkidle`.
+       *
+       * This audit measures layout, and `networkidle` measures the network: it
+       * waits for 500ms of quiet, so anything keeping the connection busy stalls
+       * it regardless of whether the page is laid out. Next's image optimizer
+       * encodes on first request, and a cold AVIF at 1080px takes up to a second;
+       * on a page with thirteen pieces the browser's parallel requests kept the
+       * network busy past the 45-second timeout, and the audit failed with a
+       * navigation error on a page that curl serves in 35 milliseconds.
+       *
+       * Playwright's own documentation advises against `networkidle` for exactly
+       * this. The checks need images measured, not the network silent, so that is
+       * what is waited for.
+       */
       const response = await page.goto(BASE + pg.path, {
-        waitUntil: "networkidle",
+        waitUntil: "load",
         timeout: 45000,
       });
       const status = response?.status() ?? 0;
@@ -423,6 +464,27 @@ async function main() {
       await page.waitForTimeout(350);
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.waitForTimeout(250);
+
+      /**
+       * Now that the scroll pass has triggered them, wait for the images.
+       *
+       * After the scroll, not before: a lazy image below the fold is never
+       * `complete` until something scrolls to it, so waiting for all of them
+       * straight after navigation timed out on every single page — twenty pages
+       * times thirty-one viewports of full timeouts. The checks below read image
+       * sources and geometry, so they need the images resolved, and this is the
+       * first moment at which that is a reasonable thing to ask for.
+       */
+      await page
+        .waitForFunction(
+          () => [...document.querySelectorAll("img")].every((i) => i.complete),
+          undefined,
+          { timeout: 15000 },
+        )
+        .catch(() => {
+          /* A stuck image is a finding for the checks below, not a reason to
+             abandon the viewport. */
+        });
 
       const result = await page.evaluate(PROBE);
       checks++;
