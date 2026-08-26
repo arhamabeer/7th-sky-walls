@@ -133,6 +133,11 @@ export const copy = {
     title: "Portfolio",
     subtitle: "Every piece is produced to order in your choice of size and finish.",
     filterAllLabel: "All spaces",
+    filterWordsLabel: "Filter by whether the piece takes your own words",
+    filterWords: "Your own words",
+    filterWordsOff:
+      "Most pieces can be reset with your wording — in Urdu, Arabic or Latin script.",
+    filterWordsOn: "Showing only pieces you can set in your own words.",
     emptyState: "No artworks match this filter yet — try another space.",
     breadcrumbRoot: "Portfolio",
   },

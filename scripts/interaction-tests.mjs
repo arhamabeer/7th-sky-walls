@@ -1057,6 +1057,62 @@ async function testPortfolioFiltering(page, vp) {
     [...document.querySelectorAll('main a[href^="/portfolio/"]')].every((a) => a.getAttribute("href")),
   );
   record(vp.name, "artwork cards are real anchors", hrefs);
+
+  /**
+   * The "your own words" filter.
+   *
+   * Seventeen of twenty-eight pieces can be reset with the customer's own
+   * wording, and that was discoverable only by opening a piece and finding a tab
+   * — the studio's clearest differentiator hidden behind a click. The filter has
+   * to narrow, compose with the others, and survive being turned off again.
+   */
+  const countCards = () =>
+    page.evaluate(
+      () =>
+        new Set(
+          [...document.querySelectorAll('main a[href^="/portfolio/"]')].map((a) =>
+            a.getAttribute("href"),
+          ),
+        ).size,
+    );
+
+  await page.goto(`${BASE}/portfolio`, { waitUntil: "networkidle" });
+  const all = await countCards();
+  await page.goto(`${BASE}/portfolio?words=yes`, { waitUntil: "networkidle" });
+  const words = await countCards();
+  record(
+    vp.name,
+    "the your-words filter narrows the grid",
+    words > 0 && words < all,
+    `${words} of ${all}`,
+  );
+
+  await page.goto(`${BASE}/portfolio?words=yes&collection=sacred-lines`, {
+    waitUntil: "networkidle",
+  });
+  const both = await countCards();
+  await page.goto(`${BASE}/portfolio?collection=sacred-lines`, { waitUntil: "networkidle" });
+  const collectionOnly = await countCards();
+  record(
+    vp.name,
+    "your-words composes with a collection rather than replacing it",
+    both > 0 && both <= collectionOnly && collectionOnly <= all,
+    `${both} customisable of ${collectionOnly} in the collection`,
+  );
+
+  // Pressing the chip again has to clear it, not deep-link into a state with no
+  // way out — the failure mode of a toggle rendered as a filter chip.
+  await page.goto(`${BASE}/portfolio?words=yes`, { waitUntil: "networkidle" });
+  const chip = page.locator('main a[aria-current="page"]', { hasText: "Your own words" });
+  record(vp.name, "the active filter is marked for assistive tech", (await chip.count()) > 0);
+  await chip.first().click();
+  await page.waitForURL((u) => !u.href.includes("words=yes"), { timeout: 5000 });
+  record(
+    vp.name,
+    "pressing it again clears the filter",
+    (await countCards()) === all,
+    page.url().replace(BASE, ""),
+  );
 }
 
 async function testGridReveals(page, vp) {

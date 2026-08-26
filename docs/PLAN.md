@@ -432,6 +432,29 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### The customisable pieces could not be browsed — 2026-08-26
+
+Seventeen of the twenty-eight pieces can be reset with the customer's own
+wording, in Urdu set in Nastaliq, Arabic set in Naskh or Latin. That is the
+studio's clearest differentiator in its own market, and there was no way to see
+which pieces had it: the capability was discoverable only by opening a piece and
+finding a tab.
+
+`/portfolio?words=yes` now filters for them, as a plain crawlable link like the
+venue and collection filters, composing with both rather than replacing them. The
+chip carries a line naming the three scripts, so the capability is stated on the
+index rather than waiting to be found.
+
+A dedicated landing page was considered and rejected: `/services` already has a
+Calligraphy & Typography section, and a second page would have competed with it
+for the same search intent — the mistake About and the new materials page were
+just untangled from. The missing thing here was an affordance, not a page.
+
+Four checks: that it narrows, that it composes with a collection rather than
+replacing it, that the active chip is marked for assistive tech, and that pressing
+it again clears it — a toggle rendered as a filter chip fails by deep-linking into
+a state with no way out.
+
 ### Every index page was fetching four to seventy times the pixels it painted — 2026-08-26
 
 Performance had never been gated — the bar was 90+ on SEO, best practices and

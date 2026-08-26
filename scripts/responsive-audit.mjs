@@ -75,6 +75,7 @@ const PAGES = [
   { path: "/", name: "home" },
   { path: "/portfolio", name: "portfolio" },
   { path: "/portfolio?venue=hotel", name: "portfolio-filtered" },
+  { path: "/portfolio?words=yes", name: "portfolio-your-words" },
   { path: "/collections", name: "collections" },
   { path: "/collections/sacred-lines", name: "collection-detail" },
   { path: "/spaces", name: "spaces" },
