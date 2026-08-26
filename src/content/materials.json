@@ -5,7 +5,9 @@
     "spec": "Cast acrylic, typically 10 mm, flame-polished edge, matte or gloss face",
     "why": "The default for lettering that has to look sharp for a decade. Laser cutting leaves a clear polished edge that catches light along every stroke, which is what makes the letters read as objects rather than stickers. Matte faces are the safer choice under downlights — a gloss face directly below a spotlight becomes a mirror.",
     "fire": "Combustible. Standard cast acrylic is not fire resistant, so where a specification calls for a rated material we quote PVC foam or aluminium instead — or a flame-retardant acrylic grade, which exists but costs more and is worth ordering only when the rating is actually required.",
-    "bestFor": "Reception walls, boardrooms, hotels"
+    "bestFor": "Reception walls, boardrooms, hotels",
+    "fireShort": "Combustible",
+    "depthMm": 10
   },
   {
     "id": "mirror-acrylic",
@@ -13,7 +15,9 @@
     "spec": "3 mm mirror acrylic in gold, silver or black, flame-polished edge",
     "why": "A mirror face reflects the room rather than holding a colour of its own, which is why a set of it changes character between a window wall and a corridor. Lighter and far safer than glass mirror — it will not shatter, so it belongs where glass is not allowed, and it takes a polished edge that reads as a finished object rather than a cut sheet. Wipe with a soft cloth only; a gritty cloth is the one thing that marks it.",
     "fire": "Combustible, like all acrylic. Its advantage over glass mirror is breakage, not fire: it will not shatter into edges. Where a rating is required, the same piece can be cut in polished aluminium instead.",
-    "bestFor": "Reception walls, restaurants, hotels, salons"
+    "bestFor": "Reception walls, restaurants, hotels, salons",
+    "fireShort": "Combustible",
+    "depthMm": 3
   },
   {
     "id": "pvc-foam",
@@ -21,7 +25,9 @@
     "spec": "Expanded PVC, typically 19 mm, sprayed satin, sealed edge",
     "why": "Light enough to mount with tape alone on a wall that cannot be drilled, and unaffected by humidity — it will not swell or warp the way a timber letter can. The 19 mm depth is what makes a shadow read from across a room; anything under 10 mm looks applied rather than mounted.",
     "fire": "The best fire performer here, and the reason it is the default for schools and corridors. Expanded PVC is self-extinguishing — chlorine makes up over half its mass and acts as a flame retardant, giving it a limiting oxygen index of 35–45%, so it stops burning once the flame source is removed. Thin gauges reach Class A under ASTM E84. Ask and we will send the supplier's test data for the exact sheet.",
-    "bestFor": "Schools, universities, corridors, leased offices, cafés"
+    "bestFor": "Schools, universities, corridors, leased offices, cafés",
+    "fireShort": "Self-extinguishing",
+    "depthMm": 19
   },
   {
     "id": "routed-mdf",
@@ -29,7 +35,9 @@
     "spec": "MDF, typically 19 mm, primed and sprayed to any colour, sealed faces",
     "why": "The most economical route to a large word cloud, and the only one that takes an exact brand colour without a premium. Sealed on every face so the cut edge cannot draw moisture. Kept away from wet areas, where PVC is the correct answer instead.",
     "fire": "Standard MDF is Class D — combustible, with a long flame-spread. Fire-retardant MDF reaching Class B is available and is what we quote for an escape route or anywhere a rating is specified; it costs more, so it is worth asking for only where it is needed.",
-    "bestFor": "Studios, offices, large word clouds"
+    "bestFor": "Studios, offices, large word clouds",
+    "fireShort": "Class D; FR grade reaches Class B",
+    "depthMm": 19
   },
   {
     "id": "brushed-aluminium",
@@ -37,7 +45,9 @@
     "spec": "3 mm aluminium face on 15 mm returns, clear anodised",
     "why": "For reception and lobby walls that appear in photographs of the company. The brushed grain reads as a material rather than a colour and does not date. Longest-lived of these and the most forgiving of being cleaned around.",
     "fire": "Non-combustible. Where a specification leaves no room — an atrium, a protected stairwell, a hospital corridor — this is the material that answers it without a conversation.",
-    "bestFor": "Reception walls, lobbies, atriums, stairwells, meeting-room fronts"
+    "bestFor": "Reception walls, lobbies, atriums, stairwells, meeting-room fronts",
+    "fireShort": "Non-combustible",
+    "depthMm": 15
   },
   {
     "id": "printed-pla",
@@ -45,6 +55,8 @@
     "spec": "Continuous-line print, typically 8 mm depth, colour through the material",
     "why": "The only practical way to make continuous outline work — a single unbroken line that a cutter cannot produce. The colour is the filament rather than a coat of paint, so there is no finish to chip. Light enough for tape mounting, which keeps a leased wall intact.",
     "fire": "Combustible, with no useful rating. Fine on an office or classroom wall; not what we would put on an escape route, where PVC foam or aluminium is the right answer.",
-    "bestFor": "Co-working floors, classrooms, leased offices"
+    "bestFor": "Co-working floors, classrooms, leased offices",
+    "fireShort": "Combustible, no rating",
+    "depthMm": 8
   }
 ]

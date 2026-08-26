@@ -39,6 +39,7 @@ const ROUTES = [
     ungated: ["seo"],
     ungatedWhy: "noindex by design — see the route's generateMetadata",
   },
+  { path: "/materials", name: "materials" },
   { path: "/services", name: "services" },
   { path: "/about", name: "about" },
   { path: "/contact", name: "contact" },
