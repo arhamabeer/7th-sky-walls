@@ -112,7 +112,7 @@ export const copy = {
     servicesTitle: "How we usually work here",
     materialsTitle: "Materials that suit this space",
     materialsSubtitle:
-      "The surface matters as much as the image. These are the ones we work in, and where each belongs.",
+      "The material matters as much as the words. These are the ones we cut, and where each belongs.",
     materialsLink: "Read why we use each one",
     ctaTitle: "Tell us about the space",
     ctaSubtitle:
@@ -146,6 +146,44 @@ export const copy = {
     templateLink: "Print it at true size",
     templateLinkNote:
       "A one-page specification to forward, or the piece itself tiled at full size to tape to the wall.",
+  },
+  /**
+   * The materials page.
+   *
+   * Its own page rather than a section on About, because two other pages tell
+   * the reader that fire rating is the first thing a facilities manager asks —
+   * and an answer buried in a studio biography is not an answer they can send to
+   * anyone.
+   */
+  materials: {
+    /** Short enough for a footer column. */
+    navLabel: "Materials",
+    eyebrow: "Specification",
+    title: "What we cut, and how it behaves",
+    subtitle:
+      "Six materials, each with the reasoning rather than the sales pitch — how deep the letters stand off the wall, what happens in a fire, and where each one belongs. Everything here is a property of the material, not a certificate for our letters; supplier test data comes with the quote.",
+    tableTitle: "Side by side",
+    tableNote:
+      "Depth is how far the finished letter stands off the wall, which is what casts the shadow — not the sheet thickness, which for aluminium is a 3 mm face on 15 mm returns.",
+    columns: {
+      material: "Material",
+      depth: "Depth",
+      fire: "In fire",
+      bestFor: "Best for",
+    },
+    detailTitle: "Why each one",
+    fireLabel: "In fire",
+    mountingTitle: "How it fixes to the wall",
+    mountingSubtitle:
+      "Cut lettering has no frame and no substrate, so what you are choosing is how far off the wall it sits — which decides how much shadow the piece throws, and whether the wall has to be drilled at all.",
+    standoffLabel: "Stand-off",
+    flushLabel: "Against the wall",
+    ratingCaveatTitle: "What these ratings are, and are not",
+    ratingCaveat:
+      "Every line above describes the material. “Expanded PVC is self-extinguishing” is a fact about PVC; “our letters are Class B certified” would need a test certificate against the finished piece, which is a different document. Tell us the rating your specification asks for and we will quote the material that meets it and send the supplier's test data with it.",
+    ctaTitle: "Specifying a wall?",
+    ctaSubtitle:
+      "Send us the space and the rating it has to meet. We will come back with the material, the depth and the mounting that answer it — and say so plainly if what you want is not what the wall needs.",
   },
   /**
    * The printable templates. Kept here with everything else rather than beside
@@ -248,9 +286,10 @@ export const copy = {
       { label: "Installed by", value: "Our own team" },
     ],
     materialsEyebrow: "Materials",
-    materialsTitle: "What we print on, and why",
+    materialsTitle: "What we cut, and why",
+    materialsLink: "The full specification",
     materialsSubtitle:
-      "Commercial walls are not living-room walls. These are the surfaces we work in, with the reasoning rather than the sales pitch — including the fire rating and cleanability a facilities manager will ask about first.",
+      "Commercial walls are not living-room walls. These are the materials we cut, with the reasoning rather than the sales pitch — including the fire behaviour a facilities manager will ask about first.",
     caseStudiesEyebrow: "Recent work",
     placeholderNote:
       "Illustrative example — real project stories and photography are being prepared.",

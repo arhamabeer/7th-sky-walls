@@ -90,6 +90,7 @@ const PAGES = [
   // 320px phone like everything else.
   { path: "/portfolio/sabr/template", name: "template-spec" },
   { path: "/portfolio/sabr/template?mode=corners", name: "template-corners" },
+  { path: "/materials", name: "materials" },
   { path: "/services", name: "services" },
   { path: "/about", name: "about" },
   { path: "/contact", name: "contact" },

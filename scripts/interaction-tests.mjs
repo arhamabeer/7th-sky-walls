@@ -921,6 +921,104 @@ async function testPrintTemplates(page, vp) {
   );
 }
 
+
+/**
+ * The materials page.
+ *
+ * The page a specifier forwards to a procurement officer, so the failure that
+ * matters is a material present in one half and missing from the other: the table
+ * is what gets scanned, the cards are what gets read, and both are built from the
+ * same records precisely so they cannot disagree. Asserting the counts match is
+ * what keeps that true if either half is ever edited by hand.
+ */
+async function testMaterialsPage(page, vp) {
+  await page.goto(`${BASE}/materials`, { waitUntil: "networkidle" });
+
+  const shape = await page.evaluate(() => {
+    const rows = [...document.querySelectorAll("main table tbody tr")];
+    const cards = [...document.querySelectorAll("main ul li .scroll-mt-24")];
+    return {
+      rows: rows.length,
+      cards: cards.length,
+      // Every row's link has to have something to land on.
+      danglingAnchors: rows
+        .map((r) => r.querySelector("a")?.getAttribute("href") ?? "")
+        .filter((href) => href.startsWith("#") && !document.getElementById(href.slice(1))),
+      // The column the page exists for cannot be blank in any row.
+      blankFireCells: rows.filter((r) => !(r.children[2]?.textContent ?? "").trim()).length,
+      blankDepthCells: rows.filter((r) => !/\d+\s*mm/.test(r.children[1]?.textContent ?? "")).length,
+      mounts: document.querySelectorAll("main section:nth-of-type(4) ul li").length,
+    };
+  });
+
+  record(
+    vp.name,
+    "every material in the table has a detail card",
+    shape.rows > 0 && shape.rows === shape.cards,
+    `${shape.rows} rows, ${shape.cards} cards`,
+  );
+  record(
+    vp.name,
+    "no table row links to an anchor that does not exist",
+    shape.danglingAnchors.length === 0,
+    shape.danglingAnchors.join(", ") || "all resolve",
+  );
+  record(
+    vp.name,
+    "the fire and depth columns are filled for every material",
+    shape.blankFireCells === 0 && shape.blankDepthCells === 0,
+    `${shape.blankFireCells} blank fire, ${shape.blankDepthCells} blank depth`,
+  );
+
+  /**
+   * A four-column comparison cannot fit a 320px phone, so it scrolls inside its
+   * own container. What must not happen is the page scrolling with it.
+   */
+  const scroll = await page.evaluate(() => {
+    const box = document.querySelector("main table")?.parentElement;
+    const cs = box ? getComputedStyle(box) : null;
+    return {
+      contained: cs?.overflowX === "auto" || cs?.overflowX === "scroll",
+      pageOverflow:
+        document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  record(
+    vp.name,
+    "the comparison table scrolls in its own container, not the page",
+    scroll.contained && scroll.pageOverflow <= 1,
+    `contained=${scroll.contained}, page overflow=${scroll.pageOverflow}px`,
+  );
+
+  // Clicking a material name has to put its card on screen, below the header
+  // rather than under it.
+  await page.click('main table a[href="#pvc-foam"]');
+  await page.waitForTimeout(600);
+  const landed = await page.evaluate(() => {
+    const el = document.getElementById("pvc-foam");
+    if (!el) return null;
+    const top = el.getBoundingClientRect().top;
+    const header = document.querySelector("header[data-site-chrome]");
+    const headerH = header ? header.getBoundingClientRect().height : 0;
+    return { top: Math.round(top), headerH: Math.round(headerH) };
+  });
+  record(
+    vp.name,
+    "clicking a material name scrolls its card clear of the header",
+    Boolean(landed) && landed.top >= landed.headerH - 4 && landed.top < 400,
+    landed ? `card top ${landed.top}px, header ${landed.headerH}px` : "no card",
+  );
+
+  // The venue pages hand off here for material detail; that link is the whole
+  // reason this page exists rather than a section on About.
+  await page.goto(`${BASE}/spaces/school`, { waitUntil: "networkidle" });
+  record(
+    vp.name,
+    "a venue page hands off to the materials page",
+    (await page.locator('main a[href="/materials"]').count()) > 0,
+  );
+}
+
 async function testPortfolioFiltering(page, vp) {
   await page.goto(`${BASE}/portfolio`, { waitUntil: "networkidle" });
   const total = await page.locator('main a[href^="/portfolio/"]').count();
@@ -2105,6 +2203,7 @@ async function main() {
       ["text configurator", testTextConfigurator],
       ["wall planner", testWallPlanner],
       ["print templates", testPrintTemplates],
+      ["materials page", testMaterialsPage],
       ["portfolio filtering", testPortfolioFiltering],
       ["grid reveals", testGridReveals],
       ["inquiry form", testInquiryForm],

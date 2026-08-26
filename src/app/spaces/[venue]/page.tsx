@@ -238,7 +238,7 @@ export default async function SpacePage({ params }: PageProps<"/spaces/[venue]">
           </ul>
           <p className="mt-6 text-sm text-muted">
             <Link
-              href="/about"
+              href="/materials"
               className="inline-flex min-h-11 items-center font-semibold text-accent underline-offset-4 hover:underline"
             >
               {copy.spaces.materialsLink}

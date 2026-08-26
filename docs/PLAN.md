@@ -432,6 +432,53 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### A specification page of its own — 2026-08-26
+
+`/materials`. Two pages tell the reader that fire rating is the first thing a
+facilities manager asks, and the answer had been living halfway down the studio
+biography on About — which is not something a specifier can forward to a
+procurement officer. The venue pages linked to `/about` for material detail;
+they now link here.
+
+The page is a comparison table, then the six detail cards, then how each fixes
+to the wall, built from `materials.json` and `MOUNTS` so nothing on it is
+authored twice.
+
+Two fields were added to every material to make the table possible, and both are
+**restatements of the researched prose, never additions to it**:
+
+- `fireShort` — the fire behaviour in three or four words. The long form is what a
+  specifier reads; this is what they scan across six materials before deciding
+  which paragraph to read.
+- `depthMm` — how far the finished letter stands off the wall. Depth rather than
+  sheet thickness, because for cut lettering they are not the same number and
+  depth is the one that casts the shadow. Aluminium is a 3 mm face on 15 mm
+  returns, so its depth is 15.
+
+Both are required in the schema, so a material cannot enter the table with a blank
+cell in the column the table exists for.
+
+About no longer carries its own copy of the cards. It shows the same table and
+links here — the previous arrangement duplicated every word of `why` and `fire`
+on a second URL, which reads to a search engine as two pages competing to answer
+one question and to a maintainer as two places to update. The table is shared as a
+component for the same reason.
+
+The audit found three defects in it that inspection had not:
+
+1. The scroller used the full-bleed `-mx-4 px-4` trick inside `Container`, which
+   made it wider than its own parent — reported as both a clipped parent and text
+   extending past the viewport, on every phone. Removed; there is nothing to bleed
+   past inside the container's width.
+2. The table's material links were 19–39px touch targets.
+3. Rather than scroll a four-column table sideways on a phone, "Best for" is
+   hidden below `sm` — it is the widest column and it is already on every card.
+   Three columns fit a 320px phone with no scrolling at all.
+
+Six checks cover it, including that the table and the cards hold the same number
+of materials and that no row links to an anchor that does not exist. Dropping one
+card fails both.
+
 ### The last of the print-era copy, including a fire claim — 2026-08-26
 
 The catalogue and the materials list were rebuilt for cut dimensional lettering.

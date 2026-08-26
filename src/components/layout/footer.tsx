@@ -36,6 +36,7 @@ export function Footer() {
               { href: "/collections", label: copy.collections.title },
               { href: "/spaces", label: copy.spaces.title },
               { href: "/planner", label: copy.planner.title },
+              { href: "/materials", label: copy.materials.navLabel },
               ...NAV_LINKS.filter((l) => l.href !== "/" && l.href !== "/portfolio"),
             ].map((link) => (
               <li key={link.href}>

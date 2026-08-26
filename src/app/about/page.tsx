@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { copy } from "@/content/copy";
 import { site } from "@/config/site.config";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -11,6 +12,7 @@ import {
   getVenueById,
 } from "@/lib/content";
 import { wallColour } from "@/content/finishes";
+import { MaterialComparisonTable } from "@/components/materials/comparison-table";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { Reveal } from "@/components/motion/reveal";
@@ -134,31 +136,23 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <ul className="mt-10 grid gap-5 md:grid-cols-2">
-            {materials.map((material, i) => (
-              <Reveal as="li" key={material.id} delay={staggerDelay(i)} className="h-full">
-                <div className="flex h-full flex-col rounded-xl border border-line bg-surface p-6">
-                  <h3 className="font-display text-xl font-medium">{material.name}</h3>
-                  <p className="mt-1 font-mono text-xs uppercase tracking-wider text-accent">
-                    {material.spec}
-                  </p>
-                  <p className="mt-4 text-sm leading-7 text-muted">{material.why}</p>
-                  {/* Its own block, labelled. Two pages tell the reader that fire
-                      rating is the first thing a facilities manager asks, and
-                      until now nothing answered it. */}
-                  <div className="mt-4 flex-1 rounded-lg border border-line bg-background p-4">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-accent">
-                      In fire
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-muted">{material.fire}</p>
-                  </div>
-                  <p className="mt-4 border-t border-line pt-4 text-xs font-semibold uppercase tracking-widest text-muted">
-                    {material.bestFor}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </ul>
+          {/* The short form only. The full cards live on /materials, and About
+              used to carry a second copy of every word of them — which reads to a
+              search engine as two pages competing to answer the same question,
+              and to a maintainer as two places to update. */}
+          <div className="mt-10">
+            <MaterialComparisonTable materials={materials} linkRows="page" />
+          </div>
+          <p className="mt-6 text-sm text-muted">
+            <Link
+              href="/materials"
+              className="inline-flex min-h-11 items-center font-semibold text-accent underline-offset-4 hover:underline"
+            >
+              {copy.about.materialsLink}
+            </Link>{" "}
+            — the reasoning for each, how it behaves in fire, and how it fixes to
+            the wall.
+          </p>
         </Container>
       </section>
 

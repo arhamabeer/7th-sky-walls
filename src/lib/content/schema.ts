@@ -118,6 +118,23 @@ export const materialSchema = z.object({
    * certificate the studio has not provided.
    */
   fire: z.string().min(20),
+  /**
+   * The same fire behaviour in three or four words, for a comparison table.
+   *
+   * A restatement of `fire`, never an addition to it. The long form is the one a
+   * specifier reads; this is the one they scan across six materials before
+   * deciding which paragraph to read. Required so a material cannot enter the
+   * table with a blank cell in the column the table exists for.
+   */
+  fireShort: z.string().min(3).max(48),
+  /**
+   * How far the finished letter stands off the wall, in millimetres.
+   *
+   * Depth rather than sheet thickness, because for cut lettering they are not
+   * the same number and depth is the one that matters: it is what casts the
+   * shadow. Aluminium is a 3mm face on 15mm returns, so its depth is 15.
+   */
+  depthMm: z.number().int().positive(),
   bestFor: z.string(),
 });
 export type Material = z.infer<typeof materialSchema>;
