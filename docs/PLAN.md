@@ -432,6 +432,68 @@ small route that serves it back with `model/vnd.usdz+zip`. That question gets
 answered on a real iPhone before the phase is committed to, alongside the
 existing device QA.
 
+### Every index page was fetching four to seventy times the pixels it painted — 2026-08-26
+
+Performance had never been gated — the bar was 90+ on SEO, best practices and
+accessibility — so it was measured properly for the first time. Lighthouse's
+number turned out to be the least useful part of the answer.
+
+**First, what was not wrong.** The artwork page's LCP under Lighthouse's own
+throttling profile (1.6Mbps, 150ms RTT, 4x CPU) measures **1724ms** across five
+runs, comfortably inside the 2.5s "good" threshold. Lighthouse reports 3.5s
+because it simulates rather than measures. Chasing that number would have been
+optimising the metric.
+
+**What was wrong is `sizes`.** `next/image` picks a candidate width from the
+`sizes` attribute, so `sizes` has to describe the rendered image. Here it
+described the *card* — and every artwork is `object-contain` inside a padded,
+often height-capped box, so the painted width is much smaller than the card:
+
+| Page | Viewport | Painted | Fetched | Pixels |
+| --- | --- | --- | --- | --- |
+| /planner | phone | 53×71 | 1080px | **61x** |
+| /portfolio/sabr | phone | 64×64 | 1080px | 42x |
+| /spaces/office | phone | 77×103 | 1080px | 29x |
+| /collections | laptop | 132×176 | 750px | 32x |
+| /portfolio | desktop | 247×329 | 640px | 6.7x |
+
+195 of 289 measured images were over-fetching beyond 4x in area. All of them are
+now within one rung of the candidate ladder, verified across 286 images on nine
+pages at four viewports. `/collections` went from about 455KB of images to
+**177KB**; the planner from a 61x over-fetch to 64KB for the page.
+
+Two lessons in *how* to express `sizes`:
+
+- Where the box has a fixed height — the collections covers, the home collections
+  row — the painted width is the box height times the piece's aspect and does
+  **not vary with the viewport at all**. A vw value can only be wrong there. Both
+  now compute an exact pixel value from `getOrientationAspect`.
+- Where an element is capped with `max-w`, vw is wrong above the cap in both
+  directions: the hero's centre frame was simultaneously over-served on a phone
+  and *under-served* at tablet, which is the worse failure — a soft image on cut
+  lettering is the product looking cheap.
+
+**`priority` was tried and reverted.** The remaining LCP on the grid pages is not
+about image size — the images are ~25KB each now — it is about when they can
+start. Fourteen resources begin at 187ms: two fonts at 60KB and ten framework
+chunks at 166KB, and on a 1.6Mbps pipe the images wait behind them. Preloading
+the first card measured neutral to slightly worse on `/portfolio` and
+`/collections`, and on every page where the grid sits below the fold it *added*
+66KB by eagerly loading something that had been lazy. Reverted.
+
+Moving that number further means fewer bytes of font and framework before first
+paint, which is an architectural question rather than an attribute, and is left
+written down rather than half-done.
+
+`npm run check:images:sizes` gates both directions — under-fetching as an error,
+over-fetching beyond 6x as a failure. 6x rather than 4x because the ladder's own
+step from 128 to 256 is already 4x in area, so a stricter gate demands precision
+`sizes` cannot express. Its first version measured every page in one browser
+context and blamed the markup for the HTTP cache: Chrome reuses an
+already-downloaded larger candidate rather than fetching a smaller one, so a 48px
+thumbnail whose `sizes` was perfectly correct reported a 1080px fetch. Each page
+is measured as a cold arrival now.
+
 ### Three more stale facts, and a gate for the class — 2026-08-26
 
 The dominant defect in this codebase is one fact written down in two places. Four
@@ -444,7 +506,7 @@ waited for.
   was not. The count is gone rather than corrected, which is the same fix the
   "four surfaces" copy got and for the same reason.
 - **The AR device checklist opened by naming a piece that does not exist.** "Use
-  **Minaret Dawn** or **Begin Anyway** for the first run" — Minaret Dawn belonged
+  "Minaret Dawn" or **Begin Anyway** for the first run" — Minaret Dawn belonged
   to the catalogue the product-category rebuild replaced. A checklist whose first
   instruction names something missing is a checklist nobody finishes. It now says
   Sabr, and says why: the brass flourish sits beneath the word, so a flipped model

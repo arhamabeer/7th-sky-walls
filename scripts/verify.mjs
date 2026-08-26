@@ -77,7 +77,17 @@ const printCode = run("node", [
   ".audit",
 ]);
 
-// --- 6. Audit. ------------------------------------------------------------
+// --- 6. Image sizing. ----------------------------------------------------
+// Whether every image is fetched at close to the size it is painted. `sizes` is
+// a string no type checker reads, and when a layout changes underneath one the
+// only symptom is bytes — 195 of 289 images were over-fetching, by up to 61x.
+console.log("→ Checking image sizing...");
+const sizesCode = run("node", [
+  "scripts/check-image-sizes.mjs",
+  `http://localhost:${PORT}`,
+]);
+
+// --- 7. Audit. ------------------------------------------------------------
 const auditCode = run("node", [
   "scripts/responsive-audit.mjs",
   "--url",
@@ -86,4 +96,4 @@ const auditCode = run("node", [
 ]);
 
 shutdown();
-process.exit(auditCode || heroCode || printCode);
+process.exit(auditCode || heroCode || printCode || sizesCode);

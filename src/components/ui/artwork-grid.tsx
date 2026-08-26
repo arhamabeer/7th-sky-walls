@@ -44,8 +44,8 @@ export function ArtworkGrid({
               showCollection={showCollection}
               sizes={
                 wide
-                  ? "(min-width: 1024px) 66vw, (min-width: 640px) 100vw, 100vw"
-                  : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  ? "(min-width: 1024px) 48vw, (min-width: 640px) 88vw, 82vw"
+                  : "(min-width: 1024px) 20vw, (min-width: 640px) 40vw, 82vw"
               }
             />
           </Reveal>

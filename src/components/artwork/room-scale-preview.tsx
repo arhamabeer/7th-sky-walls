@@ -210,7 +210,7 @@ export function RoomScalePreview({
             src={imageSrc}
             alt=""
             fill
-            sizes="(min-width: 1024px) 40vw, 80vw"
+            sizes="(min-width: 1024px) 8vw, 20vw"
             // drop-shadow, not a shadow on the wrapper: these are transparent
             // PNGs of cut letters, and a shadowed rectangle around one reads as
             // paper on the wall. Fourth place this same mistake appeared, which

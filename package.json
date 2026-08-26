@@ -21,7 +21,8 @@
     "serve": "node scripts/serve.mjs",
     "check:brand": "node scripts/check-brand-swap.mjs",
     "check:slug-refs": "node scripts/check-slug-refs.mjs",
-    "check:print": "node scripts/check-print-template.mjs"
+    "check:print": "node scripts/check-print-template.mjs",
+    "check:image-sizes": "node scripts/check-image-sizes.mjs"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",

@@ -150,7 +150,7 @@ export default function ServicesPage() {
                           alt={artwork.alt}
                           width={artwork.image.width}
                           height={artwork.image.height}
-                          sizes="(min-width: 1024px) 45vw, 90vw"
+                          sizes="(min-width: 1024px) 32vw, (min-width: 640px) 85vw, 80vw"
                           className="h-auto max-h-[26rem] w-auto max-w-full object-contain drop-shadow-[0_16px_28px_rgba(25,21,16,0.38)] transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
                           {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
                         />

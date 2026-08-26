@@ -87,7 +87,7 @@ export default function SpacesPage() {
                                 alt=""
                                 width={artwork.image.width}
                                 height={artwork.image.height}
-                                sizes="(min-width: 768px) 16vw, 30vw"
+                                sizes="(min-width: 768px) 11vw, 26vw"
                                 className="h-auto max-h-28 w-auto max-w-full object-contain drop-shadow-[0_8px_14px_rgba(0,0,0,0.32)] transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
                                 {...(blur
                                   ? { placeholder: "blur" as const, blurDataURL: blur }

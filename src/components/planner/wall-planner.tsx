@@ -215,7 +215,7 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
                 src={piece.imageSrc}
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 20vw, 40vw"
+                sizes="(min-width: 1024px) 6.5vw, 19vw"
                 className="object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)]"
                 {...(piece.blurDataURL
                   ? { placeholder: "blur" as const, blurDataURL: piece.blurDataURL }
