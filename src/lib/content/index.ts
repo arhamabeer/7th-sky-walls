@@ -132,10 +132,13 @@ for (const a of artworks) {
 export function getArtworks(filter?: {
   venue?: VenueId;
   collection?: string;
+  /** Only pieces that can be reset with the customer's own wording. */
+  customText?: boolean;
 }): Artwork[] {
   let list = artworks;
   if (filter?.venue) list = list.filter((a) => a.venues.includes(filter.venue!));
   if (filter?.collection) list = list.filter((a) => a.collection === filter.collection);
+  if (filter?.customText) list = list.filter((a) => a.customText);
   return list;
 }
 

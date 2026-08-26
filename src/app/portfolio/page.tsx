@@ -32,14 +32,27 @@ export default async function PortfolioPage({
     typeof params.collection === "string" ? params.collection : undefined;
   const collections = getCollections();
   const collection = collections.find((c) => c.id === collectionParam)?.id;
+  /**
+   * Seventeen of the twenty-eight pieces can be reset with the customer's own
+   * wording, and until this filter existed there was no way to see which — the
+   * capability was discoverable only by opening a piece and finding a tab. For a
+   * studio whose configurator sets Urdu in Nastaliq and Arabic in Naskh, that is
+   * the differentiator being hidden behind a click.
+   */
+  const yourWords = params.words === "yes";
 
-  const artworks = getArtworks({ venue, collection });
+  const artworks = getArtworks({ venue, collection, customText: yourWords });
   const venues = getVenues();
 
-  const filterLink = (next: { venue?: string; collection?: string }) => {
+  const filterLink = (next: {
+    venue?: string;
+    collection?: string;
+    words?: boolean;
+  }) => {
     const q = new URLSearchParams();
     if (next.venue) q.set("venue", next.venue);
     if (next.collection) q.set("collection", next.collection);
+    if (next.words) q.set("words", "yes");
     const qs = q.toString();
     return qs ? `/portfolio?${qs}` : "/portfolio";
   };
@@ -58,14 +71,14 @@ export default async function PortfolioPage({
           <nav aria-label="Filter by space" className="mt-8">
             <ul className="flex flex-wrap gap-2">
               <li>
-                <Chip href={filterLink({ collection })} active={!venue}>
+                <Chip href={filterLink({ collection, words: yourWords })} active={!venue}>
                   {copy.portfolio.filterAllLabel}
                 </Chip>
               </li>
               {venues.map((v) => (
                 <li key={v.id}>
                   <Chip
-                    href={filterLink({ venue: v.id, collection })}
+                    href={filterLink({ venue: v.id, collection, words: yourWords })}
                     active={venue === v.id}
                     ariaCurrent
                   >
@@ -92,8 +105,8 @@ export default async function PortfolioPage({
                   <Chip
                     href={
                       collection === c.id
-                        ? filterLink({ venue })
-                        : filterLink({ venue, collection: c.id })
+                        ? filterLink({ venue, words: yourWords })
+                        : filterLink({ venue, collection: c.id, words: yourWords })
                     }
                     active={collection === c.id}
                     ariaCurrent
@@ -102,6 +115,26 @@ export default async function PortfolioPage({
                   </Chip>
                 </li>
               ))}
+            </ul>
+          </nav>
+
+          {/* Its own row, because it answers a different question from the other
+              two: not what kind of space or which series, but whether the piece
+              can carry the visitor's own words. It composes with both. */}
+          <nav aria-label={copy.portfolio.filterWordsLabel} className="mt-3">
+            <ul className="flex flex-wrap items-center gap-2">
+              <li>
+                <Chip
+                  href={filterLink({ venue, collection, words: !yourWords })}
+                  active={yourWords}
+                  ariaCurrent
+                >
+                  {copy.portfolio.filterWords}
+                </Chip>
+              </li>
+              <li className="text-sm text-muted">
+                {yourWords ? copy.portfolio.filterWordsOn : copy.portfolio.filterWordsOff}
+              </li>
             </ul>
           </nav>
         </Container>
@@ -119,6 +152,7 @@ export default async function PortfolioPage({
             {collection
               ? ` in ${collections.find((c) => c.id === collection)?.name}`
               : ""}
+            {yourWords ? " that can carry your own words" : ""}
           </h2>
           {artworks.length === 0 ? (
             <p className="py-20 text-center text-muted">{copy.portfolio.emptyState}</p>
