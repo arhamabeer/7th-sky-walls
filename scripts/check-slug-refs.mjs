@@ -1,5 +1,6 @@
 /**
- * Catch references to artworks and collections that no longer exist.
+ * Catch references to artworks and collections that no longer exist — by slug in
+ * the code, and by title in the docs.
  *
  * Tests, audits and pages hard-code a few slugs to exercise specific shapes — a
  * panoramic piece, a customisable one, one with AR assets. When the catalogue is
@@ -68,17 +69,61 @@ for (const file of files) {
   }
 }
 
+/**
+ * The docs name pieces by title, not by slug, and those rot the same way.
+ *
+ * The AR device checklist opened with "use Minaret Dawn for the first run" for a
+ * day after the product-category rebuild deleted that piece — and a checklist
+ * whose first instruction names something that does not exist is a checklist
+ * nobody finishes. Slugs were covered; titles in prose were not.
+ *
+ * Only **bold** phrases are checked, because that is how these documents mark
+ * something to open or click. A title mentioned in passing is prose, and matching
+ * every capitalised phrase in a design document against the catalogue would find
+ * nothing but false positives.
+ */
+const validTitles = new Set([
+  ...artworks.map((a) => a.title),
+  ...collections.map((c) => c.name),
+]);
+
+/** Bold phrases that are interface labels or checklist headings, not pieces. */
+const NOT_TITLES = /^(On your wall|Place on my wall|Make it yours|Small|Medium|Large|Extra large|WebXR|Scene Viewer|Quick Look|Print|Paper|Materials|Specification|Corner marks|Full template|Consult|Design|Produce|Install|Urdu|Arabic|Latin|Verified|Scale|Margins|Background graphics|SEO|Best practices|Narrowed|Still needed)\b/;
+
+const docFiles = (await readdir(path.join(ROOT, "docs")))
+  .filter((f) => f.endsWith(".md"))
+  .map((f) => path.join(ROOT, "docs", f));
+
+const staleTitles = new Map();
+for (const file of docFiles) {
+  const text = await readFile(file, "utf8");
+  for (const match of text.matchAll(/\*\*([A-Z][A-Za-z&'’ ]{2,30})\*\*/g)) {
+    const phrase = match[1].trim();
+    if (NOT_TITLES.test(phrase) || validTitles.has(phrase)) continue;
+    // A phrase that reads as a piece name: two or three capitalised words, or one.
+    if (!/^[A-Z][a-z]+(?: [A-Z][a-z]+){0,2}$/.test(phrase)) continue;
+    const key = `title "${phrase}"`;
+    if (!staleTitles.has(key)) staleTitles.set(key, new Set());
+    staleTitles.get(key).add(path.relative(ROOT, file).replace(/\\/g, "/"));
+  }
+}
+
 console.log(
-  `Checked ${files.length} files against ${validArtworks.size} artworks and ${validCollections.size} collections.`,
+  `Checked ${files.length} files against ${validArtworks.size} artworks and ${validCollections.size} collections,\n` +
+    `and ${docFiles.length} docs against ${validTitles.size} titles.`,
 );
 
-if (stale.size === 0) {
-  console.log("RESULT: PASS — every referenced slug exists.");
+if (stale.size === 0 && staleTitles.size === 0) {
+  console.log("RESULT: PASS — every referenced slug and title exists.");
   process.exit(0);
+}
+
+for (const [key, where] of staleTitles) {
+  console.error(`  ${key} — named in ${[...where].join(", ")}`);
 }
 
 for (const [key, where] of stale) {
   console.error(`  ${key} — referenced by ${[...where].join(", ")}`);
 }
-console.error("\nRESULT: FAIL — these slugs no longer exist in the catalogue.");
+console.error("\nRESULT: FAIL — these no longer exist in the catalogue.");
 process.exit(1);

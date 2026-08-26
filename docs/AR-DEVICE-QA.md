@@ -17,9 +17,14 @@ and one Android handset.
 - Deploy to a preview URL. **AR will not work over plain `http://` or from
   another machine's `localhost`** — the camera and both handoff viewers require
   a secure context.
-- Use **Minaret Dawn** or **Begin Anyway** for the first run. Both have a clear
-  top and bottom, which matters: an upside-down or wall-facing model is
-  indistinguishable from a correct one on a symmetric piece.
+- Use **Sabr** or **Begin Anyway** for the first run. Both have a clear top and
+  bottom, which matters: an upside-down or wall-facing model is
+  indistinguishable from a correct one on a symmetric piece. Sabr's brass
+  flourish sits *beneath* the word, so a flipped model is obvious without
+  reading anything — which is the point on a phone held at arm's length.
+  (This said "Minaret Dawn" until 2026-08-26, a piece from the catalogue that
+  the product-category rebuild replaced. A checklist whose first instruction
+  names something that does not exist is a checklist nobody finishes.)
 - Have a tape measure to hand.
 
 ## iPhone — Safari

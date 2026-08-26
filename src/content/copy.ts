@@ -31,7 +31,7 @@ export const copy = {
     heroSubtitle: `${site.name} designs, produces and installs immersive wall art for offices, cafés, hotels, restaurants and campuses.`,
     collectionsEyebrow: "The catalog",
     collectionsTitle: "Collections",
-    collectionsSubtitle: "Six curated series, each built for a different mood and space.",
+    collectionsSubtitle: "Curated series, each built for a different mood and space.",
     featuredTitle: "Featured works",
     featuredSubtitle: "A first look at pieces our clients build rooms around.",
     venuesEyebrow: "Venue verticals",
@@ -122,7 +122,7 @@ export const copy = {
   collections: {
     title: "Collections",
     subtitle:
-      "Six curated series, each built for a different mood and a different kind of space.",
+      "Curated series, each built for a different mood and a different kind of space.",
     viewCollection: "View the series",
     bestForTitle: "Best suited to",
     ctaTitle: "Want this series in your space?",
