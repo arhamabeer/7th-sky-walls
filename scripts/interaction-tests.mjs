@@ -2282,6 +2282,148 @@ async function testOneHangingHeight() {
   );
 }
 
+
+/**
+ * The camera preview's calibration arithmetic.
+ *
+ * This is the site's true-to-size promise on the tier that every device can
+ * reach, and nothing checked the number. The existing camera checks cover that
+ * the overlay opens, traps scroll and says plainly that it is not tracked AR —
+ * all of which stays true while the piece is drawn at the wrong size, which is
+ * the one thing this panel exists to get right.
+ *
+ * The visitor stretches a dashed guide to match a real sheet of paper held
+ * against the wall. That gives pixels-per-centimetre, and the piece is drawn at
+ * its real dimensions in those pixels. So the assertion is exact rather than
+ * approximate: guide width divided by the sheet's real width, times the piece's
+ * real width.
+ */
+async function testCameraCalibration(browser) {
+  const vp = "camera-scale";
+  const context = await browser.newContext({
+    viewport: { width: 412, height: 915 },
+    hasTouch: true,
+    isMobile: true,
+    permissions: ["camera"],
+  });
+  const page = await context.newPage();
+  // Large on a portrait piece is 90 x 120cm; the sheet widths are the real ones.
+  const PIECE_W = 90;
+  const A4_W = 21;
+  const LETTER_W = 21.6;
+
+  await page.goto(`${BASE}/portfolio/sabr?size=l`, { waitUntil: "networkidle" });
+
+  // The camera entry point lives inside the AR panel, so that tab has to be open
+  // before it exists — the first version of this looked for it on the page.
+  const arTab = page.locator("[role=tab]", { hasText: "On your wall" });
+  if ((await arTab.count()) === 0) {
+    record(vp, "the AR panel is available to reach the camera preview from", false);
+    await context.close();
+    return;
+  }
+  await arTab.click();
+  await page
+    .waitForFunction(() => Boolean(document.querySelector("model-viewer")), undefined, {
+      timeout: 20000,
+    })
+    .catch(() => {});
+
+  const cameraButton = page.locator("[role=tabpanel] button", { hasText: /camera/i }).first();
+  if ((await cameraButton.count()) === 0) {
+    record(vp, "the camera preview is reachable", false, "no camera entry point");
+    await context.close();
+    return;
+  }
+  await cameraButton.click();
+  await page
+    .waitForSelector('[role=dialog][aria-modal="true"]', { timeout: 15000 })
+    .catch(() => {});
+
+  const start = page.locator("button", { hasText: /start the camera/i }).first();
+  if ((await start.count()) > 0) await start.click();
+  // The fake device needs a moment to produce a frame before the stage exists.
+  await page.waitForSelector('[aria-label="Drag to position the artwork"]', { timeout: 15000 })
+    .catch(() => {});
+
+  const uncalibrated = await page.evaluate(() =>
+    (document.querySelector('[role=dialog][aria-modal="true"]')?.textContent ?? "").includes(
+      "Approximate size",
+    ),
+  );
+  record(
+    vp,
+    "before calibrating it says the size is approximate rather than claiming true scale",
+    uncalibrated,
+  );
+
+  const calibrate = page.locator("button", { hasText: /calibrate for true size/i }).first();
+  if ((await calibrate.count()) === 0) {
+    record(vp, "calibration is offered", false, "no calibrate button");
+    await context.close();
+    return;
+  }
+  await calibrate.click();
+
+  const slider = page.locator('input[type="range"]').first();
+  await slider.fill("210");
+  await page.locator("button", { hasText: /^It matches$/ }).first().click();
+  await page.waitForTimeout(400);
+
+  const measured = await page.evaluate(() => {
+    const stage = document.querySelector('[aria-label="Drag to position the artwork"]');
+    const art = stage?.querySelector("img");
+    const dialog = document.querySelector('[role=dialog][aria-modal="true"]');
+    return {
+      width: art ? Math.round(art.getBoundingClientRect().width) : 0,
+      label: (dialog?.textContent ?? "").match(/Shown at [^.]*\./)?.[0] ?? "",
+    };
+  });
+
+  // 210px of guide across a 21cm sheet is 10px per cm, so a 90cm piece is 900px.
+  const expected = Math.round(PIECE_W * (210 / A4_W));
+  record(
+    vp,
+    "a calibrated piece is drawn at its real size in the calibrated pixels",
+    measured.width > 0 && Math.abs(measured.width - expected) <= 2,
+    `expected ~${expected}px, measured ${measured.width}px`,
+  );
+  record(
+    vp,
+    "and it says so, naming the sheet it was calibrated against",
+    /Shown at 90 × 120 cm/.test(measured.label) && /A4/.test(measured.label),
+    measured.label || "no label",
+  );
+
+  /**
+   * Letter is 21.6cm wide, not 21. Choosing it must change the scale, or the
+   * sheet chooser is decoration — and a 3% error on a 90cm piece is 2.6cm.
+   */
+  await page.locator("button", { hasText: /recalibrate/i }).first().click();
+  await page.locator("button", { hasText: /US Letter/i }).first().click();
+  await page.locator('input[type="range"]').first().fill("210");
+  await page.locator("button", { hasText: /^It matches$/ }).first().click();
+  await page.waitForTimeout(400);
+
+  const letterWidth = await page.evaluate(() => {
+    const art = document
+      .querySelector('[aria-label="Drag to position the artwork"]')
+      ?.querySelector("img");
+    return art ? Math.round(art.getBoundingClientRect().width) : 0;
+  });
+  const expectedLetter = Math.round(PIECE_W * (210 / LETTER_W));
+  record(
+    vp,
+    "choosing US Letter uses its own width, not A4's",
+    letterWidth > 0 &&
+      Math.abs(letterWidth - expectedLetter) <= 2 &&
+      letterWidth !== measured.width,
+    `A4 gave ${measured.width}px, Letter gave ${letterWidth}px (expected ~${expectedLetter}px)`,
+  );
+
+  await context.close();
+}
+
 async function main() {
   const browser = await chromium.launch({
     // The camera preview needs a stream; without these getUserMedia is denied
@@ -2342,6 +2484,7 @@ async function main() {
   await testConfiguratorBrief();
   await testErrorSink();
   await testOneHangingHeight();
+  await testCameraCalibration(browser);
   await testRateLimit(browser);
   await browser.close();
 
