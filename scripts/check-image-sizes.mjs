@@ -92,6 +92,17 @@ for (const vp of VIEWPORTS) {
     });
     const page = await ctx.newPage();
     await page.goto(BASE + path, { waitUntil: "networkidle", timeout: 60000 });
+    /**
+     * Wait for the fonts before measuring anything.
+     *
+     * Several of these images sit in boxes whose height comes from the text
+     * beside them, and an `object-contain` image in a height-capped box takes its
+     * width from that height. So a card measured mid font-swap is a few pixels
+     * different, and a few pixels either side of a candidate-width boundary flips
+     * the verdict — which made this check fail intermittently on the same build.
+     */
+    await page.evaluate(() => document.fonts.ready);
+
     // Everything below the fold has to be loaded before it can be judged.
     await page.evaluate(async () => {
       for (let y = 0; y <= document.body.scrollHeight; y += window.innerHeight * 0.8) {
@@ -100,7 +111,9 @@ for (const vp of VIEWPORTS) {
       }
       window.scrollTo(0, 0);
     });
-    await page.waitForTimeout(600);
+    // Long enough for the reveal transitions to settle, since a transform in
+    // flight also changes a bounding box.
+    await page.waitForTimeout(900);
 
     const rows = await page.evaluate((dpr) => {
       return [...document.querySelectorAll("img")]

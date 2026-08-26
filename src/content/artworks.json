@@ -298,7 +298,7 @@
     "title": "Bright Ideas",
     "collection": "line-and-wire",
     "description": "Six outline bulbs on wires, each carrying one word, printed as a continuous coloured line. Light enough to mount with tape, which keeps a leased wall intact.",
-    "alt": "Six outlined lightbulbs in bright colours hanging on wires, each containing one word",
+    "alt": "Four outlined lightbulbs in bright colours hanging on wires, each containing one word",
     "venues": [
       "office",
       "cafe",
@@ -311,7 +311,7 @@
     "orientation": "landscape",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/bright-ideas.1e813f29.png",
+      "src": "/artworks/bright-ideas.79ace620.png",
       "width": 2000,
       "height": 1500
     },
@@ -348,7 +348,7 @@
     "orientation": "panorama",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/hanging-goals.d55462f3.png",
+      "src": "/artworks/hanging-goals.b9156e95.png",
       "width": 2500,
       "height": 1000
     },
@@ -385,7 +385,7 @@
     "orientation": "landscape",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/lit.1e813f29.png",
+      "src": "/artworks/lit.e57dd36e.png",
       "width": 2000,
       "height": 1500
     },
@@ -422,7 +422,7 @@
     "orientation": "panorama",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/six-questions.d55462f3.png",
+      "src": "/artworks/six-questions.bca8e736.png",
       "width": 2500,
       "height": 1000
     },

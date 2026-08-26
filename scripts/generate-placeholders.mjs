@@ -179,7 +179,25 @@ const HEROES = {
   "deep-work": "FOCUS",
 };
 
-const BULB_WORDS = ["Innovation", "Goals", "Success", "Research", "Growth", "Teamwork"];
+/**
+ * A word set per piece, not one list for the collection.
+ *
+ * `lineArtBulbs` never touches its RNG — every stroke is derived from the words,
+ * the canvas and the palette — so two pieces of the same orientation and wall
+ * tone produced byte-identical artwork. Hanging Goals and Six Questions were the
+ * same image, and so were Lit and Bright Ideas: four cards in the portfolio
+ * showing two pieces.
+ *
+ * The fix is words rather than randomness, which is also better content. Six
+ * Questions holding who/what/when/where/why/how is the piece its title
+ * describes; the same six bulbs holding "Innovation, Goals, Success" were not.
+ */
+const BULB_WORDS = {
+  "six-questions": ["Who", "What", "When", "Where", "Why", "How"],
+  "hanging-goals": ["Goals", "Targets", "Focus", "Wins", "Growth", "Next"],
+  lit: ["Spark", "Idea", "Insight", "Bright"],
+  "bright-ideas": ["Innovation", "Research", "Teamwork", "Success"],
+};
 const VALUE_WORDS = ["Curious", "Honest", "Together", "Precise", "Bold", "Useful"];
 
 /**
@@ -210,10 +228,17 @@ const GENERATORS = {
     }),
   "words-at-work": (r, w, h, p, art) =>
     art_.statementLines(r, w, h, p, { title: art.title, motif: MOTIF_SLUGS.has(art.slug) }),
-  "line-and-wire": (r, w, h, p, art) =>
-    art_.lineArtBulbs(r, w, h, p, {
-      words: art.orientation === "panorama" ? BULB_WORDS : BULB_WORDS.slice(0, 4),
-    }),
+  "line-and-wire": (r, w, h, p, art) => {
+    const words = BULB_WORDS[art.slug];
+    // Fail rather than fall back, for the same reason the collection dispatch
+    // does: a default here is how two pieces ended up identical.
+    if (!words) {
+      throw new Error(
+        `No bulb words for "${art.slug}" — add a set to BULB_WORDS, one per piece.`,
+      );
+    }
+    return art_.lineArtBulbs(r, w, h, p, { words });
+  },
   "values-boards": (r, w, h, p) => art_.valuesBoard(r, w, h, p, { words: VALUE_WORDS }),
   "sacred-lines": (r, w, h, p, art) => art_.raisedScript(r, w, h, p, { word: art.title }),
   "brand-walls": (r, w, h, p, art) => art_.brandWall(r, w, h, p, { title: art.title }),
@@ -240,15 +265,32 @@ function svgOpen(w, h) {
  * Note: text is rasterised with the host's system fonts, so cards should be
  * regenerated on one machine and committed rather than built per environment.
  */
-async function buildOgCard(art, collectionName, sourceFile, outFile) {
+async function buildOgCard(art, collectionName, sourceFile, wall, outFile) {
   const W = 1200;
   const H = 630;
   const IMG_W = Math.round(W * 0.56);
   const PANEL_X = IMG_W + 56;
   const PANEL_W = W - PANEL_X - 56;
+  /** Matte, so no piece touches the edge of its panel. */
+  const PAD = 48;
 
+  /**
+   * Matted, not cropped — the same rule the gallery tile follows and states in
+   * its own docstring: cropping an artwork misrepresents the piece being sold.
+   *
+   * This used `fit: "cover"` with `position: "attention"`, which fills the panel
+   * and throws away whatever does not fit. On a 5:2 panorama that is 57% of the
+   * width, and "attention" puts the surviving crop in the middle of a word — so
+   * the share card for Ask Better Questions read "BETTER / TIONS", cut off at
+   * both ends. Six of the twenty-eight pieces are panoramas, and a share card is
+   * the first thing anyone sees of this studio on WhatsApp.
+   *
+   * `contain` against the piece's own wall colour letterboxes with wall rather
+   * than with a bar, so a panorama reads as a wide piece hung on a wall.
+   */
   const image = await sharp(sourceFile)
-    .resize(IMG_W, H, { fit: "cover", position: "attention" })
+    .resize(IMG_W - PAD * 2, H - PAD * 2, { fit: "contain", background: wall })
+    .extend({ top: PAD, bottom: PAD, left: PAD, right: PAD, background: wall })
     .toBuffer();
 
   // Wrap the title to the panel width, roughly 15 characters per line at 54px.
@@ -311,6 +353,8 @@ async function main() {
 
   const blur = {};
   let renamed = 0;
+  /** Image hash to the piece that produced it, so a collision fails loudly. */
+  const seenHashes = new Map();
   for (const art of artworks) {
     const { width: w, height: h } = art.image;
 
@@ -336,7 +380,27 @@ async function main() {
 
     // The filename follows the bytes, so an unchanged image keeps its URL (and
     // its caches) while a changed one gets a new URL nothing has cached.
-    const filename = `${art.slug}.${contentHash(buffer)}.png`;
+    const hash = contentHash(buffer);
+
+    /**
+     * Two pieces must never be the same image.
+     *
+     * Content-addressed filenames make this invisible: identical bytes get an
+     * identical name, so the two pieces quietly share one file and the portfolio
+     * shows the same picture twice with two different titles. That is what
+     * happened to Hanging Goals and Six Questions, and to Lit and Bright Ideas —
+     * four cards, two images — because their generator ignores its RNG and
+     * derives everything from inputs those pairs shared.
+     */
+    if (seenHashes.has(hash)) {
+      throw new Error(
+        `Artwork "${art.slug}" generated the same image as "${seenHashes.get(hash)}". ` +
+          `Give it its own inputs — a shared filename hides this completely.`,
+      );
+    }
+    seenHashes.set(hash, art.slug);
+
+    const filename = `${art.slug}.${hash}.png`;
     const file = path.join(OUT_DIR, filename);
     await writeFile(file, buffer);
     await pruneOldRevisions(art.slug, filename);
@@ -358,6 +422,7 @@ async function main() {
       art,
       collectionName[art.collection] ?? "",
       await onWall.clone().jpeg({ quality: 90 }).toBuffer(),
+      wall,
       path.join(OG_DIR, `${art.slug}.jpg`),
     );
 
