@@ -1331,6 +1331,64 @@ checked too, by mapping the rendered titles back through `artworks.json` rather
 than by adding an attribute to the markup for the test's benefit; reverting to the
 prefix fails it with "3 of 7 series".
 
+### The same prefix, in three more places — 2026-08-27
+
+`slice(0, n)` on a filtered catalogue is a prefix of the catalogue, and the
+catalogue is ordered by series, so the earliest series crowds out the rest
+wherever it was used. Looking at the spaces index found it three times over.
+
+**Six venue cards, and three of them led with the same lightbulb.** Offices,
+Schools and Universities all opened with Idea, and the Schools and Universities
+strips were near-identical — both entirely word-cloud bulbs on dark tiles.
+Spanning the series turned out not to be enough on its own: the series are asked
+in catalogue order, so every venue holding word clouds, statement walls and
+line-and-wire picks the first of each and Offices and Schools come out identical
+again, which is what the first attempt produced.
+
+So the series are ranked by how much of each one belongs to the venue — pieces
+tagged for it over pieces in the series. That is a statement about the space
+rather than a shuffle: restaurants lead with Sacred Lines, hotels with Mirror
+Acrylic, universities with Statement Walls, schools with Line & Wire, offices
+with Brand Walls. Offices are tagged for twenty-seven of twenty-eight pieces, so
+every series scores 100% there and the tie breaks on catalogue order — the honest
+answer for a venue that takes everything, and worth knowing about that tag.
+
+**The venue detail pages** led with the same six pieces for the same reason, and
+now use the same function.
+
+**And the home page dropped two series.** `getFeaturedArtworks().slice(0, 6)` fed
+the featured grid: nine pieces carry the flag and they span all seven series, so
+taking six in catalogue order dropped Brand Walls and Mirror Acrylic — the two
+series this market asks for by name and the two added most recently. The flag is
+the editorial decision about what belongs on the home page and the slice was
+silently overriding it, so the slice is gone. To show fewer, flag fewer. The hero
+is unaffected: it reads an explicit `HERO_SLUGS` list, which is its own curation.
+
+A build-time integrity check now asserts the property, so a future prefix fails
+the build: each venue's preview must cover as many series as it has series to draw
+from. Reverting the selection to a prefix fails with "the preview of 3 pieces for
+'office' covers 1 series where 3 were available" — which was exactly the state the
+page shipped in.
+
+**Two harness faults surfaced alongside.** The image-sizing check reported one
+image on the home page as never having chosen a candidate — the honest version of
+what it used to report as a 365x over-fetch. Followed up rather than accepted: the
+image is the to-scale wall demonstration, 77px wide and 8400px down the page on a
+phone, and it loads correctly when anything actually asks for it (256px candidate
+against a 200px need). The check's scroll pass steps at 80% of a viewport every
+120ms, which never triggered its lazy load; waiting longer did nothing because
+nothing had asked. It centres each pending image now, which is what a visitor
+does, and coverage went from 276 measured at the start of the day to 297 with
+none pending.
+
+The materials-page anchor check failed once in three runs at 610px against a
+400px bound. It already had a guard for this class — wait for the page to move
+rather than for a fixed 600ms — and that guard fixed the wrong half: the scroll is
+animated, so "moved past 100px" and "arrived" are different moments and 400ms
+after the first is not reliably the second. The condition is now two consecutive
+samples at the same scroll position; a broken anchor never satisfies it and still
+fails. Five consecutive clean runs since.
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.

@@ -12,6 +12,7 @@ import {
   getServices,
   getSizeDimensions,
   getVenueById,
+  getVenuePreview,
   getVenues,
 } from "@/lib/content";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
@@ -179,7 +180,7 @@ export default async function SpacePage({ params }: PageProps<"/spaces/[venue]">
               {copy.cta.viewAll}
             </Link>
           </div>
-          <ArtworkGrid artworks={pieces.slice(0, 6)} className="mt-8" />
+          <ArtworkGrid artworks={getVenuePreview(venue.id, 6)} className="mt-8" />
         </Container>
       </section>
 

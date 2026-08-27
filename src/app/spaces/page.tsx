@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { getArtworks, getBlurDataURL, getVenues } from "@/lib/content";
+import { getArtworks, getBlurDataURL, getVenuePreview, getVenues } from "@/lib/content";
 import { wallColour } from "@/content/finishes";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/jsonld-script";
@@ -55,7 +55,7 @@ export default function SpacesPage() {
                * wall — which is what the page is actually about. A panorama ends
                * up width-limited and a portrait height-limited, as on a real wall.
                */
-              const preview = pieces.slice(0, 3);
+              const preview = getVenuePreview(venue.id, 3);
               return (
                 <Reveal as="li" key={venue.id} delay={staggerDelay(i)}>
                   <Link

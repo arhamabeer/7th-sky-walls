@@ -161,8 +161,30 @@ for (const vp of VIEWPORTS) {
 
     let { rows, pending } = await measureRows();
     if (pending > 0) {
-      // One more moment for whatever had not chosen a candidate yet.
-      await page.waitForTimeout(1500);
+      /**
+       * Put whatever is still pending in front of the viewport and wait for it.
+       *
+       * The scroll pass above steps through the page at 80% of a viewport every
+       * 120ms, which is enough for most of it but not for a small image far down
+       * a long page: the to-scale wall demonstration sits 8400px down on a phone
+       * and is 77px wide, and it had not started loading by the time the pass
+       * returned to the top. Waiting longer did not help, because nothing had
+       * asked for it. Centring each one does, and it is the same thing a visitor
+       * does by scrolling there.
+       */
+      await page.evaluate(async () => {
+        const stillPending = [...document.querySelectorAll("img")].filter(
+          (img) => !img.currentSrc && (img.getAttribute("src") || "").includes("/_next/image"),
+        );
+        for (const img of stillPending) {
+          img.scrollIntoView({ block: "center" });
+          for (let i = 0; i < 20 && !img.currentSrc; i += 1) {
+            await new Promise((r) => setTimeout(r, 150));
+          }
+        }
+        window.scrollTo(0, 0);
+      });
+      await page.waitForTimeout(300);
       ({ rows, pending } = await measureRows());
     }
     if (pending > 0) {
