@@ -586,22 +586,21 @@ export function raisedScript(r, w, h, p, { word }) {
     },
   );
 
-  const dotR = size * 0.055;
-  s += raised(
-    pathLayer({
-      d: circlePath(cx + half * 0.5, baseline - size * 0.92, dotR),
-      strokeWidth: 0,
-      fill: "colour",
-    }),
-    {
-      depth,
-      stepX,
-      stepY,
-      side: p.accentSide,
-      face: p.accent,
-      shadow: { x: shadowOffset, y: shadowOffset, colour: p.shadow, opacity: 0.28 },
-    },
-  );
+  /**
+   * There used to be a loose accent dot above the word here, and it is gone.
+   *
+   * It was placed at a fixed fraction of the word's half-width and of the type
+   * size, which is blind to the letterforms — this function knows character
+   * advances, not glyph outlines, so it cannot tell where an ascender is. On two
+   * of the four pieces the dot landed on one: it sat on the "a" of Bismillah and
+   * on an "l" of Alhamdulillah. On the other two it floated free with nothing to
+   * relate to. Either way, on a studio that sells cut lettering a loose gold mark
+   * touching a letter reads as an offcut left on the wall.
+   *
+   * Nothing was lost by removing it. The accent colour is carried by the
+   * underswept flourish, which has a reason to exist; the dot never had one
+   * written down.
+   */
   return s;
 }
 

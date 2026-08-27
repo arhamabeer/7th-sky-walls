@@ -97,25 +97,25 @@
   },
   "sabr": {
     "left": 0.0747,
-    "top": 0.321,
+    "top": 0.372,
     "right": 0.95,
     "bottom": 0.644
   },
   "bismillah": {
     "left": 0.0806,
-    "top": 0.3817,
+    "top": 0.4156,
     "right": 0.9439,
     "bottom": 0.6072
   },
   "shukr": {
     "left": 0.0773,
-    "top": 0.36,
+    "top": 0.4,
     "right": 0.9473,
     "bottom": 0.6165
   },
   "alhamdulillah": {
     "left": 0.0824,
-    "top": 0.303,
+    "top": 0.359,
     "right": 0.942,
     "bottom": 0.7
   },

@@ -1268,6 +1268,35 @@ Two navigation timeouts inside `verify` remain unexplained and are recorded as
 such above: the cause was hunted, the leading theory was tested and disproved,
 and what changed is that the symptom is no longer destructive.
 
+**And the image-sizing check was reading the wrong string.** It took
+`img.currentSrc || img.src`, and on a `next/image` element `img.src` is the
+no-srcset fallback — the *largest* rung of the ladder. Chromium supports srcset,
+so that URL is never the resource fetched. An image that had simply not chosen a
+candidate yet was therefore reported as having fetched 3840px, which made a
+77 × 103 thumbnail "365x the pixels" and failed the gate. Not a race being
+mis-measured: the wrong string.
+
+It reads `currentSrc` alone now. An image that is laid out and has not chosen is
+counted as pending, given another moment, and reported if it still has not —
+because a silent skip is how a gate loses coverage while looking clean. Coverage
+went from 276 measured to 284-286.
+
+**A loose accent mark, on the pieces where the word is the product.** Every
+`raisedScript` piece carried a gold dot above the word, positioned at a fixed
+fraction of the word's half-width and of the type size. That is blind to the
+letterforms — this generator knows character advances, not glyph outlines, so it
+cannot tell where an ascender is — and on two of the four pieces the dot landed
+on one: the "a" of Bismillah and an "l" of Alhamdulillah. On the other two it
+floated free. On a studio selling cut lettering, a loose gold mark touching a
+letter reads as an offcut left on the wall.
+
+Removed rather than repositioned, because nothing was lost: the accent colour is
+carried by the underswept flourish, which has a documented reason to exist, and
+the dot never had one. `screenshots.mjs` also gained the materials page, the
+your-words filter and the print template — all three were audited for layout but
+absent from the list a person actually looks at, and both of the day's content
+defects were found by looking.
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.
