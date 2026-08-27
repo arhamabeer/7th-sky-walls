@@ -475,17 +475,6 @@ async function main() {
        * sources and geometry, so they need the images resolved, and this is the
        * first moment at which that is a reasonable thing to ask for.
        */
-      await page
-        .waitForFunction(
-          () => [...document.querySelectorAll("img")].every((i) => i.complete),
-          undefined,
-          { timeout: 15000 },
-        )
-        .catch(() => {
-          /* A stuck image is a finding for the checks below, not a reason to
-             abandon the viewport. */
-        });
-
       const result = await page.evaluate(PROBE);
       checks++;
       for (const issue of result.issues) {

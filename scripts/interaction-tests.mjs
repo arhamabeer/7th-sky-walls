@@ -1049,7 +1049,20 @@ async function testMaterialsPage(page, vp) {
   // Clicking a material name has to put its card on screen, below the header
   // rather than under it.
   await page.click('main table a[href="#pvc-foam"]');
-  await page.waitForTimeout(600);
+  /**
+   * Wait for the scroll to happen rather than for 600ms.
+   *
+   * A fixed wait was enough until the page grew, and then it was not: on a loaded
+   * machine the click landed before the anchor's target had settled and the check
+   * reported the card at 1733px — its unscrolled position — which reads as "the
+   * anchor is broken" rather than "the measurement was early". Waiting for the
+   * page to actually move says the same thing without the false alarm, and still
+   * fails if nothing moves.
+   */
+  await page
+    .waitForFunction(() => window.scrollY > 100, undefined, { timeout: 5000 })
+    .catch(() => {});
+  await page.waitForTimeout(400);
   const landed = await page.evaluate(() => {
     const el = document.getElementById("pvc-foam");
     if (!el) return null;

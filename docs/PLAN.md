@@ -451,19 +451,33 @@ parallelise: a cold AVIF at 1080px takes about a second, and a page with thirtee
 pieces kept the network busy past `networkidle`'s patience. The audit failed with
 a navigation timeout on a page that curl serves in 35 milliseconds.
 
-Three things came out of fixing it, and two of them were my own mistakes:
+The fix was one line. Getting there took three attempts, two of which were my own
+mistakes and are recorded because they were instructive:
 
-1. **`networkidle` was the wrong wait.** It waits for the network to go quiet,
-   and this audit measures layout. Playwright's own documentation advises against
-   it. Now `load`, which does not care how long an image optimizer takes.
-2. **Waiting for every image to be `complete` straight after navigation was
-   worse.** A lazy image below the fold is never complete until something scrolls
-   to it, so that waited out the full timeout on every page — twenty pages times
-   thirty-one viewports of it. The wait belongs after the scroll pass, which is
-   the first moment at which it is a reasonable thing to ask.
-3. **Warming the image cache first cost more than it saved.** 280 variants at
+1. **`networkidle` was the wrong wait, and that was the whole bug.** It waits for
+   the network to go quiet; this audit measures layout. Playwright's own
+   documentation advises against it. `load` does not care how slow an image
+   optimizer is, and with that one change the full 620 checks pass.
+2. **Warming the image cache first cost more than it saved.** 280 variants at
    concurrency six took 5.6 minutes, and then Chromium crashed under the load.
-   Removed.
+3. **Waiting for every image to be `complete` was unsatisfiable**, which took
+   three rounds to see. The hero renders both its large-screen wall and its
+   small-screen row and hides one with CSS, so on a phone six images sit in a
+   `display: none` subtree, lazy and correctly never loaded. Filtering those out
+   left six more in the grid, laid out but `0x0` — an unloaded `w-auto` image has
+   no intrinsic size — and equally never coming. Removed; the audit's own scroll
+   pass already resolves what its checks measure.
+
+That third attempt also produced a report that lied. A never-started image has no
+`currentSrc`, so falling back to `src` reported next/image's no-srcset fallback —
+the 3840px candidate — and the finding read as though a phone were fetching a
+3840px file. Nothing was: the widest request on that page is 640, confirmed by
+recording every request the page makes. Worth writing down, because "phone
+downloads 3840px image" is exactly the kind of finding that gets acted on before
+it gets checked.
+
+Net effect on runtime: the mobile matrix went from hanging entirely, to 330
+seconds with the wait, to 134 seconds without it.
 
 What worked instead: the audit asks the optimizer for WebP. Not a shortcut around
 production — a separation of concerns. It measures overflow, touch targets,
