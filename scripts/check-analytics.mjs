@@ -21,27 +21,58 @@ const BASE = (process.argv[2] || "http://localhost:4020").replace(/\/$/, "");
  */
 await assertServing(BASE);
 
+/**
+ * Whether the *target* runs on Vercel, asked of the target.
+ *
+ * This used to read `process.env.VERCEL` — the environment of the check itself,
+ * not of the site it is pointed at. Run from a laptop against the live
+ * deployment it therefore concluded "off Vercel" and asserted the negative case,
+ * so the checklist item this exists for ("confirm Vercel Analytics and Speed
+ * Insights are receiving data") could never be confirmed by it.
+ *
+ * `x-vercel-id` is on every response Vercel serves, and unlike the hostname it
+ * keeps working once the real domain replaces the `.vercel.app` one.
+ */
+const targetHeaders = await fetch(`${BASE}/`).then((r) => r.headers);
+const onVercel = targetHeaders.has("x-vercel-id");
+
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
+/**
+ * Detected by the globals the packages install, not by a URL.
+ *
+ * The old detector looked for `/_vercel/insights` and `/_vercel/speed-insights`.
+ * Vercel no longer serves them there: both arrive from a randomised hex path —
+ * `/74d02e7359f4429f/script.js` — specifically so ad blockers cannot match on
+ * the URL. So the detector could never fire, on Vercel or off it, and paired with
+ * the environment bug above the check could not fail in either direction.
+ *
+ * `window.va` and `window.si` are what `@vercel/analytics` and
+ * `@vercel/speed-insights` install once their script runs. Measured on both
+ * sides: on the live deployment both are functions and two hex scripts are
+ * requested; locally both are undefined and none are.
+ */
+const hexScripts = [];
+page.on("request", (r) => {
+  const { pathname } = new URL(r.url());
+  if (/^\/[0-9a-f]{12,}\/script\.js$/.test(pathname)) hexScripts.push(pathname);
+});
 const requested = [];
 page.on("request", (r) => requested.push(r.url()));
 
 await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
-await page.waitForTimeout(1500);
+await page.waitForTimeout(2500);
 
-const scripts = await page.evaluate(() =>
-  [...document.querySelectorAll("script[src]")].map((s) => s.getAttribute("src")),
-);
+const installed = await page.evaluate(() => ({
+  va: typeof window.va === "function",
+  si: typeof window.si === "function",
+}));
 
-const has = (needle) =>
-  scripts.some((s) => s?.includes(needle)) || requested.some((u) => u.includes(needle));
-
-const vercelAnalytics = has("/_vercel/insights");
-const vercelSpeed = has("/_vercel/speed-insights");
-const googleAnalytics = has("googletagmanager.com");
+const vercelAnalytics = installed.va;
+const vercelSpeed = installed.si;
+const googleAnalytics = requested.some((u) => u.includes("googletagmanager.com"));
 const gaConfigured = Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
-const onVercel = Boolean(process.env.VERCEL);
 
 /**
  * Off Vercel the insights scripts must NOT be requested: they are served by

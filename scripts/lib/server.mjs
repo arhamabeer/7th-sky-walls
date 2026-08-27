@@ -120,8 +120,20 @@ export async function portServesBuild(port, buildId) {
  * `requireBuild: false` reports a mismatch instead of failing, for the checks
  * that are legitimately pointed at a dev server or a deployment.
  */
-export async function assertServing(base, { requireBuild = true, label = "" } = {}) {
+export async function assertServing(base, options = {}) {
   const url = base.replace(/\/$/, "");
+  /**
+   * A remote host is allowed to serve a different build than the disk.
+   *
+   * The trap this guard exists for is specifically a *localhost* port held by a
+   * leftover process — that is what silently answered with yesterday's bundle.
+   * A deployment legitimately runs whatever commit its own pipeline last built,
+   * so demanding it match the local `.next` would refuse every run against a
+   * real URL, which is exactly when these checks are most worth running. Found
+   * by trying to verify a deployment and being blocked by my own guard.
+   */
+  const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(url);
+  const { requireBuild = isLocal, label = "" } = options;
   let res;
   try {
     res = await fetch(`${url}/`);
