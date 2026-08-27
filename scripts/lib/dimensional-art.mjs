@@ -552,19 +552,50 @@ export function valuesBoard(r, w, h, p, { words }) {
   const { depth, stepX, stepY, shadowOffset } = depthFor(w);
   const face = FACES.heavy;
   const list = words.slice(0, 6).map((x) => x.toUpperCase());
-  const rowH = (h * 0.82) / list.length;
+
+  /**
+   * Two columns in a wide box, so a landscape board is not a portrait board
+   * with small type.
+   *
+   * The size clamp that actually binds is `rowH * 0.74`, never the width target:
+   * six rows share 82% of the height whatever the shape of the canvas, so the
+   * same six words in a 4:3 box came out at half the size they take in a 3:4 one.
+   * Measured rather than eyeballed — the landscape piece carried 12.6% of its
+   * canvas in ink against 23-25% for the three portraits, on the one piece whose
+   * description promises it "reads from the far end of the table".
+   *
+   * Halving the rows doubles the row height, which is the entire fix. The test
+   * is the canvas rather than the artwork's orientation flag, because this
+   * function is handed a width and a height and knows nothing else — and every
+   * measurement stays a share of its own column, so one column renders exactly
+   * the pixels it always did.
+   */
+  const columns = w / h > 1.2 && list.length > 3 ? 2 : 1;
+  const rowCount = Math.ceil(list.length / columns);
+  const columnW = w / columns;
+  const inset = columnW * (columns > 1 ? 0.06 : 0.08);
+  const rowH = (h * 0.82) / rowCount;
   const heroIndex = Math.floor(r() * list.length);
   let s = "";
 
   list.forEach((word, i) => {
     const isHero = i === heroIndex;
-    const target = w * (isHero ? 0.86 : between(r, 0.52, 0.74));
+    // Filled across and then down, not down and then across: these lists are
+    // given in an order that means something — a process, or values ranked by
+    // the team that wrote them — and a wide board is read the way English is.
+    // Column-major put "Ask, Draft, Test" down one side and "Refine, Ship,
+    // Learn" down the other, which is only the right order if the reader knows
+    // to take the columns in turn.
+    const row = Math.floor(i / columns);
+    const column = i % columns;
+    const target = columnW * (isHero ? 0.86 : between(r, 0.52, 0.74));
     const size = Math.min(target / textWidth(word, 1, face), rowH * 0.74);
-    const alignLeft = i % 2 === 0;
+    const alignLeft = row % 2 === 0;
+    const columnLeft = columnW * column;
     s += raised(
       textLayer({
-        x: alignLeft ? w * 0.08 : w * 0.92,
-        y: h * 0.11 + rowH * i + size * capOf(face),
+        x: alignLeft ? columnLeft + inset : columnLeft + columnW - inset,
+        y: h * 0.11 + rowH * row + size * capOf(face),
         size,
         face,
         anchor: alignLeft ? "start" : "end",

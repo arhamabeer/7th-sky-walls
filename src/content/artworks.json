@@ -297,7 +297,7 @@
     "slug": "bright-ideas",
     "title": "Bright Ideas",
     "collection": "line-and-wire",
-    "description": "Six outline bulbs on wires, each carrying one word, printed as a continuous coloured line. Light enough to mount with tape, which keeps a leased wall intact.",
+    "description": "Four outline bulbs on wires, each carrying one word, printed as a continuous coloured line. Light enough to mount with tape, which keeps a leased wall intact.",
     "alt": "Four outlined lightbulbs in bright colours hanging on wires, each containing one word",
     "venues": [
       "office",
@@ -458,7 +458,7 @@
     "orientation": "portrait",
     "wallTone": "dark",
     "image": {
-      "src": "/artworks/house-rules.4eecda8a.png",
+      "src": "/artworks/house-rules.a12253ca.png",
       "width": 1500,
       "height": 2000
     },
@@ -495,7 +495,7 @@
     "orientation": "portrait",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/what-we-stand-for.fb2834cf.png",
+      "src": "/artworks/what-we-stand-for.593db192.png",
       "width": 1500,
       "height": 2000
     },
@@ -531,7 +531,7 @@
     "orientation": "portrait",
     "wallTone": "dark",
     "image": {
-      "src": "/artworks/team-charter.054c3793.png",
+      "src": "/artworks/team-charter.795e2409.png",
       "width": 1500,
       "height": 2000
     },
@@ -567,7 +567,7 @@
     "orientation": "landscape",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/how-we-work.c4de672a.png",
+      "src": "/artworks/how-we-work.b07160aa.png",
       "width": 2000,
       "height": 1500
     },

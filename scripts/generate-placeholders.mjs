@@ -198,7 +198,25 @@ const BULB_WORDS = {
   lit: ["Spark", "Idea", "Insight", "Bright"],
   "bright-ideas": ["Innovation", "Research", "Teamwork", "Success"],
 };
-const VALUE_WORDS = ["Curious", "Honest", "Together", "Precise", "Bold", "Useful"];
+/**
+ * Values boards, by slug: the words that piece shows.
+ *
+ * One shared list for all four pieces looked fine in every gate and wrong on the
+ * page. The randomiser varies which word is the hero and where each row aligns,
+ * so no two files were byte-identical and the duplicate-image check stayed
+ * quiet — but the portfolio grid showed the same six words four times over, which
+ * reads as filler rather than a catalogue of four pieces.
+ *
+ * Each set is the words its own description promises: house rules, reception
+ * values, a team charter, a process. House Rules is five because its description
+ * says five, and valuesBoard draws exactly what it is handed.
+ */
+const VALUE_WORDS = {
+  "house-rules": ["Kind", "Curious", "Candid", "Prompt", "Present"],
+  "what-we-stand-for": ["Honest", "Careful", "Useful", "Open", "Bold", "Together"],
+  "team-charter": ["Listen", "Decide", "Build", "Review", "Support", "Repeat"],
+  "how-we-work": ["Ask", "Draft", "Test", "Refine", "Ship", "Learn"],
+};
 
 /**
  * Modular sets, by slug: the shape and how many tiles.
@@ -239,7 +257,15 @@ const GENERATORS = {
     }
     return art_.lineArtBulbs(r, w, h, p, { words });
   },
-  "values-boards": (r, w, h, p) => art_.valuesBoard(r, w, h, p, { words: VALUE_WORDS }),
+  "values-boards": (r, w, h, p, art) => {
+    const words = VALUE_WORDS[art.slug];
+    if (!words) {
+      throw new Error(
+        `No value words for "${art.slug}" — add a set to VALUE_WORDS, one per piece.`,
+      );
+    }
+    return art_.valuesBoard(r, w, h, p, { words });
+  },
   "sacred-lines": (r, w, h, p, art) => art_.raisedScript(r, w, h, p, { word: art.title }),
   "brand-walls": (r, w, h, p, art) => art_.brandWall(r, w, h, p, { title: art.title }),
   "mirror-acrylic": (r, w, h, p, art) => {
@@ -277,42 +303,74 @@ function drawnItemCount(art) {
     // The generator clamps to 4-6 whatever it is given.
     return words ? Math.min(6, Math.max(4, words.length)) : null;
   }
-  if (art.collection === "values-boards") return Math.min(6, VALUE_WORDS.length);
+  if (art.collection === "values-boards") {
+    const words = VALUE_WORDS[art.slug];
+    // The generator draws exactly what it is handed, capped at six rows.
+    return words ? Math.min(6, words.length) : null;
+  }
   if (art.collection === "mirror-acrylic") return MIRROR_SETS[art.slug]?.count ?? null;
+  if (art.collection === "words-at-work") {
+    // statementLines lays out every word of the title and drops nothing, so the
+    // title is the count. Same strip it applies, or an apostrophe would split a
+    // word in two here and not there.
+    return String(art.title)
+      .replace(/[^A-Za-z0-9' ]/g, " ")
+      .split(/\s+/)
+      .filter(Boolean).length;
+  }
   return null;
 }
 
 /**
- * An alt text that counts something has to count it correctly.
+ * Prose that counts something has to count it correctly.
  *
- * Alt text is what a screen reader reads out and what a search engine indexes, so
- * a wrong number there is wrong in the two places it is hardest to notice. House
- * Rules said "five value words" while its generator drew six, and Bright Ideas
- * said "six outlined lightbulbs" while the landscape pieces take four — both
- * survived because nothing compared the sentence to the picture.
+ * Alt text is what a screen reader reads out and what a search engine indexes,
+ * and the description is the sentence a buyer reads before asking for a price, so
+ * a wrong number in either is wrong where it is hardest to notice. House Rules
+ * said "five value words" while its generator drew six, and Bright Ideas said
+ * "six outlined lightbulbs" while the landscape pieces take four — both survived
+ * because nothing compared the sentence to the picture.
  *
- * Only a number immediately followed by the thing being drawn is checked. The alt
- * texts also mention millimetres and standoffs, and matching those would produce
- * nothing but noise.
+ * Checking the alt text alone turned out not to be enough. The alt was corrected
+ * and the description went on saying "Five words" over a picture of six, because
+ * only one of the two fields was ever read. They are the same claim about the same
+ * image, so both are read here.
+ *
+ * Only a number immediately followed by the plural of the thing being drawn is
+ * checked. This prose also mentions millimetres, standoffs and component ranges,
+ * and matching those would produce nothing but noise.
+ *
+ * Plural specifically, because a singular is not a total. "Each carrying one
+ * word" and "One word raised deeper than the rest" are both about one of many,
+ * and reading them as claims of a one-item picture failed two correct sentences
+ * on the first run. A genuinely single-item piece goes unchecked, which is the
+ * same stance drawnItemCount takes on a word cloud: better silent than inventing
+ * a rule.
  */
 const COUNT_WORDS = {
   one: 1, two: 2, three: 3, four: 4, five: 5, six: 6,
   seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12,
 };
 
-function assertAltCount(art) {
+const COUNTED_THING =
+  /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\d+)\s+(?:[a-z-]+\s+){0,2}(words|lightbulbs|bulbs|letters|shapes|hexagons|circles|triangles|mirrors)\b/i;
+
+function assertProseCounts(art) {
   const drawn = drawnItemCount(art);
   if (drawn === null) return;
-  const match = art.alt.match(
-    /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\d+)\s+(?:[a-z-]+\s+){0,2}(words?|lightbulbs?|letters?|shapes?|hexagons?|circles?|triangles?|mirrors?)\b/i,
-  );
-  if (!match) return;
-  const claimed = COUNT_WORDS[match[1].toLowerCase()] ?? Number(match[1]);
-  if (claimed !== drawn) {
-    throw new Error(
-      `Artwork "${art.slug}" alt text claims ${claimed} ${match[2]} but its generator draws ${drawn}. ` +
-        `Alt text is read aloud and indexed, so correct the sentence or drop the count.`,
-    );
+  for (const [field, text] of [
+    ["alt text", art.alt],
+    ["description", art.description],
+  ]) {
+    const match = text.match(COUNTED_THING);
+    if (!match) continue;
+    const claimed = COUNT_WORDS[match[1].toLowerCase()] ?? Number(match[1]);
+    if (claimed !== drawn) {
+      throw new Error(
+        `Artwork "${art.slug}" ${field} claims ${claimed} ${match[2]} but its generator draws ${drawn}. ` +
+          `That sentence is read aloud, indexed and printed beside the picture, so correct it or drop the count.`,
+      );
+    }
   }
 }
 
@@ -479,7 +537,7 @@ async function main() {
           `No generator for collection "${art.collection}" (artwork "${art.slug}")`,
         );
       }
-      assertAltCount(art);
+      assertProseCounts(art);
       const svg = svgOpen(w, h) + gen(rng(art.slug), w, h, p, art) + "</svg>";
       buffer = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
     }

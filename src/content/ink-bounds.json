@@ -72,28 +72,28 @@
     "bottom": 0.931
   },
   "house-rules": {
-    "left": 0.0813,
-    "top": 0.1075,
+    "left": 0.084,
+    "top": 0.1085,
     "right": 0.9427,
-    "bottom": 0.883
+    "bottom": 0.8515
   },
   "what-we-stand-for": {
-    "left": 0.082,
+    "left": 0.088,
     "top": 0.1075,
-    "right": 0.9453,
+    "right": 0.9467,
     "bottom": 0.8855
   },
   "team-charter": {
-    "left": 0.0813,
+    "left": 0.084,
     "top": 0.1075,
-    "right": 0.9453,
-    "bottom": 0.8855
+    "right": 0.946,
+    "bottom": 0.8845
   },
   "how-we-work": {
-    "left": 0.081,
-    "top": 0.1073,
-    "right": 0.946,
-    "bottom": 0.8973
+    "left": 0.031,
+    "top": 0.106,
+    "right": 0.9945,
+    "bottom": 0.7967
   },
   "sabr": {
     "left": 0.0747,

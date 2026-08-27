@@ -505,7 +505,7 @@
   },
   "house-rules": {
     "wall": "dark wall",
-    "source": "/artworks/house-rules.4eecda8a.png",
+    "source": "/artworks/house-rules.a12253ca.png",
     "sizes": {
       "s": {
         "glb": "/ar/house-rules/s.glb",
@@ -513,8 +513,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 47648,
-        "usdzBytes": 52861
+        "glbBytes": 43184,
+        "usdzBytes": 47222
       },
       "m": {
         "glb": "/ar/house-rules/m.glb",
@@ -522,8 +522,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 47644,
-        "usdzBytes": 52861
+        "glbBytes": 43180,
+        "usdzBytes": 47222
       },
       "l": {
         "glb": "/ar/house-rules/l.glb",
@@ -531,8 +531,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 47644,
-        "usdzBytes": 52861
+        "glbBytes": 43180,
+        "usdzBytes": 47222
       },
       "xl": {
         "glb": "/ar/house-rules/xl.glb",
@@ -540,14 +540,14 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 47640,
-        "usdzBytes": 52861
+        "glbBytes": 43176,
+        "usdzBytes": 47222
       }
     }
   },
   "what-we-stand-for": {
     "wall": "light wall",
-    "source": "/artworks/what-we-stand-for.fb2834cf.png",
+    "source": "/artworks/what-we-stand-for.593db192.png",
     "sizes": {
       "s": {
         "glb": "/ar/what-we-stand-for/s.glb",
@@ -555,8 +555,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 50840,
-        "usdzBytes": 52719
+        "glbBytes": 45520,
+        "usdzBytes": 50806
       },
       "m": {
         "glb": "/ar/what-we-stand-for/m.glb",
@@ -564,8 +564,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 50836,
-        "usdzBytes": 52719
+        "glbBytes": 45516,
+        "usdzBytes": 50806
       },
       "l": {
         "glb": "/ar/what-we-stand-for/l.glb",
@@ -573,8 +573,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 50836,
-        "usdzBytes": 52719
+        "glbBytes": 45516,
+        "usdzBytes": 50806
       },
       "xl": {
         "glb": "/ar/what-we-stand-for/xl.glb",
@@ -582,14 +582,14 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 50832,
-        "usdzBytes": 52719
+        "glbBytes": 45512,
+        "usdzBytes": 50806
       }
     }
   },
   "team-charter": {
     "wall": "dark wall",
-    "source": "/artworks/team-charter.054c3793.png",
+    "source": "/artworks/team-charter.795e2409.png",
     "sizes": {
       "s": {
         "glb": "/ar/team-charter/s.glb",
@@ -597,8 +597,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 47912,
-        "usdzBytes": 52193
+        "glbBytes": 41488,
+        "usdzBytes": 48514
       },
       "m": {
         "glb": "/ar/team-charter/m.glb",
@@ -606,8 +606,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 47912,
-        "usdzBytes": 52193
+        "glbBytes": 41488,
+        "usdzBytes": 48514
       },
       "l": {
         "glb": "/ar/team-charter/l.glb",
@@ -615,8 +615,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 47912,
-        "usdzBytes": 52193
+        "glbBytes": 41488,
+        "usdzBytes": 48514
       },
       "xl": {
         "glb": "/ar/team-charter/xl.glb",
@@ -624,14 +624,14 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 47908,
-        "usdzBytes": 52193
+        "glbBytes": 41484,
+        "usdzBytes": 48514
       }
     }
   },
   "how-we-work": {
     "wall": "light wall",
-    "source": "/artworks/how-we-work.c4de672a.png",
+    "source": "/artworks/how-we-work.b07160aa.png",
     "sizes": {
       "s": {
         "glb": "/ar/how-we-work/s.glb",
@@ -639,8 +639,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 41740,
-        "usdzBytes": 42680
+        "glbBytes": 40900,
+        "usdzBytes": 46290
       },
       "m": {
         "glb": "/ar/how-we-work/m.glb",
@@ -648,8 +648,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 41740,
-        "usdzBytes": 42680
+        "glbBytes": 40900,
+        "usdzBytes": 46290
       },
       "l": {
         "glb": "/ar/how-we-work/l.glb",
@@ -657,8 +657,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 41740,
-        "usdzBytes": 42680
+        "glbBytes": 40900,
+        "usdzBytes": 46290
       },
       "xl": {
         "glb": "/ar/how-we-work/xl.glb",
@@ -666,8 +666,8 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 41736,
-        "usdzBytes": 42680
+        "glbBytes": 40896,
+        "usdzBytes": 46290
       }
     }
   },

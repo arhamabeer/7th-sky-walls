@@ -1083,10 +1083,83 @@ and a pixel count proving the tiled sheets are not blank. That last threshold is
 2%, chosen from measurement: with the artwork made invisible the rules and labels
 alone cover 0.47%, and the real cases cover 7.0% and 26.6%.
 
-Not done, and worth doing if paper cost ever matters: **skip interior sheets that
-contain no ink.** A tiled portrait piece has genuinely blank sheets top and
-bottom, and analysing the artwork's alpha per tile at build time could drop them.
-It complicates the sheet numbering, so it is not free.
+**Blank sheets are skipped.** These are cut letters on a transparent ground, so a
+piece with a short word leaves large empty margins and the tiler was sending them
+through the printer: measured across every piece and size, 31% of sheets carried
+no ink at all, worst case Name in Gold at Large with 29 blank sheets out of 35.
+`src/content/ink-bounds.json` records each piece's ink rectangle — measured at
+generation time, when the pixels are already in hand, because reading a
+1500 × 2000 alpha channel is not something to do while rendering a page. Sheets
+outside it are dropped, the remainder are numbered by printed position so the
+labels stay contiguous, and the first sheet says how many were omitted. Alpha
+above 8 rather than above 0: the generators antialias, and one pixel at 1/255
+would stretch the box to the full canvas and make the measurement useless.
+
+### Four pieces of one piece, and prose the gate could not read — 2026-08-27
+
+Every gate was green, so the pages were looked at instead. The portfolio grid gave
+up two things no check could have found.
+
+**The four values boards were four versions of one piece.** They shared a single
+six-word list — Curious, Honest, Together, Precise, Bold, Useful — and the
+randomiser varies only which word is the hero and where each row aligns. So no two
+files were byte-identical, the duplicate-image check stayed quiet, and the grid
+showed the same six words four times over. That reads as filler, not as a
+catalogue of four pieces. Each board now shows the words its own description
+promises: house rules, reception values, a team charter, a process. The dispatch
+throws on a piece with no set, for the same reason the collection dispatch does — a
+default here is how four pieces became one.
+
+**The count gate read the alt text and not the description.** It was built after
+House Rules' alt said five words over a picture of six. It fixed the alt. The
+description went on saying "Five words" over the same picture of six for two more
+phases, because nothing ever read that field — the fix had been scoped to the
+field the bug was found in rather than to the claim. Both fields make the same
+claim about the same image, so both are checked now, and two more instances fell
+out immediately: Bright Ideas' description said six bulbs where the generator
+draws four (the noun list had `lightbulbs` but not `bulbs`, so the real sentence
+was invisible to it), and `words-at-work` was never checked at all although
+`statementLines` lays out every word of the title and drops nothing, which makes
+the title the count.
+
+The first run of the widened gate failed two *correct* sentences: "each carrying
+one word" and "One word raised deeper than the rest". Both are distributive — one
+of many, not a total of one — so only plurals are counted now. A genuinely
+single-word piece goes unchecked, which is the same stance `drawnItemCount` takes
+on a word cloud: better silent than inventing a rule.
+
+**The landscape values board carried half the ink of the portraits.** `valuesBoard`
+divides 82% of the height among its rows and the size clamp that binds is always
+the row height, never the width target — so the same six words in a 4:3 box came
+out at half the size they take in a 3:4 one. Measured rather than eyeballed: 12.6%
+of the canvas inked against 23-25% for the three portraits, on the one piece whose
+description promises it "reads from the far end of the table". A wide box splits
+into two columns, which halves the rows and so doubles the row height. Every
+measurement is a share of its own column, so the three portraits re-generated
+byte-identical — one image re-hashed, which is the proof the change was scoped.
+
+Filled across and then down, not down and then across: these lists are given in an
+order that means something, and column-major put Ask, Draft, Test down one side
+and Refine, Ship, Learn down the other — the right order only if the reader knows
+to take the columns in turn.
+
+`check:ar` earned its keep here without being touched: four artwork hashes changed
+and it failed all four by name.
+
+**Two faults in the interaction harness, found by pointing it at a dead port.**
+The eleven standalone contexts were awaited bare while the viewport groups were
+each wrapped, so the first crash took the other ten with it: the run ended in a
+stack trace with no summary, which makes a server that died halfway
+indistinguishable from a suite that found nothing. And with nothing loaded, "no
+console errors during interaction" passed in all three viewports — a page that
+never loaded logs nothing, and that is a number quoted as evidence in every
+report. It counts documents that actually arrived now.
+
+The first version of that guard counted `load` events and still passed, because
+Chromium fires `load` for its own connection-refused error page: the guard agreed
+with the bug it was written to catch. Successful document responses are the
+signal. Against a dead port the suite now scores 0/50 rather than 3/50, and
+against the real build 363/363.
 
 ## Post-launch backlog
 

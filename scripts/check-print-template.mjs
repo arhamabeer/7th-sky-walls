@@ -1,5 +1,6 @@
 import { chromium } from "playwright";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import sharp from "sharp";
 
 const BASE = process.argv[2] || "http://localhost:4010";
@@ -26,7 +27,18 @@ async function assertFreshBuild() {
   console.log(`Serving build ${expected}.`);
 }
 await assertFreshBuild();
-const OUT = process.argv[3] || ".";
+/**
+ * Where the PDFs and screenshots land.
+ *
+ * A dotted, ignored directory like every other script here, rather than the
+ * repository root. This check produces seven PDFs and ten PNGs of evidence, and
+ * defaulting to "." dropped all seventeen beside the source: every run dirtied
+ * the tree, and a `git add -A` would have committed several megabytes of paper.
+ * `.gitignore` already carried the tally file, so the intent was there and the
+ * artefacts were simply missed.
+ */
+const OUT = process.argv[3] || path.resolve(import.meta.dirname, "..", ".print");
+mkdirSync(OUT, { recursive: true });
 const PX_PER_MM = 96 / 25.4;
 const mm = (px) => Math.round((px / PX_PER_MM) * 100) / 100;
 

@@ -2633,6 +2633,23 @@ async function main() {
     });
 
     /**
+     * Count the documents that actually arrived, so "no console errors" cannot
+     * pass on nothing.
+     *
+     * A page that never loaded logs nothing, so pointed at a dead server this
+     * check reported clean for all three viewports — and "0 console errors" is a
+     * number that gets quoted as evidence. An empty set is not a clean set.
+     *
+     * Successful document responses rather than `load` events: Chromium fires
+     * `load` for its own connection-refused error page, so counting those made
+     * the guard agree with the bug it was written to catch.
+     */
+    let documents = 0;
+    page.on("response", (res) => {
+      if (res.request().resourceType() === "document" && res.ok()) documents += 1;
+    });
+
+    /**
      * Each group is isolated. A thrown locator timeout in one group used to
      * abort the whole run and discard every result collected before it, which
      * hid what actually passed and made the real failure harder to find.
@@ -2660,21 +2677,49 @@ async function main() {
       }
     }
 
-    record(vp.name, "no console errors during interaction", errors.length === 0, errors.slice(0, 2).join(" | "));
+    record(
+      vp.name,
+      "no console errors during interaction",
+      documents > 0 && errors.length === 0,
+      documents === 0
+        ? "no page ever loaded, so a clean console proves nothing"
+        : errors.slice(0, 2).join(" | "),
+    );
     await context.close();
   }
 
-  await testAndroidArTiers(browser);
-  await testArAnalytics(browser);
-  await testArFailureRecovery(browser);
-  await testCustomTextReachesPreview(browser);
-  await testUrduAndArabic(browser);
-  await testReducedMotion(browser);
-  await testConfiguratorBrief();
-  await testErrorSink();
-  await testOneHangingHeight();
-  await testCameraCalibration(browser);
-  await testRateLimit(browser);
+  /**
+   * The standalone contexts, each isolated the way the viewport groups already
+   * are.
+   *
+   * They used to be awaited bare, so the first one to throw took the other ten
+   * with it: the run ended in a stack trace with no summary, which makes a
+   * server that died halfway look exactly like a suite that found nothing. A
+   * crash is recorded as a failed check now and the remaining contexts still
+   * run, so one bad context costs one check instead of ten contexts.
+   */
+  const CONTEXTS = [
+    ["android-ar-tiers", () => testAndroidArTiers(browser)],
+    ["ar-analytics", () => testArAnalytics(browser)],
+    ["ar-failure-recovery", () => testArFailureRecovery(browser)],
+    ["custom-text", () => testCustomTextReachesPreview(browser)],
+    ["urdu-and-arabic", () => testUrduAndArabic(browser)],
+    ["reduced-motion", () => testReducedMotion(browser)],
+    ["configurator-brief", () => testConfiguratorBrief()],
+    ["error-sink", () => testErrorSink()],
+    ["hanging-height", () => testOneHangingHeight()],
+    ["camera-calibration", () => testCameraCalibration(browser)],
+    ["rate-limit", () => testRateLimit(browser)],
+  ];
+
+  for (const [name, run] of CONTEXTS) {
+    try {
+      await run();
+    } catch (err) {
+      record(name, `${name} context completed without throwing`, false, String(err).slice(0, 160));
+    }
+  }
+
   await browser.close();
 
   const failed = results.filter((r) => !r.pass);
