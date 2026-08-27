@@ -23,6 +23,7 @@
     "check:config": "node scripts/check-config.mjs",
     "check:slug-refs": "node scripts/check-slug-refs.mjs",
     "check:print": "node scripts/check-print-template.mjs",
+    "check:seo": "node scripts/check-seo.mjs",
     "check:image-sizes": "node scripts/check-image-sizes.mjs"
   },
   "dependencies": {
