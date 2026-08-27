@@ -226,7 +226,7 @@ consider after device testing, not a gap.
 Done:
 
 - Lighthouse runner gating SEO, best practices and accessibility at 90 across
-  twelve routes. All three score **100** on every route except the print
+  every route it lists. All three score **100** on every route except the print
   template, whose two shortfalls are deliberate and recorded in
   [LAUNCH.md](LAUNCH.md).
 - Two real contrast defects and one heading-order defect fixed, found by the
@@ -272,8 +272,8 @@ Full list:
   substrate, so the file carries alpha and the wall behind it belongs to the
   room. `readMaster` looks for the plain `.png` name only, so this paragraph
   saying `.jpg` was an instruction that silently did nothing.
-- ~~Lighthouse: 90+ SEO and Best Practices~~ — 100 on both across eleven
-  routes. Performance is 76–97 on the throttled mobile profile, with the
+- ~~Lighthouse: 90+ SEO and Best Practices~~ — 100 on both across every gated
+  route. Performance is 76–97 on the throttled mobile profile, with the
   remaining cost being the artwork imagery itself.
 - ~~Accessibility pass; keyboard navigation and focus states~~ — done, see
   above.
@@ -1230,7 +1230,7 @@ than a red one.
 responsive audit takes its base URL as `--url`; every other script here takes it
 positionally. Handed it positionally, it discarded the value, measured the
 default port — a month-old node process answering 404 to everything — and
-reported 589 unexpected-status errors and 620 pages with no `h1`. It now refuses
+reported 589 unexpected-status errors and 620 page-viewport combinations with no `h1`. It now refuses
 an argument it does not understand, and refuses a server that is not serving this
 site.
 
