@@ -1389,6 +1389,31 @@ nothing had asked. It centres each pending image now, which is what a visitor
 does, and coverage went from 276 measured at the start of the day to 297 with
 none pending.
 
+### The skip link delivered people under the header — 2026-08-27
+
+Found by looking at a phone. `main#content` is the skip link's target and the
+header is sticky, and nothing gave the target a scroll margin — so activating the
+skip link put the top of the content at exactly 0 with the header occupying 0 to
+65px. The first 65px of every page was behind the header for the one person who
+used the affordance built for them.
+
+The services sections and the materials cards both carry `scroll-mt-24` for this
+exact reason. The one target that matters most for accessibility did not.
+
+The check that should have caught it was called **"skip link moves past the
+header"** and tested `location.hash` and where focus had gone. It never measured
+a pixel, so it passed the whole time — a check whose name promises geometry and
+whose assertion tests a string. It is now two checks: one that focus moved into
+the content, and one that the content lands clear of the header, which fails with
+"content top 0px, header bottom 65px" when the class is removed.
+
+Lighthouse scores accessibility 100 on all thirteen routes and never presses the
+skip link. That is the third time this phase that a 100 has sat above a real
+keyboard defect — the modal focus traps and the 1.73:1 focus ring were the first
+two.
+
+### Two flakes, both nameable now — 2026-08-27
+
 The materials-page anchor check failed once in three runs at 610px against a
 400px bound. It already had a guard for this class — wait for the page to move
 rather than for a fixed 600ms — and that guard fixed the wrong half: the scroll is

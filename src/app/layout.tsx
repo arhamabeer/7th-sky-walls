@@ -57,7 +57,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SmoothScroll />
         <Header />
         <ScrollProgress />
-        <main id="content" className="flex-1">
+        {/*
+          `scroll-mt-24` because the header is sticky and this is a jump target.
+
+          The skip link exists for the people least able to work around a layout
+          problem, and it was delivering them to content with its first 65px
+          behind the header: measured on a phone, the target's top edge landed at
+          exactly 0 with the header occupying 0 to 65. The services sections and
+          the materials cards already carry this class for the same reason; the
+          one target that matters most for accessibility did not.
+        */}
+        <main id="content" className="flex-1 scroll-mt-24">
           {children}
         </main>
         <Footer />

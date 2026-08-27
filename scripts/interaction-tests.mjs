@@ -67,18 +67,37 @@ async function testKeyboardNavigation(page, vp) {
   record(vp.name, "skip link becomes visible when focused", first.visible);
 
   await page.keyboard.press("Enter");
+  /**
+   * Measure where the content lands, not just that the hash changed.
+   *
+   * This check was called "skip link moves past the header" and tested the hash
+   * and the focus — so it passed while the header sat on top of the first 65px of
+   * `main`, which is precisely the thing its name claims to rule out. The skip
+   * link is for the people least able to work around a layout problem, and a
+   * `scroll-mt` was missing from the one jump target that matters most for it.
+   */
+  await page.waitForTimeout(700);
   const skipped = await page.evaluate(() => {
     const main = document.getElementById("content");
+    const header = document.querySelector("header[data-site-chrome]");
     return {
       hash: location.hash,
       focusInMain: Boolean(main && main.contains(document.activeElement)),
+      targetTop: main ? Math.round(main.getBoundingClientRect().top) : null,
+      headerBottom: header ? Math.round(header.getBoundingClientRect().bottom) : 0,
     };
   });
   record(
     vp.name,
-    "skip link moves past the header",
+    "skip link moves focus into the content",
     skipped.hash === "#content" || skipped.focusInMain,
     `hash ${skipped.hash}`,
+  );
+  record(
+    vp.name,
+    "skip link lands the content clear of the header",
+    skipped.targetTop !== null && skipped.targetTop >= skipped.headerBottom - 2,
+    `content top ${skipped.targetTop}px, header bottom ${skipped.headerBottom}px`,
   );
 
   // A positive tabindex reorders the tab sequence away from the reading order,
