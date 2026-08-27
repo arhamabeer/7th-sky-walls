@@ -72,7 +72,7 @@ npm run generate:placeholders -- --blur-only
 | `sizes` | Any of `s`, `m`, `l`, `xl`, `square`, `panorama`; defined in `src/content/catalog.ts` |
 | `defaultSize` | Must appear in `sizes`; used for AR model generation and structured data dimensions |
 | `customText` | `true` for calligraphy and typography pieces that support customer-supplied text |
-| `featured` | `true` surfaces it on the home page |
+| `featured` | `true` surfaces it on the home page. Every flagged piece appears — the page does not trim the list, so this flag is the whole decision. Trimming it silently dropped two whole series once |
 
 ## Adding a collection
 
