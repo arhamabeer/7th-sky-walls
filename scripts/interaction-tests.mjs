@@ -12,8 +12,18 @@
  * Usage: node scripts/interaction-tests.mjs [baseUrl]
  */
 import { chromium } from "playwright";
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
+import { assertServing } from "./lib/server.mjs";
 
 const BASE = (process.argv[2] || "http://localhost:4010").replace(/\/$/, "");
+
+/**
+ * 363 checks are worth nothing if they are about the wrong bundle. This suite
+ * had no build guard at all, so a stale server holding the port would have
+ * produced a full green report on code that had already been replaced.
+ */
+await assertServing(BASE);
 
 const VIEWPORTS = [
   { name: "mobile", width: 393, height: 852, touch: true },
@@ -2734,11 +2744,25 @@ async function main() {
     }
   }
 
+  /**
+   * Every result to a file, so a flake is never unnameable.
+   *
+   * One run in four came back 362/363 and the name of the failing check was
+   * lost, because the run had been filtered through `grep` for the summary line
+   * — three clean runs afterwards said "intermittent" and nothing more. A check
+   * that fails once and cannot be identified is a check that cannot be fixed, and
+   * the cost of never being in that position again is one file.
+   */
+  await writeFile(
+    path.join(import.meta.dirname, "..", ".interaction-report.json"),
+    JSON.stringify({ base: BASE, passed: results.length - failed.length, results }, null, 2),
+  ).catch(() => {});
+
   console.log(
     `\n${results.length - failed.length}/${results.length} checks passed across ${Object.keys(byViewport).length} contexts.`,
   );
   if (failed.length) {
-    console.log("RESULT: FAIL\n");
+    console.log("RESULT: FAIL — every result is in .interaction-report.json\n");
     process.exit(1);
   }
   console.log("RESULT: PASS\n");

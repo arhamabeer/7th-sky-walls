@@ -261,14 +261,17 @@ Full list:
 
 - Real artwork and brand content ingestion, AR model regeneration
 - ~~**Content-hashed artwork filenames.**~~ Done. Every artwork is served from
-  `/artworks/<slug>.<hash>.jpg`, where the hash is of the image bytes, and the
+  `/artworks/<slug>.<hash>.png`, where the hash is of the image bytes, and the
   generator rewrites `artworks.json` and prunes the old revision. Replacing an
   image in place used to leave its URL unchanged, so browser and CDN caches
   kept serving the previous pixels — observed during Phase 2, where a stale
   cached variant rendered at the old aspect ratio. `next/image` rejects a query
   string on a local source (HTTP 400), so the cache key had to be the filename.
-  The authoring workflow is unchanged: drop `<slug>.jpg` and the script does
-  the renaming.
+  The authoring workflow is unchanged: drop `<slug>.png` and the script does
+  the renaming. PNG, not JPEG — these pieces are cut lettering with no
+  substrate, so the file carries alpha and the wall behind it belongs to the
+  room. `readMaster` looks for the plain `.png` name only, so this paragraph
+  saying `.jpg` was an instruction that silently did nothing.
 - ~~Lighthouse: 90+ SEO and Best Practices~~ — 100 on both across eleven
   routes. Performance is 76–97 on the throttled mobile profile, with the
   remaining cost being the artwork imagery itself.
@@ -1146,6 +1149,29 @@ to take the columns in turn.
 `check:ar` earned its keep here without being touched: four artwork hashes changed
 and it failed all four by name.
 
+**The words inside the bulb rings were sitting across them.** `lineArtBulbs`
+fitted each word to 85% of the ring's *outer* diameter, so the stroke's own
+half-width was already eating the margin — and then the word grew again by its
+bevel and its contact shadow, neither of which the arithmetic knew about. A
+circle also narrows away from its centre line, so the width available to a word
+depends on how tall the word is. Words are fitted to the chord at their own cap
+height inside a clear radius that subtracts the stroke, the bevel and the shadow,
+refined twice; and the word's shadow is drawn shorter than the ring's, which is
+both true of a shallower letter and worth a quarter of the budget back.
+
+Measured, not eyeballed, because eyeballing it failed twice — once seeing a
+collision that was 13px of clearance, once missing one that was 13px of overlap.
+Rasterising the text layers alone and measuring the furthest ink from each ring's
+centre: before, TARGETS reached 10.9px and GROWTH 13.1px past the inner edge;
+after, every word is inside with 7.7px to spare. The same expression is now an
+assertion in the generator, which reproduces the measured distance exactly, so
+the check costs no rasterising.
+
+A full stroke of clearance was considered and rejected: it costs 13-17% of type
+size on the six-bulb panoramas, where the words are already smallest, and in that
+case the cap rather than the width binds — so the extra margin buys no room, only
+smaller letters.
+
 **Two faults in the interaction harness, found by pointing it at a dead port.**
 The eleven standalone contexts were awaited bare while the viewport groups were
 each wrapped, so the first crash took the other ten with it: the run ended in a
@@ -1160,6 +1186,87 @@ Chromium fires `load` for its own connection-refused error page: the guard agree
 with the bug it was written to catch. Successful document responses are the
 signal. Against a dead port the suite now scores 0/50 rather than 3/50, and
 against the real build 363/363.
+
+That prompted a sweep of the other gates for the same shape, since every one of
+them delivers its verdict as the absence of a finding — which makes a run that
+measured nothing read exactly like a run that found nothing wrong. The responsive
+audit crashes rather than passing when the server is dead, and its "620 checks" is
+a measured counter rather than the product of the two lists, so it was honest; it
+now also refuses to pass unless that count equals the product, so a skipped page
+cannot hide inside a green result. The image-sizing check recognises optimised
+images by their `/_next/image` URL, which a config change or a different loader
+would quietly stop producing, so it refuses to pass on zero.
+
+**A stale fact in the plan's own ingestion instructions.** Two paragraphs said
+artworks are served from `<slug>.<hash>.jpg` and told anyone bringing in real work
+to drop a `.jpg` — while `readMaster` looks for `.png` and nothing else, because
+these pieces carry alpha. Following the instruction would have done nothing at
+all, silently, and the site would have gone on serving placeholders.
+
+`check:slug-refs` now reads the file paths in the docs too, by format rather than
+by existence: `public/artworks/<slug>.png` is deliberately a file that does not
+exist yet, since it is the file the reader is being told to create, but its
+extension has to be one its own directory actually holds. Every directory here
+carries one or two formats for a stated reason — PNG for alpha, GLB and USDZ
+because those are what the two platforms accept — so a path naming anything else
+names something the pipeline cannot read. Putting the old extension back fails it
+by name.
+
+### The stale-build guard had never once checked a build — 2026-08-27
+
+Every gate here reports its verdict as the absence of a finding, so a gate
+pointed at the wrong server gives a confident answer about something else. Both
+halves of that happened within an hour, and hunting the second one found that the
+defence against it had never worked.
+
+**A gate passing on yesterday's bundle.** `check:analytics` defaults to port
+4020, which is `serve.mjs`'s port, and that port was held by a server started the
+previous day. It reported PASS three times — about a build nobody was looking at.
+The property it checks, that no third-party script loads without a measurement
+id, belongs to the bundle being served, so a green result there was worth less
+than a red one.
+
+**A gate reporting a site catastrophe that was an unread argument.** The
+responsive audit takes its base URL as `--url`; every other script here takes it
+positionally. Handed it positionally, it discarded the value, measured the
+default port — a month-old node process answering 404 to everything — and
+reported 589 unexpected-status errors and 620 pages with no `h1`. It now refuses
+an argument it does not understand, and refuses a server that is not serving this
+site.
+
+**And then the guard itself.** Writing a shared version of the assertion meant
+negative-testing it, which it failed: told the disk build had changed, it printed
+`Serving build aDifferentBuildIdEntirely` and carried on. `servedBuildId` read
+the served id by matching `/_next/static/<id>/_buildManifest` — a pattern this
+version of Next never emits, since the only segments under `/_next/static/` are
+`media` and `chunks`. So it returned null on every call in its existence, every
+comparison against it was dead code, and `startProductionServer` announced
+
+    → Verified server is serving build XKh5FOqqpwJd9FD8S0yG-
+
+using the id from disk, having verified nothing. The one helper whose whole
+purpose is to refuse a stale build had never detected one — which is also why the
+analytics failure above went unnoticed for a day.
+
+The id *is* in the served HTML, so the test is now whether it is there: a
+question that cannot come back vacuously true. Seven gates share one
+`assertServing` — three had near-identical copies of the check and three had none
+at all, including the interaction suite's 363 checks and the hero-wall gate whose
+default port was the one holding the stale server. Four branches were tested
+separately: a dead port, a stale build where the build is required, a stale build
+where it is only reported (the audit and Lighthouse legitimately run against a
+dev server or a deployment), and `startProductionServer`'s own refusal.
+
+**One unnameable flake, made nameable.** One interaction run in four came back
+362/363 and the failing check could not be identified, because the run had been
+filtered through `grep` for its summary line. Three clean runs afterwards
+established only that it was intermittent. The suite writes every result to
+`.interaction-report.json` now; a check that fails once and cannot be named is a
+check that cannot be fixed.
+
+Two navigation timeouts inside `verify` remain unexplained and are recorded as
+such above: the cause was hunted, the leading theory was tested and disproved,
+and what changed is that the symptom is no longer destructive.
 
 ## Post-launch backlog
 
