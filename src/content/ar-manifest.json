@@ -337,7 +337,7 @@
   },
   "bright-ideas": {
     "wall": "light wall",
-    "source": "/artworks/bright-ideas.79ace620.png",
+    "source": "/artworks/bright-ideas.1c4bc371.png",
     "sizes": {
       "s": {
         "glb": "/ar/bright-ideas/s.glb",
@@ -345,8 +345,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 64344,
-        "usdzBytes": 64634
+        "glbBytes": 63464,
+        "usdzBytes": 64433
       },
       "m": {
         "glb": "/ar/bright-ideas/m.glb",
@@ -354,8 +354,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 64344,
-        "usdzBytes": 64634
+        "glbBytes": 63464,
+        "usdzBytes": 64433
       },
       "l": {
         "glb": "/ar/bright-ideas/l.glb",
@@ -363,8 +363,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 64344,
-        "usdzBytes": 64634
+        "glbBytes": 63464,
+        "usdzBytes": 64433
       },
       "xl": {
         "glb": "/ar/bright-ideas/xl.glb",
@@ -372,14 +372,14 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 64340,
-        "usdzBytes": 64634
+        "glbBytes": 63460,
+        "usdzBytes": 64433
       }
     }
   },
   "hanging-goals": {
     "wall": "light wall",
-    "source": "/artworks/hanging-goals.b9156e95.png",
+    "source": "/artworks/hanging-goals.c26f78a6.png",
     "sizes": {
       "s": {
         "glb": "/ar/hanging-goals/s.glb",
@@ -387,8 +387,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 51312,
-        "usdzBytes": 54985
+        "glbBytes": 50904,
+        "usdzBytes": 54443
       },
       "m": {
         "glb": "/ar/hanging-goals/m.glb",
@@ -396,8 +396,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 51284,
-        "usdzBytes": 54985
+        "glbBytes": 50876,
+        "usdzBytes": 54443
       },
       "l": {
         "glb": "/ar/hanging-goals/l.glb",
@@ -405,8 +405,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 51276,
-        "usdzBytes": 54985
+        "glbBytes": 50868,
+        "usdzBytes": 54443
       },
       "xl": {
         "glb": "/ar/hanging-goals/xl.glb",
@@ -414,14 +414,14 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 51252,
-        "usdzBytes": 54985
+        "glbBytes": 50844,
+        "usdzBytes": 54443
       }
     }
   },
   "lit": {
     "wall": "light wall",
-    "source": "/artworks/lit.e57dd36e.png",
+    "source": "/artworks/lit.bdfbb3a5.png",
     "sizes": {
       "s": {
         "glb": "/ar/lit/s.glb",
@@ -429,8 +429,8 @@
         "widthCm": 60,
         "heightCm": 45,
         "depthCm": 3.5,
-        "glbBytes": 60888,
-        "usdzBytes": 63660
+        "glbBytes": 60440,
+        "usdzBytes": 63171
       },
       "m": {
         "glb": "/ar/lit/m.glb",
@@ -438,8 +438,8 @@
         "widthCm": 80,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 60888,
-        "usdzBytes": 63660
+        "glbBytes": 60440,
+        "usdzBytes": 63171
       },
       "l": {
         "glb": "/ar/lit/l.glb",
@@ -447,8 +447,8 @@
         "widthCm": 120,
         "heightCm": 90,
         "depthCm": 3.5,
-        "glbBytes": 60888,
-        "usdzBytes": 63660
+        "glbBytes": 60440,
+        "usdzBytes": 63171
       },
       "xl": {
         "glb": "/ar/lit/xl.glb",
@@ -456,14 +456,14 @@
         "widthCm": 160,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 60884,
-        "usdzBytes": 63660
+        "glbBytes": 60436,
+        "usdzBytes": 63171
       }
     }
   },
   "six-questions": {
     "wall": "light wall",
-    "source": "/artworks/six-questions.bca8e736.png",
+    "source": "/artworks/six-questions.12d7d12d.png",
     "sizes": {
       "s": {
         "glb": "/ar/six-questions/s.glb",
@@ -471,8 +471,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 50424,
-        "usdzBytes": 53889
+        "glbBytes": 51480,
+        "usdzBytes": 53381
       },
       "m": {
         "glb": "/ar/six-questions/m.glb",
@@ -480,8 +480,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 50396,
-        "usdzBytes": 53889
+        "glbBytes": 51452,
+        "usdzBytes": 53381
       },
       "l": {
         "glb": "/ar/six-questions/l.glb",
@@ -489,8 +489,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 50388,
-        "usdzBytes": 53889
+        "glbBytes": 51444,
+        "usdzBytes": 53381
       },
       "xl": {
         "glb": "/ar/six-questions/xl.glb",
@@ -498,8 +498,8 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 50364,
-        "usdzBytes": 53889
+        "glbBytes": 51420,
+        "usdzBytes": 53381
       }
     }
   },
