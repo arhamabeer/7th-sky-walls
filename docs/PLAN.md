@@ -1364,6 +1364,14 @@ the editorial decision about what belongs on the home page and the slice was
 silently overriding it, so the slice is gone. To show fewer, flag fewer. The hero
 is unaffected: it reads an explicit `HERO_SLUGS` list, which is its own curation.
 
+Three more images on the most valuable page is a cost worth measuring rather than
+assuming: it is **zero** on arrival. All nine are lazy and the first sits 4128px
+down, more than four viewport heights on a phone, where the initial load is 11
+optimised images and 24KB in total. Whoever scrolls that far pays for what they
+are looking at and gets two more series for it. Lighthouse re-run after the
+change: accessibility 100 and best practices 100 on all thirteen routes, SEO 100
+on twelve with the print template's deliberate 69 skipped by name.
+
 A build-time integrity check now asserts the property, so a future prefix fails
 the build: each venue's preview must cover as many series as it has series to draw
 from. Reverting the selection to a prefix fails with "the preview of 3 pieces for
