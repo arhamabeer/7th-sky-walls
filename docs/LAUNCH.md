@@ -26,19 +26,29 @@ npm run lighthouse
 | `check:images` | Every artwork file on disk matches the dimensions the site declares. A mismatch causes layout shift and letterboxed renders. |
 | `check:ar` | All 112 AR asset pairs encode the exact finished size advertised, carry the Quick Look rotation and vertical anchoring, and are packed the way Quick Look requires — and were built from the artwork the site currently serves. That last one matters because everything else stays true when the texture inside is a previous version of the piece, which is how four pieces showed the old image in AR with every check passing. |
 | `verify` | Production build, hero wall arrangement, the printable templates, image sizing, and the responsive audit across 31 viewports and 20 pages — desktop, laptop, tablet and phone, portrait and landscape. |
-| `test:interaction` | 363 behavioural checks across fourteen contexts — mobile, tablet, desktop, the Android AR tiers, AR launch-failure recovery, custom wording, Urdu and Arabic, the configurator brief, the client error sink, the materials page, the hanging height, the camera preview's calibration, the AR analytics events, reduced motion and the rate limiter. |
+| `test:interaction` | Behavioural checks across fourteen contexts — mobile, tablet, desktop, the Android AR tiers, AR launch-failure recovery, custom wording, Urdu and Arabic, the configurator brief, the client error sink, the materials page, the hanging height, the camera preview's calibration, the AR analytics events, reduced motion and the rate limiter. Every result is written to `.interaction-report.json`, so a check that fails once can still be named afterwards. The run prints its own count; this table does not repeat it, because a number kept in two places is the defect this codebase produces most. |
 | `lighthouse` | SEO, best practices and accessibility at 90+ on thirteen routes. All three sit at 100 everywhere except the print template, which scores best practices 96 and is exempt from the SEO gate. Both are deliberate and explained below. |
 | `check:print` | The printable templates measured in print media, where nothing else looks: sheet and PDF page boxes in millimetres, the calibration bar at exactly 100mm, nothing clipped by the sheet edge, one PDF page per sheet, the tiled template actually carrying the piece, and the sheet count on the button being the count that prints — blank sheets are omitted, so a count worked out twice is a count that will disagree with itself. Also refuses to run against a server holding a stale build. Included in `verify`. |
-| `check:image-sizes` | Every image is fetched at close to the size it is painted, measured across 286 images on nine pages at four viewports. Under-fetching fails as an error — a soft image on cut lettering is the product looking cheap — and over-fetching beyond 6x fails too. It found 195 of 289 images over-fetching by up to 61x. Included in `verify`. |
-| `check:slug-refs` | Every artwork and collection slug referenced by a test, audit or page still exists, and every piece the docs name in bold still exists. Renaming the catalogue leaves stale references that fail as broken features rather than as stale strings — and it left the AR checklist opening with a piece that had been deleted. |
+| `check:image-sizes` | Every image is fetched at close to the size it is painted, across nine pages at four viewports. Under-fetching fails as an error — a soft image on cut lettering is the product looking cheap — and over-fetching beyond 6x fails too. It found 195 of 289 images over-fetching by up to 61x when it was written. It refuses to pass on zero images measured, and reports any image that never chose a candidate rather than skipping it silently. Included in `verify`. |
+| `check:slug-refs` | Every artwork and collection slug referenced by a test, audit or page still exists, and every piece the docs name in bold still exists. Renaming the catalogue leaves stale references that fail as broken features rather than as stale strings — and it left the AR checklist opening with a piece that had been deleted. It also checks the file paths the docs name, by format: `public/artworks/<slug>.png` is deliberately a file that does not exist yet, but its extension has to be one that directory holds, because the plan told anyone ingesting real work to drop a `.jpg` that nothing reads. |
+| `check:analytics` | Vercel's cookieless scripts do not load off Vercel and Google Analytics does not load without a measurement id — so a development or preview deployment cannot reach the reporting property. |
 | `check:brand` | Swaps in a 44-character studio name and a different palette, rebuilds, and confirms no trace of the real brand survives and the header still contains its contents at 320–430px. Restores the real config either way. Two builds, so run it before launch and after touching the header, footer or config shape — not on every change. |
 
-`npm run test:interaction` and `npm run lighthouse` need a server already
-running — use `npm run serve`, which frees the port first and refuses to serve
-a build other than the one on disk. Starting `next start` by hand is how a
-stale server ends up answering, and that failure presents as an unstyled page
-or a defect that was already fixed rather than as an error. `npm run verify`
-starts and checks its own server.
+`npm run test:interaction`, `npm run check:analytics` and `npm run lighthouse`
+need a server already running — use `npm run serve`, which frees the port first
+and refuses to serve a build other than the one on disk. `npm run verify` starts
+and checks its own server.
+
+Every one of these gates now refuses to measure a server that is not serving the
+build on disk, and says so instead of producing a verdict. That is not
+belt-and-braces: `check:analytics` passed three times in one session against a
+server started the previous day, because its default port was held by a leftover
+process, and the responsive audit — handed its base URL positionally where it
+wanted a flag — measured a month-old process on another port and reported 589
+status errors and 620 page-viewport combinations with no `h1`. The helper they all share had itself
+never worked: it read the served build id with a pattern this version of Next
+does not emit, so every comparison against it was dead code and it announced
+"verified" on the strength of the id from disk.
 
 ### The print template's two non-perfect Lighthouse scores
 
