@@ -155,8 +155,20 @@ Set these in Vercel's project settings. See `.env.example`.
       Structured data validity does not affect the Lighthouse score but does
       gate rich results.
 - [ ] Submit the sitemap in Search Console.
-- [ ] Confirm Vercel Analytics and Speed Insights are receiving data — they
-      are deliberately inert anywhere other than Vercel.
+- [x] Confirm Vercel Analytics and Speed Insights are receiving data — they
+      are deliberately inert anywhere other than Vercel. **Verified 2026-08-28**
+      against the live deployment: `npm run check:analytics https://<domain>`
+      asserts the positive case when the target responds with `x-vercel-id`, and
+      the negative case otherwise. Both mount on the deployment; neither loads
+      locally.
+
+      Until today it could not have told you either way. It read
+      `process.env.VERCEL` — the environment of the check, not of the site it was
+      pointed at — so run from a laptop it always assumed "off Vercel" and
+      asserted the negative. And it looked for `/_vercel/insights`, which Vercel
+      no longer serves: both scripts now arrive from a randomised hex path so ad
+      blockers cannot match the URL. Detection is now `window.va` and `window.si`,
+      the globals the packages install.
 
 ## Device testing
 
