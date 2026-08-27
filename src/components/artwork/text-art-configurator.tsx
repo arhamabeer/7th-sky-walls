@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import { MOUNTS, getMount } from "@/content/finishes";
+import { MOUNTS, getMount, mountShadow } from "@/content/finishes";
 import {
   GROUNDS,
   INKS,
@@ -63,6 +63,9 @@ export function TextArtConfigurator({
   const ink = getInk(inkId);
   const ground = getGround(groundId);
   const finish = getMount(finishId);
+  // The short edge of the preview in its own units: 100cqw for a portrait piece,
+  // less for a landscape one, since cqw is a share of the container width.
+  const shadow = mountShadow(finishId, 100 * Math.min(1, heightCm / widthCm));
 
   const lines = useMemo(
     () => text.split("\n").map((l) => l.trim()).filter(Boolean).slice(0, 5),
@@ -130,6 +133,24 @@ export function TextArtConfigurator({
                 letterSpacing: typeface.letterSpacing,
                 color: ink.value,
                 fontSize: `${fontSize}cqw`,
+                /**
+                 * The mounting, drawn rather than described.
+                 *
+                 * This chooser changed the caption underneath the preview and
+                 * nothing else — measured, the pixels that differed between
+                 * flush and 25mm standoff were confined to a twelve-pixel band
+                 * at the bottom of a 640px preview, which is that caption. Four
+                 * options describing four depths, one picture.
+                 *
+                 * `text-shadow` rather than a `drop-shadow` filter because this
+                 * is text; the numbers come from the same `mountShadow` the
+                 * artwork tile uses, in `cqw` because that is the unit this
+                 * preview is already sized in. The short edge of a portrait
+                 * preview is its width, which is 100cqw; a landscape one is
+                 * shorter than it is wide, so the ratio scales it down.
+                 */
+                textShadow: `${shadow.offset.toFixed(2)}cqw ${shadow.offset.toFixed(2)}cqw ` +
+                  `${shadow.blur.toFixed(2)}cqw rgba(0,0,0,${shadow.opacity})`,
               }}
             >
               {lines.length ? lines.join("\n") : "Your words"}

@@ -1389,6 +1389,35 @@ nothing had asked. It centres each pending image now, which is what a visitor
 does, and coverage went from 276 measured at the start of the day to 297 with
 none pending.
 
+### The mounting chooser changed a caption and nothing else — 2026-08-27
+
+The configurator offers four mountings — flush against the wall, a 12mm float, a
+25mm float, on a backer panel — and the shadow *is* the difference between them.
+The materials page says so in as many words: depth is how far the letter stands
+off the wall, which is what casts the shadow. The preview drew no shadow at all,
+so all four options produced the same picture on a site whose premise is showing
+the buyer what arrives.
+
+Nearly missed, and then found by measuring. The preview looked flat, but a pixel
+diff between flush and 25mm reported nine thousand differing bytes — enough to
+conclude the control was live and move on. Locating those differences instead of
+counting them showed they were confined to `y[619..630]` of a 640px preview: a
+twelve-pixel band at the very bottom, which is the caption sentence. The picture
+was byte-identical.
+
+`MOUNTS` has carried `shadowRatio`, `blurRatio` and `shadowOpacity` per mounting
+all along, and `MountedArtwork` was already using them for the artwork tile. Both
+now call one `mountShadow`, because the tile and the configurator drawing the same
+mounting differently is the defect this codebase produces most. In the
+configurator it is a `text-shadow` — the element is text — sized in `cqw`, the
+unit that preview is already laid out in.
+
+Verified the same way it was found: with the caption excluded, 4.84% of the
+preview now differs between flush and 25mm, spanning exactly the band the word
+occupies, and at 2x the difference between a tight contact shadow and a soft
+offset one is plain. The interaction suite reads the computed `text-shadow` under
+two mountings and fails with `flush "none" vs 25mm "none"` when it is removed.
+
 ### The skip link delivered people under the header — 2026-08-27
 
 Found by looking at a phone. `main#content` is the skip link's target and the
