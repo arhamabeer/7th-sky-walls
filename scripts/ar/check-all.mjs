@@ -27,6 +27,86 @@ const manifest = JSON.parse(
   await readFile(path.join(ROOT, "src", "content", "ar-manifest.json"), "utf8"),
 );
 
+/**
+ * The AR generator's copy of the catalogue geometry must match the catalogue.
+ *
+ * `generate-ar-assets.mjs` keeps its own `ORIENTATION_ASPECT` and `SIZE_TIERS`
+ * because it is a .mjs script and `src/content/catalog.ts` is TypeScript. Its
+ * comment says "kept in sync by check:ar-manifest" — and there is no
+ * `check:ar-manifest`. Nothing compared them. That comment was worse than no
+ * comment, because whoever edits a size tier reads it and trusts a gate that
+ * does not exist.
+ *
+ * It matters more here than the usual duplication, because the checks below
+ * verify each model against the *manifest*, and the manifest is written from
+ * these very numbers. A drifted tier is self-consistent all the way through and
+ * passes everything — while the model on somebody's wall is a different size
+ * from the one the page advertises, on a site whose whole promise is true to
+ * size.
+ */
+function numericMap(source, name) {
+  const start = source.indexOf(name);
+  if (start === -1) return null;
+  const body = source.slice(source.indexOf("{", start) + 1, source.indexOf("}", start));
+  const out = {};
+  for (const [, key, expr] of body.matchAll(/(\w+)\s*:\s*([\d.\s/*+-]+?)\s*,/g)) {
+    // Only arithmetic on literals, so this evaluates "3 / 4" without evaluating code.
+    if (!/^[\d.\s/*+-]+$/.test(expr)) return null;
+    out[key] = Number(new Function(`return (${expr});`)());
+  }
+  return Object.keys(out).length ? out : null;
+}
+
+function numberedRows(source, name) {
+  const start = source.indexOf(name);
+  if (start === -1) return null;
+  const body = source.slice(start, source.indexOf("\n];", start));
+  const rows = [...body.matchAll(/\{[^}]*id:\s*"(\w+)"[^}]*\}/g)].map((m) => {
+    const row = { id: m[1] };
+    for (const [, key, value] of m[0].matchAll(/(\w*[Cc]m)\s*:\s*(\d+(?:\.\d+)?)/g)) {
+      row[key] = Number(value);
+    }
+    return row;
+  });
+  return rows.length ? rows : null;
+}
+
+{
+  const catalog = await readFile(path.join(ROOT, "src", "content", "catalog.ts"), "utf8");
+  const generator = await readFile(
+    path.join(ROOT, "scripts", "generate-ar-assets.mjs"),
+    "utf8",
+  );
+
+  const pairs = [
+    ["ORIENTATION_ASPECT", numericMap(catalog, "ORIENTATION_ASPECT"), numericMap(generator, "ORIENTATION_ASPECT")],
+    ["SIZE_TIERS", numberedRows(catalog, "SIZE_TIERS"), numberedRows(generator, "SIZE_TIERS")],
+  ];
+
+  for (const [name, fromCatalog, fromGenerator] of pairs) {
+    if (!fromCatalog || !fromGenerator) {
+      fail(
+        name,
+        "could not be read from both catalog.ts and generate-ar-assets.mjs, so this " +
+          "check would pass without comparing anything",
+      );
+      continue;
+    }
+    // Compared by the fields the generator actually carries: the catalogue also
+    // has labels, which the AR pipeline has no use for.
+    const trimmed = Array.isArray(fromCatalog)
+      ? fromCatalog.map((row, i) =>
+          Object.fromEntries(Object.keys(fromGenerator[i] ?? {}).map((k) => [k, row[k]])),
+        )
+      : fromCatalog;
+    const a = JSON.stringify(trimmed);
+    const b = JSON.stringify(fromGenerator);
+    if (a !== b) {
+      fail(name, `catalog.ts has ${a} but the AR generator has ${b}`);
+    }
+  }
+}
+
 const io = new NodeIO();
 
 async function glbSizeCm(file) {

@@ -30,7 +30,13 @@ const TEXTURE_MAX_EDGE = 1024;
 /** Physical depth of a finished piece, in centimetres. */
 const DEPTH_CM = 3.5;
 
-/** Mirrors content/catalog.ts — kept in sync by check:ar-manifest. */
+/**
+ * Mirrors content/catalog.ts, because this is a .mjs script and the catalogue is
+ * TypeScript. `check:ar` compares the two and fails on any drift — the comment
+ * that used to sit here named a `check:ar-manifest` that did not exist, which is
+ * worse than no comment: whoever edits a tier reads it and trusts a gate that was
+ * never written.
+ */
 const ORIENTATION_ASPECT = {
   portrait: 3 / 4,
   landscape: 4 / 3,
