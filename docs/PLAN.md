@@ -1389,6 +1389,36 @@ nothing had asked. It centres each pending image now, which is what a visitor
 does, and coverage went from 276 measured at the start of the day to 297 with
 none pending.
 
+### An emoji in the message broke the inquiry handover — 2026-08-27
+
+Until `RESEND_API_KEY` is set the handover *is* how an inquiry reaches the studio:
+the form says plainly that it could not send and offers a prefilled WhatsApp or
+email message instead. So the handover sits on the one path the whole site funnels
+into, and it crashed on emoji.
+
+`clampToUrlBudget` binary-searches the body down until its *encoded* length fits,
+and it was slicing by UTF-16 code unit. A cut between the two halves of a
+surrogate pair leaves a lone surrogate, and `encodeURIComponent` throws
+`URI malformed` on one of those — from inside the search itself. Measured: a
+message of "…reception wall 🎉🙏🏽 and the lobby too 🕌" repeated to length threw at
+the 3000-byte WhatsApp budget. Whoever typed the way people type on WhatsApp got
+nothing: no alert, no handover, a page that sits there after Send.
+
+It splits on grapheme clusters now, via `Intl.Segmenter` with a code-point
+fallback. Graphemes rather than code points because 🙏🏽 is a hand plus a skin tone,
+and cutting between those changes the emoji rather than dropping it. The cut also
+backs off to the last space when one is close, so the message ends on a word —
+worth doing mainly for Urdu and Arabic, where half a word can read as a different
+word. Verified across emoji, Urdu and a four-thousand-character run with no
+spaces at all: no throw, every result inside its budget.
+
+**The check written for it passed on the bug first.** It skipped itself whenever
+the alert did not say "not connected", reasoning that a delivering build has no
+handover to inspect — and against the broken clamp there is no alert at all, so it
+reported "skipped by design" and went green. It now fails silence first and only
+lets a *positively delivering* build skip the handover checks. That is the fourth
+time this phase a check has agreed with the defect it was written to catch.
+
 ### The mounting chooser changed a caption and nothing else — 2026-08-27
 
 The configurator offers four mountings — flush against the wall, a 12mm float, a

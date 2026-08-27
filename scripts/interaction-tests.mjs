@@ -1593,6 +1593,116 @@ async function testInquiryForm(page, vp) {
 }
 
 /**
+ * A message with emoji in it must still produce a handover.
+ *
+ * `clampToUrlBudget` trimmed the body by UTF-16 code units, which splits a
+ * surrogate pair and leaves a lone surrogate — and `encodeURIComponent` throws
+ * `URI malformed` on one of those, from inside the binary search. Measured: a
+ * message of "…reception wall 🎉🙏🏽 and the lobby too 🕌" repeated to length threw
+ * at the WhatsApp budget. Until RESEND_API_KEY is set the handover *is* how an
+ * inquiry reaches the studio, so that crash sat on the one path the whole site
+ * funnels into, for a customer typing the way people type on WhatsApp.
+ *
+ * Its own `x-forwarded-for`, like the rate-limit check, so this submission does
+ * not eat another group's bucket.
+ */
+async function testHandoverEncoding(browser) {
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    extraHTTPHeaders: { "x-forwarded-for": `203.0.113.${Math.floor(Math.random() * 200) + 10}` },
+  });
+  const page = await context.newPage();
+  await page.goto(`${BASE}/contact`, { waitUntil: "networkidle" });
+
+  const message =
+    "We want this for our reception wall 🎉🙏🏽 and the lobby too 🕌 " +
+    "ہمیں اپنی استقبالیہ دیوار کے لیے صبر کا لفظ چاہیے، سنہری آئینے میں۔ ";
+  await page.fill('main form input[name="name"]', "Emoji Sender");
+  await page.fill('main form input[name="email"]', "emoji@example.com");
+  await page.fill('main form input[name="city"]', "Karachi");
+  await page.selectOption('main form select[name="venue"]', "hotel");
+  await page.fill('main form textarea[name="message"]', message.repeat(20));
+  await page.locator('main form button[type="submit"]').click();
+  await page.waitForTimeout(1800);
+
+  const result = await page.evaluate(() => {
+    const alert = document.querySelector("main form [role=alert]");
+    const text = alert?.textContent ?? "";
+    const hasAlert = Boolean(alert);
+    const links = [...(alert?.querySelectorAll("a") ?? [])].map((a) => a.getAttribute("href") ?? "");
+    const bodies = links.map((href) => {
+      const raw = href.split(/[?&](?:text|body)=/)[1] ?? "";
+      let decoded = "";
+      let threw = false;
+      try {
+        decoded = decodeURIComponent(raw);
+      } catch {
+        threw = true;
+      }
+      return { bytes: raw.length, threw, decoded };
+    });
+    return {
+      hasAlert,
+      alertText: text.replace(/\s+/g, " ").slice(0, 120),
+      declaredUndelivered: /not connected/i.test(text),
+      declaredDelivered: /thank|received|on its way/i.test(text),
+      errored: /something went wrong|error/i.test(text),
+      whatsapp: links.some((h) => h.includes("wa.me")),
+      mailto: links.some((h) => h.startsWith("mailto:")),
+      anyThrew: bodies.some((b) => b.threw),
+      // U+FFFD is what a mangled surrogate becomes once something has replaced it.
+      anyReplacement: bodies.some((b) => b.decoded.includes("�")),
+      // The budgets are 1500 for mailto and 3000 for WhatsApp, on the body alone.
+      overBudget: bodies.filter((b) => b.bytes > 3000).length,
+      count: links.length,
+    };
+  });
+
+  /**
+   * The submission has to say *something*, before anything else is asked of it.
+   *
+   * The first version of this check skipped itself whenever the alert did not
+   * say "not connected", on the reasoning that a delivering build has no
+   * handover to inspect. Run against the broken clamp it reported "skipped by
+   * design" and passed — masking the exact bug it was written for. What the
+   * crash actually produces is no alert at all: the server action throws, and
+   * somebody who clicks Send gets a page that sits there telling them nothing.
+   * So silence is the first thing failed, not the thing skipped past.
+   */
+  record(
+    "handover-encoding",
+    "submitting says something rather than nothing",
+    result.hasAlert && !result.errored,
+    result.hasAlert ? `alert: ${result.alertText}` : "no alert at all — the action threw",
+  );
+
+  if (result.declaredUndelivered) {
+    record(
+      "handover-encoding",
+      "an emoji-laden message still produces both handover links",
+      result.whatsapp && result.mailto,
+      `${result.count} link(s)`,
+    );
+    record(
+      "handover-encoding",
+      "the handover bodies decode cleanly and stay inside the budget",
+      !result.anyThrew && !result.anyReplacement && result.overBudget === 0,
+      `threw=${result.anyThrew}, replacement char=${result.anyReplacement}, over budget=${result.overBudget}`,
+    );
+  } else {
+    // Only a positively delivering build may skip the handover checks.
+    record(
+      "handover-encoding",
+      "delivery is configured, so there is no handover to check",
+      result.declaredDelivered,
+      result.declaredDelivered ? "skipped by design" : `unexpected state: ${result.alertText}`,
+    );
+  }
+
+  await context.close();
+}
+
+/**
  * Repeated submissions from one address must be refused, and refused in a way
  * that still points somewhere useful. Runs once rather than per viewport,
  * since it deliberately exhausts a bucket.
@@ -2809,6 +2919,7 @@ async function main() {
     ["error-sink", () => testErrorSink()],
     ["hanging-height", () => testOneHangingHeight()],
     ["camera-calibration", () => testCameraCalibration(browser)],
+    ["handover-encoding", () => testHandoverEncoding(browser)],
     ["rate-limit", () => testRateLimit(browser)],
   ];
 

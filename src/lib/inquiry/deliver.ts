@@ -91,21 +91,64 @@ function renderHtml(input: InquiryInput, reference: string): string {
 const MAILTO_BODY_BUDGET = 1500;
 const WHATSAPP_BODY_BUDGET = 3000;
 
+/**
+ * Split a string into units that are safe to cut between.
+ *
+ * Grapheme clusters where the runtime can find them, code points otherwise —
+ * never UTF-16 code units. Cutting between code units splits a surrogate pair
+ * and leaves a lone surrogate, and `encodeURIComponent` throws `URI malformed` on
+ * one of those. That is not theoretical: this clamp did exactly that, inside the
+ * binary search, for any message with an emoji near the boundary — measured, a
+ * message of "…reception wall 🎉🙏🏽 and the lobby too 🕌" threw at the WhatsApp
+ * budget. On the current setup the handover *is* how an inquiry reaches the
+ * studio, so that crash was on the one path the whole site funnels into, for a
+ * customer typing the way people type on WhatsApp.
+ *
+ * Graphemes rather than code points because 🙏🏽 is two code points — a hand and a
+ * skin tone — and cutting between them silently changes the emoji rather than
+ * dropping it.
+ */
+function splittableUnits(text: string): string[] {
+  const Segmenter = (Intl as { Segmenter?: typeof Intl.Segmenter }).Segmenter;
+  if (Segmenter) {
+    return [...new Segmenter(undefined, { granularity: "grapheme" }).segment(text)].map(
+      (s) => s.segment,
+    );
+  }
+  return [...text];
+}
+
 /** Trim `body` until its encoded form fits, marking it if anything was cut. */
 function clampToUrlBudget(body: string, budget: number): { text: string; truncated: boolean } {
   if (encodeURIComponent(body).length <= budget) return { text: body, truncated: false };
   const marker = "\n\n[Message cut short to fit — happy to send the rest.]";
-  // Binary search on characters: the encoded length is not proportional to the
-  // character count once scripts are mixed, so stepping by bytes would either
-  // overshoot or take thousands of iterations.
+  const units = splittableUnits(body);
+
+  // Binary search on units: the encoded length is not proportional to their
+  // count once scripts are mixed, so stepping by bytes would either overshoot or
+  // take thousands of iterations.
   let low = 0;
-  let high = body.length;
+  let high = units.length;
   while (low < high) {
     const mid = Math.ceil((low + high) / 2);
-    if (encodeURIComponent(body.slice(0, mid) + marker).length <= budget) low = mid;
+    if (encodeURIComponent(units.slice(0, mid).join("") + marker).length <= budget) low = mid;
     else high = mid - 1;
   }
-  return { text: body.slice(0, low).trimEnd() + marker, truncated: true };
+
+  /**
+   * Back off to the last space, so the message ends on a word.
+   *
+   * Only if a space is reasonably close to the cut — on a run with no spaces
+   * there is nothing to back off to, and dropping a quarter of the message to
+   * find one would lose more than the ragged edge costs. Urdu and Arabic are the
+   * reason this is worth doing at all: a Latin word cut in half still reads as a
+   * cut word, while a cut Urdu word can read as a different word.
+   */
+  const kept = units.slice(0, low).join("");
+  const lastSpace = kept.search(/\s+\S*$/);
+  const text = lastSpace > kept.length * 0.9 ? kept.slice(0, lastSpace) : kept;
+
+  return { text: text.trimEnd() + marker, truncated: true };
 }
 
 /**
