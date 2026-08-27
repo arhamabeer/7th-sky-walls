@@ -266,6 +266,57 @@ function svgOpen(w, h) {
  * regenerated on one machine and committed rather than built per environment.
  */
 /**
+ * How many countable things each collection's generator draws for one piece.
+ *
+ * Returns null where the count is not fixed — a word cloud deals a variable
+ * number of words, and asserting anything about it would be inventing a rule.
+ */
+function drawnItemCount(art) {
+  if (art.collection === "line-and-wire") {
+    const words = BULB_WORDS[art.slug];
+    // The generator clamps to 4-6 whatever it is given.
+    return words ? Math.min(6, Math.max(4, words.length)) : null;
+  }
+  if (art.collection === "values-boards") return Math.min(6, VALUE_WORDS.length);
+  if (art.collection === "mirror-acrylic") return MIRROR_SETS[art.slug]?.count ?? null;
+  return null;
+}
+
+/**
+ * An alt text that counts something has to count it correctly.
+ *
+ * Alt text is what a screen reader reads out and what a search engine indexes, so
+ * a wrong number there is wrong in the two places it is hardest to notice. House
+ * Rules said "five value words" while its generator drew six, and Bright Ideas
+ * said "six outlined lightbulbs" while the landscape pieces take four — both
+ * survived because nothing compared the sentence to the picture.
+ *
+ * Only a number immediately followed by the thing being drawn is checked. The alt
+ * texts also mention millimetres and standoffs, and matching those would produce
+ * nothing but noise.
+ */
+const COUNT_WORDS = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6,
+  seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12,
+};
+
+function assertAltCount(art) {
+  const drawn = drawnItemCount(art);
+  if (drawn === null) return;
+  const match = art.alt.match(
+    /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\d+)\s+(?:[a-z-]+\s+){0,2}(words?|lightbulbs?|letters?|shapes?|hexagons?|circles?|triangles?|mirrors?)\b/i,
+  );
+  if (!match) return;
+  const claimed = COUNT_WORDS[match[1].toLowerCase()] ?? Number(match[1]);
+  if (claimed !== drawn) {
+    throw new Error(
+      `Artwork "${art.slug}" alt text claims ${claimed} ${match[2]} but its generator draws ${drawn}. ` +
+        `Alt text is read aloud and indexed, so correct the sentence or drop the count.`,
+    );
+  }
+}
+
+/**
  * The rectangle of the image that actually carries ink, as fractions of it.
  *
  * These are cut letters on a transparent ground, so a piece with a short word in
@@ -428,6 +479,7 @@ async function main() {
           `No generator for collection "${art.collection}" (artwork "${art.slug}")`,
         );
       }
+      assertAltCount(art);
       const svg = svgOpen(w, h) + gen(rng(art.slug), w, h, p, art) + "</svg>";
       buffer = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
     }

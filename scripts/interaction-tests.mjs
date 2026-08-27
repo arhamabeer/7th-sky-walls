@@ -305,7 +305,25 @@ async function testArtworkPage(page, vp) {
   await page.locator("[role=tab]", { hasText: /^Artwork$/ }).click();
   await page.waitForTimeout(150);
   await page.locator("main button[aria-label*='full screen']").click();
-  await page.waitForTimeout(250);
+  /**
+   * Wait for the image to have a size rather than for a fixed 250ms.
+   *
+   * The ratio assertion below divides by the measured height, so an image
+   * measured before layout reports 0 and the check fails with "ratio 0" — which
+   * says nothing about the ratio. It only appeared on a loaded machine, which is
+   * exactly when a timing assumption breaks and exactly when it is least useful
+   * to be told a number that is really "not measured yet".
+   */
+  await page
+    .waitForFunction(
+      () => {
+        const img = document.querySelector("[role=dialog] img");
+        return Boolean(img && img.getBoundingClientRect().height > 0);
+      },
+      undefined,
+      { timeout: 10000 },
+    )
+    .catch(() => {});
   const opened = await page.evaluate(() => {
     const d = document.querySelector("[role=dialog]");
     const img = d?.querySelector("img");
@@ -1031,7 +1049,20 @@ async function testMaterialsPage(page, vp) {
   // Clicking a material name has to put its card on screen, below the header
   // rather than under it.
   await page.click('main table a[href="#pvc-foam"]');
-  await page.waitForTimeout(600);
+  /**
+   * Wait for the scroll to happen rather than for 600ms.
+   *
+   * A fixed wait was enough until the page grew, and then it was not: on a loaded
+   * machine the click landed before the anchor's target had settled and the check
+   * reported the card at 1733px — its unscrolled position — which reads as "the
+   * anchor is broken" rather than "the measurement was early". Waiting for the
+   * page to actually move says the same thing without the false alarm, and still
+   * fails if nothing moves.
+   */
+  await page
+    .waitForFunction(() => window.scrollY > 100, undefined, { timeout: 5000 })
+    .catch(() => {});
+  await page.waitForTimeout(400);
   const landed = await page.evaluate(() => {
     const el = document.getElementById("pvc-foam");
     if (!el) return null;

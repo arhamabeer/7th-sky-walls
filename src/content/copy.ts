@@ -172,7 +172,7 @@ export const copy = {
     eyebrow: "Specification",
     title: "What we cut, and how it behaves",
     subtitle:
-      "Six materials, each with the reasoning rather than the sales pitch — how deep the letters stand off the wall, what happens in a fire, and where each one belongs. Everything here is a property of the material, not a certificate for our letters; supplier test data comes with the quote.",
+      "Every material we cut, each with the reasoning rather than the sales pitch — how deep the letters stand off the wall, what happens in a fire, and where each one belongs. Everything here is a property of the material, not a certificate for our letters; supplier test data comes with the quote.",
     tableTitle: "Side by side",
     tableNote:
       "Depth is how far the finished letter stands off the wall, which is what casts the shadow — not the sheet thickness, which for aluminium is a 3 mm face on 15 mm returns.",
