@@ -20,20 +20,12 @@
  * Usage: node scripts/check-image-sizes.mjs [baseUrl]
  */
 import { chromium } from "playwright";
-import { existsSync, readFileSync } from "node:fs";
+import { assertServing } from "./lib/server.mjs";
 
 const BASE = (process.argv[2] || "http://localhost:4010").replace(/\/$/, "");
 
-/** Refuse to measure a stale build — see the note in check-print-template.mjs. */
-if (existsSync(".next/BUILD_ID")) {
-  const expected = readFileSync(".next/BUILD_ID", "utf8").trim();
-  const html = await fetch(`${BASE}/`).then((r) => r.text());
-  if (!html.includes(expected)) {
-    console.error(`The server at ${BASE} is not serving build ${expected}.`);
-    process.exit(2);
-  }
-  console.log(`Serving build ${expected}.`);
-}
+/** Refuse to measure a stale build — see the note on `assertServing`. */
+await assertServing(BASE);
 
 const PAGES = [
   "/",
@@ -184,6 +176,26 @@ if (errors.length) {
 }
 if (warns.length) {
   console.log("\nRESULT: FAIL — images are being served much larger than they are painted.");
+  process.exit(1);
+}
+
+/**
+ * Refuse to pass on nothing measured.
+ *
+ * Every verdict here is the absence of a finding, so a run that measured no
+ * images reads identically to a run that found every image correct. The way that
+ * happens is not exotic: this check recognises optimised images by their
+ * `/_next/image` URL, and a config change, a different loader or a renamed
+ * attribute would leave it measuring zero and reporting success. Each of these
+ * pages carries artwork at every viewport, so one measurement per page is a
+ * floor that is true today and worth failing on if it stops being true.
+ */
+const perPage = Math.floor(measured / PAGES.length);
+if (measured === 0 || perPage < 1) {
+  console.log(
+    `\nRESULT: FAIL — measured ${measured} optimised images across ${PAGES.length} pages. ` +
+      `Every one of these pages carries artwork, so this run measured nothing and proves nothing.`,
+  );
   process.exit(1);
 }
 console.log("RESULT: PASS — every image is fetched at close to the size it is painted.");

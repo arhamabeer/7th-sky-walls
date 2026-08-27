@@ -9,10 +9,18 @@
  * Usage: node scripts/check-hero-layout.mjs [baseUrl]
  */
 import { chromium } from "playwright";
+import { assertServing } from "./lib/server.mjs";
 
 const BASE = (process.argv[2] || "http://localhost:4020").replace(/\/$/, "");
 /** Minimum gap between frames, in pixels, so the wall reads as hung not stacked. */
 const MIN_GAP = 8;
+
+/**
+ * This gate had no idea what it was measuring, and its default port is the one
+ * an ad-hoc `serve.mjs` uses — so a leftover server from an earlier session
+ * would have had it confirming the hero wall of a build nobody was looking at.
+ */
+await assertServing(BASE);
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
