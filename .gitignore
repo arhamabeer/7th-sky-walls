@@ -42,8 +42,7 @@ next-env.d.ts
 .audit/
 .audit-report.json
 .audit-run.txt
-.template-check
 .shots/
 .ar-tmp/
 .lighthouse/
-
+.print/
