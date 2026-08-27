@@ -1297,6 +1297,40 @@ your-words filter and the print template — all three were audited for layout b
 absent from the list a person actually looks at, and both of the day's content
 defects were found by looking.
 
+### The planner offered three of seven series — 2026-08-27
+
+`Add a piece` took `artworks.slice(0, 12)`, a prefix of the catalogue, so its
+shortcuts came from Word Clouds, Statement Walls and Line & Wire and from nowhere
+else. The series it left out were the worst ones to leave out: mirror acrylic is
+sold as sets of six to twenty-two components the buyer arranges, which is the
+single clearest reason this planner exists, and it was not offered here at all.
+Sacred Lines, Brand Walls and the values boards were missing too. Two from each
+series covers all seven and keeps the row the size it was.
+
+**The preview scrolled out of sight as soon as anyone used the controls.** The
+control column is about twice the height of the preview — a wall is wider than it
+is tall, and there is a size chooser per piece — so on a wide screen the wall left
+the screen exactly when sizes started changing. Watching the arrangement change is
+the whole feature, so the preview is pinned on `lg:` and above.
+
+That has a failure mode worth guarding rather than discovering: sticky pins the
+top and lets the rest run off the bottom, so a preview taller than the viewport is
+one whose lower half can never be reached — worse than not pinning it. A narrow
+pier between two windows is the real case: at 120 × 260 cm the preview comes to
+582 × 1261px against a 900px viewport. Measured across the shapes, pinning is
+correct up to about 1.3 of width and is applied up to 1.2; above that the preview
+scrolls. Verified at three wall shapes that the bottom edge stays reachable in
+every one.
+
+**And the change broke a test, correctly.** The planner suite clicked
+"Collective" by name, which the shortcuts no longer offer, so a passing test
+became a 30-second locator timeout reported as a broken planner in all three
+viewports. It takes the list as rendered now — what is being checked is that
+adding a piece puts one on the wall, not which piece. The series coverage is
+checked too, by mapping the rendered titles back through `artworks.json` rather
+than by adding an attribute to the markup for the test's benefit; reverting to the
+prefix fails it with "3 of 7 series".
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.
