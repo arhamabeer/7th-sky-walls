@@ -64,6 +64,8 @@ const MAX_AREA_RATIO = 6;
 const browser = await chromium.launch();
 const findings = [];
 let measured = 0;
+/** Laid-out optimised images that never chose a candidate — a coverage gap, not a pass. */
+const stillPending = [];
 
 for (const vp of VIEWPORTS) {
   for (const path of PAGES) {
@@ -107,10 +109,34 @@ for (const vp of VIEWPORTS) {
     // flight also changes a bounding box.
     await page.waitForTimeout(900);
 
-    const rows = await page.evaluate((dpr) => {
-      return [...document.querySelectorAll("img")]
+    /**
+     * `currentSrc` only, never `img.src`.
+     *
+     * `currentSrc` is the candidate the browser actually chose; it is empty until
+     * one has been chosen. `img.src` on a next/image element is the no-srcset
+     * fallback, which is the *largest* rung of the ladder — so falling back to it
+     * reported a 3840px fetch for an image that had simply not picked anything
+     * yet, and called a 77px thumbnail 365x over-fetched. Chromium supports
+     * srcset, so that URL is never the resource fetched: reading it was not a
+     * race being mis-measured, it was measuring the wrong string.
+     *
+     * An image with no `currentSrc` is pending rather than innocent, so it is
+     * counted and given another moment below — and anything still pending is
+     * reported, because a silent skip is how a gate loses coverage.
+     */
+    const measureRows = () => page.evaluate((dpr) => {
+      let pending = 0;
+      const rows = [...document.querySelectorAll("img")]
         .map((img) => {
-          const src = img.currentSrc || img.src || "";
+          const src = img.currentSrc || "";
+          if (!src) {
+            const box = img.getBoundingClientRect();
+            // Only count what is laid out; a display:none image has nothing to fetch.
+            if (box.width >= 8 && (img.getAttribute("src") || "").includes("/_next/image")) {
+              pending += 1;
+            }
+            return null;
+          }
           // Only optimised artwork. Icons, the wordmark and inline data URLs are
           // not served through a width ladder and have nothing to judge.
           if (!src.includes("/_next/image")) return null;
@@ -130,7 +156,18 @@ for (const vp of VIEWPORTS) {
           };
         })
         .filter(Boolean);
+      return { rows, pending };
     }, vp.dpr);
+
+    let { rows, pending } = await measureRows();
+    if (pending > 0) {
+      // One more moment for whatever had not chosen a candidate yet.
+      await page.waitForTimeout(1500);
+      ({ rows, pending } = await measureRows());
+    }
+    if (pending > 0) {
+      stillPending.push(`${vp.name} ${path}: ${pending} image(s) never chose a candidate`);
+    }
 
     for (const r of rows) {
       measured += 1;
@@ -164,6 +201,12 @@ console.log(
   `\nMeasured ${measured} optimised images across ${PAGES.length} pages and ${VIEWPORTS.length} viewports.`,
 );
 console.log(`Under-fetched: ${errors.length}   Over-fetched beyond ${MAX_AREA_RATIO}x: ${warns.length}\n`);
+
+if (stillPending.length) {
+  console.log("Images that never chose a candidate, so they were not judged:");
+  for (const line of stillPending) console.log(`  ${line}`);
+  console.log("");
+}
 
 for (const f of [...errors, ...warns].slice(0, 40)) {
   console.log(`  [${f.severity.toUpperCase()}] ${f.vp} ${f.page}: ${f.text}`);
