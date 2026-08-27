@@ -1097,19 +1097,29 @@ async function testMaterialsPage(page, vp) {
   // rather than under it.
   await page.click('main table a[href="#pvc-foam"]');
   /**
-   * Wait for the scroll to happen rather than for 600ms.
+   * Wait for the scroll to *finish*, not for it to start.
    *
-   * A fixed wait was enough until the page grew, and then it was not: on a loaded
-   * machine the click landed before the anchor's target had settled and the check
-   * reported the card at 1733px — its unscrolled position — which reads as "the
-   * anchor is broken" rather than "the measurement was early". Waiting for the
-   * page to actually move says the same thing without the false alarm, and still
-   * fails if nothing moves.
+   * A fixed wait was enough until the page grew, and then it was not: the click
+   * landed before the anchor's target had settled and the check reported the card
+   * at 1733px — its unscrolled position — which reads as "the anchor is broken"
+   * rather than "the measurement was early". Waiting for the page to move fixed
+   * that case and left a narrower one: this scroll is animated, so "it has moved
+   * past 100px" and "it has arrived" are different moments, and 400ms after the
+   * first is not reliably the second. It reported 610px against a 400px bound
+   * once in three runs — mid-animation.
+   *
+   * So the condition is two consecutive samples at the same position. A broken
+   * anchor never satisfies it, times out, and still fails the check, which is the
+   * point of the `scrollY > 100` half.
    */
-  await page
-    .waitForFunction(() => window.scrollY > 100, undefined, { timeout: 5000 })
-    .catch(() => {});
-  await page.waitForTimeout(400);
+  await page.evaluate(async () => {
+    let previous = -1;
+    for (let i = 0; i < 60; i += 1) {
+      if (window.scrollY === previous && window.scrollY > 100) return;
+      previous = window.scrollY;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+  });
   const landed = await page.evaluate(() => {
     const el = document.getElementById("pvc-foam");
     if (!el) return null;
