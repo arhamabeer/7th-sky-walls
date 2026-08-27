@@ -69,6 +69,11 @@ const PAGES = {
   "artwork-custom": "/portfolio/sabr",
   "artwork-panorama": "/portfolio/ask-better-questions",
   "artwork-square": "/portfolio/outside-the-box",
+  // Both of these are audited for layout but were not in the visual list, which
+  // is the list somebody actually looks at.
+  "portfolio-your-words": "/portfolio?words=yes",
+  materials: "/materials",
+  "template-spec": "/portfolio/sabr/template",
   services: "/services",
   about: "/about",
   contact: "/contact",

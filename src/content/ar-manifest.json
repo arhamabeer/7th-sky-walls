@@ -673,7 +673,7 @@
   },
   "sabr": {
     "wall": "light wall",
-    "source": "/artworks/sabr.1c5e5a69.png",
+    "source": "/artworks/sabr.1f2ddcdb.png",
     "sizes": {
       "s": {
         "glb": "/ar/sabr/s.glb",
@@ -681,8 +681,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 28572,
-        "usdzBytes": 28639
+        "glbBytes": 27676,
+        "usdzBytes": 27916
       },
       "m": {
         "glb": "/ar/sabr/m.glb",
@@ -690,8 +690,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 28568,
-        "usdzBytes": 28639
+        "glbBytes": 27672,
+        "usdzBytes": 27916
       },
       "l": {
         "glb": "/ar/sabr/l.glb",
@@ -699,8 +699,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 28568,
-        "usdzBytes": 28639
+        "glbBytes": 27672,
+        "usdzBytes": 27916
       },
       "xl": {
         "glb": "/ar/sabr/xl.glb",
@@ -708,14 +708,14 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 28564,
-        "usdzBytes": 28639
+        "glbBytes": 27668,
+        "usdzBytes": 27916
       }
     }
   },
   "bismillah": {
     "wall": "light wall",
-    "source": "/artworks/bismillah.adc9541b.png",
+    "source": "/artworks/bismillah.07c0a526.png",
     "sizes": {
       "s": {
         "glb": "/ar/bismillah/s.glb",
@@ -723,8 +723,8 @@
         "widthCm": 60,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 32204,
-        "usdzBytes": 33503
+        "glbBytes": 31500,
+        "usdzBytes": 32812
       },
       "m": {
         "glb": "/ar/bismillah/m.glb",
@@ -732,8 +732,8 @@
         "widthCm": 80,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 32200,
-        "usdzBytes": 33503
+        "glbBytes": 31496,
+        "usdzBytes": 32812
       },
       "l": {
         "glb": "/ar/bismillah/l.glb",
@@ -741,8 +741,8 @@
         "widthCm": 120,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 32200,
-        "usdzBytes": 33503
+        "glbBytes": 31496,
+        "usdzBytes": 32812
       },
       "xl": {
         "glb": "/ar/bismillah/xl.glb",
@@ -750,14 +750,14 @@
         "widthCm": 160,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 32196,
-        "usdzBytes": 33503
+        "glbBytes": 31492,
+        "usdzBytes": 32812
       }
     }
   },
   "shukr": {
     "wall": "dark wall",
-    "source": "/artworks/shukr.cea512df.png",
+    "source": "/artworks/shukr.a7f55b9c.png",
     "sizes": {
       "s": {
         "glb": "/ar/shukr/s.glb",
@@ -765,8 +765,8 @@
         "widthCm": 45,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 26132,
-        "usdzBytes": 28853
+        "glbBytes": 25452,
+        "usdzBytes": 28146
       },
       "m": {
         "glb": "/ar/shukr/m.glb",
@@ -774,8 +774,8 @@
         "widthCm": 60,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 26132,
-        "usdzBytes": 28853
+        "glbBytes": 25452,
+        "usdzBytes": 28146
       },
       "l": {
         "glb": "/ar/shukr/l.glb",
@@ -783,8 +783,8 @@
         "widthCm": 90,
         "heightCm": 120,
         "depthCm": 3.5,
-        "glbBytes": 26132,
-        "usdzBytes": 28853
+        "glbBytes": 25452,
+        "usdzBytes": 28146
       },
       "xl": {
         "glb": "/ar/shukr/xl.glb",
@@ -792,14 +792,14 @@
         "widthCm": 120,
         "heightCm": 160,
         "depthCm": 3.5,
-        "glbBytes": 26128,
-        "usdzBytes": 28853
+        "glbBytes": 25448,
+        "usdzBytes": 28146
       }
     }
   },
   "alhamdulillah": {
     "wall": "light wall",
-    "source": "/artworks/alhamdulillah.7418a874.png",
+    "source": "/artworks/alhamdulillah.852b2c04.png",
     "sizes": {
       "s": {
         "glb": "/ar/alhamdulillah/s.glb",
@@ -807,8 +807,8 @@
         "widthCm": 120,
         "heightCm": 48,
         "depthCm": 3.5,
-        "glbBytes": 26020,
-        "usdzBytes": 28242
+        "glbBytes": 25804,
+        "usdzBytes": 27916
       },
       "m": {
         "glb": "/ar/alhamdulillah/m.glb",
@@ -816,8 +816,8 @@
         "widthCm": 150,
         "heightCm": 60,
         "depthCm": 3.5,
-        "glbBytes": 25992,
-        "usdzBytes": 28242
+        "glbBytes": 25776,
+        "usdzBytes": 27916
       },
       "l": {
         "glb": "/ar/alhamdulillah/l.glb",
@@ -825,8 +825,8 @@
         "widthCm": 200,
         "heightCm": 80,
         "depthCm": 3.5,
-        "glbBytes": 25984,
-        "usdzBytes": 28242
+        "glbBytes": 25768,
+        "usdzBytes": 27916
       },
       "xl": {
         "glb": "/ar/alhamdulillah/xl.glb",
@@ -834,8 +834,8 @@
         "widthCm": 250,
         "heightCm": 100,
         "depthCm": 3.5,
-        "glbBytes": 25960,
-        "usdzBytes": 28242
+        "glbBytes": 25744,
+        "usdzBytes": 27916
       }
     }
   },

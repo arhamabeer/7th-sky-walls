@@ -604,7 +604,7 @@
     "orientation": "portrait",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/sabr.1c5e5a69.png",
+      "src": "/artworks/sabr.1f2ddcdb.png",
       "width": 1500,
       "height": 2000
     },
@@ -641,7 +641,7 @@
     "orientation": "square",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/bismillah.adc9541b.png",
+      "src": "/artworks/bismillah.07c0a526.png",
       "width": 1800,
       "height": 1800
     },
@@ -678,7 +678,7 @@
     "orientation": "portrait",
     "wallTone": "dark",
     "image": {
-      "src": "/artworks/shukr.cea512df.png",
+      "src": "/artworks/shukr.a7f55b9c.png",
       "width": 1500,
       "height": 2000
     },
@@ -715,7 +715,7 @@
     "orientation": "panorama",
     "wallTone": "light",
     "image": {
-      "src": "/artworks/alhamdulillah.7418a874.png",
+      "src": "/artworks/alhamdulillah.852b2c04.png",
       "width": 2500,
       "height": 1000
     },
