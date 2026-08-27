@@ -16,6 +16,7 @@ npm run check:slug-refs
 npm run check:analytics
 npm run check:print
 npm run check:image-sizes
+npm run check:seo
 npm run verify
 npm run test:interaction
 npm run lighthouse
@@ -32,6 +33,7 @@ npm run lighthouse
 | `check:image-sizes` | Every image is fetched at close to the size it is painted, across nine pages at four viewports. Under-fetching fails as an error — a soft image on cut lettering is the product looking cheap — and over-fetching beyond 6x fails too. It found 195 of 289 images over-fetching by up to 61x when it was written. It refuses to pass on zero images measured, and reports any image that never chose a candidate rather than skipping it silently. Included in `verify`. |
 | `check:slug-refs` | Every artwork and collection slug referenced by a test, audit or page still exists, and every piece the docs name in bold still exists. Renaming the catalogue leaves stale references that fail as broken features rather than as stale strings — and it left the AR checklist opening with a piece that had been deleted. It also checks the file paths the docs name, by format: `public/artworks/<slug>.png` is deliberately a file that does not exist yet, but its extension has to be one that directory holds, because the plan told anyone ingesting real work to drop a `.jpg` that nothing reads. |
 | `check:analytics` | Vercel's cookieless scripts do not load off Vercel and Google Analytics does not load without a measurement id — so a development or preview deployment cannot reach the reporting property. |
+| `check:seo` | The SEO facts Lighthouse does not ask about, on every route in the sitemap: that each canonical points at its own page, that the sitemap lists exactly the routes the content implies and nothing that 404s, that no two pages claim the same title or description, and that every structured-data block parses. Lighthouse scores SEO 100 and checks none of these — a canonical pointing elsewhere asks search engines to drop the page, and a route missing from the sitemap is one they may never come back for. The print template is verified to be `noindex` *and* absent from the sitemap, since listing a noindex page is a contradiction. Included in `verify`. |
 | `check:brand` | Swaps in a 44-character studio name and a different palette, rebuilds, and confirms no trace of the real brand survives and the header still contains its contents at 320–430px. Restores the real config either way. Two builds, so run it before launch and after touching the header, footer or config shape — not on every change. |
 
 `npm run test:interaction`, `npm run check:analytics` and `npm run lighthouse`

@@ -89,7 +89,16 @@ const sizesCode = run("node", [
   `http://localhost:${PORT}`,
 ]);
 
-// --- 7. Audit. ------------------------------------------------------------
+// --- 7. SEO facts. --------------------------------------------------------
+// Lighthouse scores SEO 100 on every route and never asks whether a canonical
+// points at its own page, whether the sitemap lists the pages that exist, or
+// whether two pages claim the same title. Those are the failures that cost
+// rankings silently — and the sitemap is generated from the same content the
+// pages are, so a new route type without a sitemap entry is drift waiting.
+console.log("→ Checking the SEO facts Lighthouse does not...");
+const seoCode = run("node", ["scripts/check-seo.mjs", `http://localhost:${PORT}`]);
+
+// --- 8. Audit. ------------------------------------------------------------
 const auditCode = run("node", [
   "scripts/responsive-audit.mjs",
   "--url",
@@ -98,4 +107,4 @@ const auditCode = run("node", [
 ]);
 
 shutdown();
-process.exit(auditCode || heroCode || printCode || sizesCode);
+process.exit(auditCode || heroCode || printCode || sizesCode || seoCode);
