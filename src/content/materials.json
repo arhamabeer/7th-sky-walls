@@ -7,7 +7,11 @@
     "fire": "Combustible. Standard cast acrylic is not fire resistant, so where a specification calls for a rated material we quote PVC foam or aluminium instead — or a flame-retardant acrylic grade, which exists but costs more and is worth ordering only when the rating is actually required.",
     "bestFor": "Reception walls, boardrooms, hotels",
     "fireShort": "Combustible",
-    "depthMm": 10
+    "depthMm": 10,
+    "venues": [
+      "office",
+      "hotel"
+    ]
   },
   {
     "id": "mirror-acrylic",
@@ -17,7 +21,12 @@
     "fire": "Combustible, like all acrylic. Its advantage over glass mirror is breakage, not fire: it will not shatter into edges. Where a rating is required, the same piece can be cut in polished aluminium instead.",
     "bestFor": "Reception walls, restaurants, hotels, salons",
     "fireShort": "Combustible",
-    "depthMm": 3
+    "depthMm": 3,
+    "venues": [
+      "office",
+      "restaurant",
+      "hotel"
+    ]
   },
   {
     "id": "pvc-foam",
@@ -27,7 +36,13 @@
     "fire": "The best fire performer here, and the reason it is the default for schools and corridors. Expanded PVC is self-extinguishing — chlorine makes up over half its mass and acts as a flame retardant, giving it a limiting oxygen index of 35–45%, so it stops burning once the flame source is removed. Thin gauges reach Class A under ASTM E84. Ask and we will send the supplier's test data for the exact sheet.",
     "bestFor": "Schools, universities, corridors, leased offices, cafés",
     "fireShort": "Self-extinguishing",
-    "depthMm": 19
+    "depthMm": 19,
+    "venues": [
+      "school",
+      "university",
+      "office",
+      "cafe"
+    ]
   },
   {
     "id": "routed-mdf",
@@ -37,7 +52,10 @@
     "fire": "Standard MDF is Class D — combustible, with a long flame-spread. Fire-retardant MDF reaching Class B is available and is what we quote for an escape route or anywhere a rating is specified; it costs more, so it is worth asking for only where it is needed.",
     "bestFor": "Studios, offices, large word clouds",
     "fireShort": "Class D; FR grade reaches Class B",
-    "depthMm": 19
+    "depthMm": 19,
+    "venues": [
+      "office"
+    ]
   },
   {
     "id": "brushed-aluminium",
@@ -47,7 +65,11 @@
     "fire": "Non-combustible. Where a specification leaves no room — an atrium, a protected stairwell, a hospital corridor — this is the material that answers it without a conversation.",
     "bestFor": "Reception walls, lobbies, atriums, stairwells, meeting-room fronts",
     "fireShort": "Non-combustible",
-    "depthMm": 15
+    "depthMm": 15,
+    "venues": [
+      "office",
+      "hotel"
+    ]
   },
   {
     "id": "printed-pla",
@@ -57,6 +79,10 @@
     "fire": "Combustible, with no useful rating. Fine on an office or classroom wall; not what we would put on an escape route, where PVC foam or aluminium is the right answer.",
     "bestFor": "Co-working floors, classrooms, leased offices",
     "fireShort": "Combustible, no rating",
-    "depthMm": 8
+    "depthMm": 8,
+    "venues": [
+      "office",
+      "school"
+    ]
   }
 ]
