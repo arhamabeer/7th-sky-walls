@@ -92,6 +92,22 @@ keeping its `h1` and its hanging notes while only the panel is replaced.
       email, social URLs, founding year. These appear in canonical URLs,
       structured data and the sitemap, so a placeholder domain here means every
       page tells search engines the wrong address.
+
+      Run **`npm run check:config`** to see what is left. It is the one gate
+      expected to *fail* until this item is done, which is why it is not in the
+      list above — a failing check in that list would train everyone to skim past
+      it. It separates the two placeholders that swallow a lead from the four that
+      are merely wrong in public:
+
+      `contact.whatsapp` and `contact.email` are not inert text. The WhatsApp
+      number is the site's most prominent call to action — header, footer, every
+      artwork page, the planner, the contact page — and it currently opens
+      WhatsApp to a number that does not exist. The email is a reserved
+      `example.com` address guaranteed never to receive anything. With
+      `RESEND_API_KEY` also unset, the form honestly reports that it could not
+      send and hands the visitor over to exactly those two dead channels, so
+      **right now an inquiry has no working route to the studio at all** — on a
+      site where every path ends in an inquiry.
 - [ ] **Swap in the real logo** at `public/brand/mark.svg`, then run
       `npm run generate:placeholders` to regenerate the app icons.
 - [ ] **Confirm the brand palette and typography** in `site.config.ts` and
