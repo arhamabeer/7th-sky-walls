@@ -45,7 +45,17 @@ export default function HomePage() {
     allArtworks.find((a) => a.slug === slug),
   ).filter((a): a is NonNullable<typeof a> => Boolean(a));
   const collections = getCollections();
-  const featured = getFeaturedArtworks().slice(0, 6);
+  /**
+   * Every featured piece, not the first six of them.
+   *
+   * The `featured` flag in the catalogue is the editorial decision about what
+   * belongs on the home page, and slicing it silently overrode that decision:
+   * nine pieces are flagged, spanning all seven series, and taking six of them in
+   * catalogue order dropped Brand Walls and Mirror Acrylic — the two series this
+   * market asks for by name, and the two added most recently. To show fewer,
+   * flag fewer.
+   */
+  const featured = getFeaturedArtworks();
   const venues = getVenues();
   const artworks = allArtworks;
   // A confident, office-appropriate piece for the wall-preview demonstration.

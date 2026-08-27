@@ -131,6 +131,32 @@ for (const a of artworks) {
   }
 }
 
+/**
+ * A venue's preview must span series rather than repeat one.
+ *
+ * The spaces index showed the same lightbulb on three of its six cards, and the
+ * schools and universities cards were near-identical, because a prefix of a
+ * filtered catalogue is a prefix of the catalogue. This asserts the property that
+ * fixes it — as many distinct series as there are series to draw from — so a
+ * future `slice(0, 3)` fails the build rather than quietly making six cards look
+ * like two.
+ */
+for (const venue of venues) {
+  const available = new Set(getArtworks({ venue: venue.id }).map((a) => a.collection)).size;
+  for (const count of [3, 6]) {
+    const preview = getVenuePreview(venue.id, count);
+    const spanned = new Set(preview.map((a) => a.collection)).size;
+    const expected = Math.min(count, available);
+    if (spanned < expected) {
+      throw new Error(
+        `The preview of ${count} pieces for "${venue.id}" covers ${spanned} series where ` +
+          `${expected} were available. A venue card showing one series repeated is how six ` +
+          `cards came to look like two.`,
+      );
+    }
+  }
+}
+
 export function getArtworks(filter?: {
   venue?: VenueId;
   collection?: string;
@@ -146,6 +172,88 @@ export function getArtworks(filter?: {
 
 export function getArtworkBySlug(slug: string): Artwork | undefined {
   return artworks.find((a) => a.slug === slug);
+}
+
+/**
+ * Take `count` pieces spanning as many series as the list allows.
+ *
+ * `list.slice(0, n)` on a filtered catalogue takes a prefix of the catalogue,
+ * and the catalogue is ordered by series — so anywhere that was used, the
+ * earliest series crowded out the rest.
+ *
+ * Round-robin across series, one from each before a second from any, in
+ * catalogue order within each series. `seriesOrder` decides which series is
+ * asked first; anything not named in it comes after those that are, keeping its
+ * catalogue position.
+ */
+function spanSeries<T extends { collection: string }>(
+  list: T[],
+  count: number,
+  seriesOrder: string[] = [],
+): T[] {
+  const bySeries = new Map<string, T[]>();
+  for (const item of list) {
+    const seen = bySeries.get(item.collection);
+    if (seen) seen.push(item);
+    else bySeries.set(item.collection, [item]);
+  }
+  const rankOf = (series: string) => {
+    const i = seriesOrder.indexOf(series);
+    return i === -1 ? seriesOrder.length : i;
+  };
+  const queues = [...bySeries.entries()]
+    .map(([series, items], position) => ({ rank: rankOf(series), position, items }))
+    .sort((a, b) => a.rank - b.rank || a.position - b.position)
+    .map((q) => q.items);
+
+  const picked: T[] = [];
+  for (let round = 0; picked.length < count; round += 1) {
+    let tookAny = false;
+    for (const queue of queues) {
+      const item = queue[round];
+      if (!item) continue;
+      picked.push(item);
+      tookAny = true;
+      if (picked.length === count) return picked;
+    }
+    // Every series exhausted, so the list is simply shorter than `count`.
+    if (!tookAny) break;
+  }
+  return picked;
+}
+
+/**
+ * The pieces to show for a venue, led by the series that belongs to it most.
+ *
+ * A prefix of the filtered list was a prefix of the catalogue, so the spaces
+ * index showed the same lightbulb on three of its six cards and the schools and
+ * universities cards were near-identical. Spanning the series was not enough on
+ * its own: the series are asked in catalogue order, so every venue that has word
+ * clouds, statement walls and line-and-wire picks the first of each and Offices
+ * and Schools come out the same.
+ *
+ * So the series are ranked by how much of each one belongs to this venue —
+ * pieces tagged for the venue over pieces in the series. That is a real
+ * statement about the space rather than an arbitrary shuffle: restaurants lead
+ * with Sacred Lines, hotels with Mirror Acrylic, universities with Statement
+ * Walls, schools with Line & Wire. Offices are tagged for twenty-seven of the
+ * twenty-eight pieces, so every series scores 100% there and the tie breaks on
+ * catalogue order — which is the honest answer for a venue that takes
+ * everything.
+ */
+export function getVenuePreview(venue: VenueId, count: number): Artwork[] {
+  const forVenue = getArtworks({ venue });
+  const totals = new Map<string, number>();
+  for (const a of artworks) totals.set(a.collection, (totals.get(a.collection) ?? 0) + 1);
+  const here = new Map<string, number>();
+  for (const a of forVenue) here.set(a.collection, (here.get(a.collection) ?? 0) + 1);
+
+  const order = [...here.keys()]
+    .map((series) => ({ series, share: here.get(series)! / totals.get(series)! }))
+    .sort((a, b) => b.share - a.share || a.series.localeCompare(b.series))
+    .map((s) => s.series);
+
+  return spanSeries(forVenue, count, order);
 }
 
 export function getFeaturedArtworks(): Artwork[] {
