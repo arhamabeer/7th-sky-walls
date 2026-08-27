@@ -5,6 +5,7 @@ import {
   EYE_LEVEL_M,
   PIECE_GAP_CM,
 } from "@/content/hanging";
+import { RULER_CM, SHEET_INSET_MM } from "@/lib/print/sheets";
 
 /**
  * All user-facing UI copy, centralized. Brand-identifying strings are
@@ -204,7 +205,7 @@ export const copy = {
   template: {
     title: "Print it at true size",
     subtitle:
-      "Every sheet carries a 10 cm bar. Measure it before anything goes on a wall — that bar is the only way to know the printer did not quietly scale the page.",
+      `Every sheet carries a ${RULER_CM} cm bar. Measure it before anything goes on a wall — that bar is the only way to know the printer did not quietly scale the page.`,
     whatToPrint: "What to print",
     paper: "Paper",
     print: "Print",
@@ -230,7 +231,7 @@ export const copy = {
     dialogTitle: "Set the print dialog to",
     scaleLabel: "Scale 100%.",
     marginsLabel: "Margins: none.",
-    marginsNote: "The sheet sets its own 10 mm border.",
+    marginsNote: `The sheet sets its own ${SHEET_INSET_MM} mm border.`,
     backgroundsLabel: "Background graphics: on.",
     backgroundsNote:
       "Otherwise pale lettering prints on a white page as nothing at all.",
@@ -238,7 +239,7 @@ export const copy = {
     specIsPortrait: "A specification is always portrait.",
     pdfNote:
       "Choosing “Save as PDF” instead gives you the same thing as a file to send on.",
-    rulerCaption: "10 cm — if not, reprint at 100%",
+    rulerCaption: `${RULER_CM} cm — if not, reprint at 100%`,
     previewNote:
       "On this screen only the first page is previewed, at phone size — its text is full size on paper.",
     specHeading: "Specification",
@@ -248,7 +249,7 @@ export const copy = {
     elevationCaption: "To scale, against a standard doorway.",
     centreLineLabel: "Centre line",
     cornerHowTo: [
-      "Check the 10 cm bar with a ruler before anything goes on the wall.",
+      `Check the ${RULER_CM} cm bar with a ruler before anything goes on the wall.`,
       `Mark the wall's centre line at ${EYE_LEVEL_M} m, then measure half the width each way from it.`,
       "Tape each sheet so its printed lines sit on those marks. The line is the edge of the piece.",
       "Stand back before you commit — that is the point of the exercise.",

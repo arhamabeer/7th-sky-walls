@@ -1,5 +1,5 @@
 import { chromium } from "playwright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import { assertServing } from "./lib/server.mjs";
@@ -28,6 +28,35 @@ await assertServing(BASE);
  */
 const OUT = process.argv[3] || path.resolve(import.meta.dirname, "..", ".print");
 mkdirSync(OUT, { recursive: true });
+
+/**
+ * The bar's length, read from the module that draws it.
+ *
+ * This gate is the thing that would catch the bar being wrong, so it must not
+ * hold its own copy of the answer: a check that agrees with a stale constant
+ * agrees with the defect. Read from the source rather than imported because this
+ * is a .mjs script and sheets.ts is TypeScript — and it fails loudly if the
+ * export is renamed, rather than falling back to a guess.
+ */
+const SHEETS_SOURCE = readFileSync(
+  path.resolve(import.meta.dirname, "..", "src", "lib", "print", "sheets.ts"),
+  "utf8",
+);
+
+function sheetConst(name) {
+  const found = SHEETS_SOURCE.match(new RegExp(`export const ${name} = (\\d+(?:\\.\\d+)?);`));
+  if (!found) {
+    console.error(
+      `Could not read ${name} from src/lib/print/sheets.ts — it was renamed, and this ` +
+        `check will not assert a number it had to guess.`,
+    );
+    process.exit(2);
+  }
+  return Number(found[1]);
+}
+
+const RULER_MM = sheetConst("RULER_MM");
+const SHEET_INSET_MM = sheetConst("SHEET_INSET_MM");
 const PX_PER_MM = 96 / 25.4;
 const mm = (px) => Math.round((px / PX_PER_MM) * 100) / 100;
 
@@ -143,13 +172,21 @@ for (const c of CASES) {
     fail(`sheet is ${sw}x${sh}mm, expected ${expW}x${expH}mm`);
   } else ok(`sheet ${sw}x${sh}mm (${portrait ? "portrait" : "landscape"})`);
 
-  if (Math.abs(mm(geo.inset.w) - (expW - 20)) > 0.5 || Math.abs(mm(geo.inset.h) - (expH - 20)) > 0.5) {
-    fail(`printable area ${mm(geo.inset.w)}x${mm(geo.inset.h)}mm, expected ${expW - 20}x${expH - 20}`);
+  const inset2 = SHEET_INSET_MM * 2;
+  if (
+    Math.abs(mm(geo.inset.w) - (expW - inset2)) > 0.5 ||
+    Math.abs(mm(geo.inset.h) - (expH - inset2)) > 0.5
+  ) {
+    fail(
+      `printable area ${mm(geo.inset.w)}x${mm(geo.inset.h)}mm, ` +
+        `expected ${expW - inset2}x${expH - inset2}`,
+    );
   } else ok(`printable ${mm(geo.inset.w)}x${mm(geo.inset.h)}mm`);
 
   const rulerMm = mm(geo.ruler);
-  if (Math.abs(rulerMm - 100) > 0.4) fail(`calibration bar is ${rulerMm}mm, must be 100mm`);
-  else ok(`calibration bar ${rulerMm}mm`);
+  if (Math.abs(rulerMm - RULER_MM) > 0.4) {
+    fail(`calibration bar is ${rulerMm}mm, must be ${RULER_MM}mm`);
+  } else ok(`calibration bar ${rulerMm}mm`);
 
   if (geo.chromeVisible > 0) fail(`${geo.chromeVisible} chrome element(s) still visible in print`);
   else ok("site chrome hidden in print");
