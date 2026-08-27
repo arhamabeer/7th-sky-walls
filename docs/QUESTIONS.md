@@ -8,14 +8,27 @@ each.
 
 Scan this list; everything below it is already settled and kept for the record.
 
-| # | What | Why it needs you |
+Nothing here is a decision any more — every open item is a piece of material or a
+device. The decisions were answered on 2026-08-27 and are recorded below.
+
+| # | Still owed | What it holds up |
 | --- | --- | --- |
-| [7b](#7b-are-printed-wall-coverings-still-a-service--claim-removed-needs-a-yes-or-no) | Are printed wall coverings still a service? | The claim is removed rather than corrected, because correcting it would mean inventing a spec and a fire rating. If you do offer them they need a `materials.json` entry like every other material. |
-| [7a](#7a-materials-and-lead-times--researched-fire-behaviour-added) | Stocked thicknesses, and lead times | The material science is researched and stands on its own. The thicknesses actually stocked, and whether five working days to concept and three to six weeks to install survive fabrication rather than printing, are yours. |
-| [1](#1-real-business-details--the-studio-will-edit-them-directly) | The real business details | Every `TODO` in `src/config/site.config.ts` — domain, legal name, address, coordinates, phone, WhatsApp, inquiry email, socials, founding year. These reach canonical URLs, structured data and the sitemap. |
+| [7a](#7a-materials-and-lead-times--researched-fire-behaviour-added) | The thicknesses actually stocked | Nothing on the site is wrong until a stocked gauge differs — the specs say "typically 10 mm", not 10 mm — but a facilities manager will quote them back. The lead times are answered and stand. |
+| [1](#1-real-business-details--the-studio-will-edit-them-directly) | The real business details | Every `TODO` in `src/config/site.config.ts` — domain, legal name, address, coordinates, phone, WhatsApp, inquiry email, socials, founding year. These reach canonical URLs, structured data and the sitemap. The placeholders stay visible meanwhile, by your decision. |
 | [3](#3-email-delivery--direct-channels-now-resend-before-production) | `RESEND_API_KEY` | Until it is set the form refuses to claim success and hands the visitor a prefilled WhatsApp or email message instead. That is honest, not delivery. |
-| [8](#8-case-studies--keep-the-placeholders-keep-the-label) | Real project stories and photography | The case studies say plainly that they are examples until then. |
+| [8](#8-case-studies--keep-the-placeholders-keep-the-label) | Real project stories and photography | The three placeholders stay with their "illustrative example" label, by your decision. The label comes off by a flag when the real ones land. |
 | — | An iPhone | The only thing [the AR checklist](AR-DEVICE-QA.md) cannot be run without, and the one deciding whether the iOS half of Phase 10 goes ahead. |
+
+**Answered 2026-08-27**, all four asked and answered together:
+
+- **Printed wall coverings are not a service.** The claim stays removed; no
+  `materials.json` entry and no Services section are owed. See [7b](#7b-are-printed-wall-coverings-still-a-service--answered-no-dropped).
+- **The lead times stand as written** — five working days to concept, three to six
+  weeks to install, framed on the page as typical rather than promised.
+- **The configuration placeholders stay visible.** "Street address pending" and a
+  placeholder number are honest and are not invented data; hiding the contact
+  block on a site whose only goal is an inquiry would be the worse trade.
+- **The case-study placeholders stay, with their label.**
 
 Nothing in that list blocks anything else; each has a working default in place
 and the code says which.
@@ -118,13 +131,18 @@ send.
 Thicknesses are now written as "typically 10 mm", "typically 19 mm" rather than
 as commitments.
 
-**Still needed, and it is narrower now:** the thicknesses actually stocked, and
-the lead times — five working days to concept and three to six weeks to install
-were confirmed against printing, not against cutting, spraying and hanging
-letters. Everything else stands on material science rather than on an assumption
-about this studio.
+**The lead times are answered.** 2026-08-27: five working days to concept and
+three to six weeks to install stand as written. The page frames them as "typical
+timing" rather than as commitments, which is the honest framing for a range, and
+they are unchanged pending anything the studio wants to correct later.
 
-### 7b. Are printed wall coverings still a service? — **claim removed, needs a yes or no**
+**Still needed, and it is narrower again:** the thicknesses actually stocked. The
+specs read "typically 10 mm", "typically 19 mm" rather than as commitments, so
+nothing on the site is wrong until a stocked gauge differs — but a facilities
+manager will quote these back. Everything else stands on material science rather
+than on an assumption about this studio.
+
+### 7b. Are printed wall coverings still a service? — **answered: no, dropped**
 Opened 2026-08-26 while sweeping the last of the print-era copy.
 
 Three places still described the previous product line, and one of them made a
@@ -144,13 +162,9 @@ one service. Murals are kept — they appear in the site's own strapline and nee
 no sheet material. The wall-covering claim is removed rather than corrected,
 because correcting it would mean inventing a spec and a fire rating.
 
-- If the studio does offer printed wall coverings, they need an entry in
-  `materials.json` with a real spec and real fire data, like every other
-  material.
-- If not, nothing further is needed — the copy no longer mentions them.
-
-Deleting a possible revenue line quietly would have been the wrong call, which is
-why it is written down here rather than only in the commit.
+**Answered 2026-08-27: not a service.** The claim stays removed and nothing
+further is owed — no `materials.json` entry, no Services section. Asking rather
+than deleting a possible revenue line quietly was the point of writing it down.
 
 ## Answered — waiting on material from the studio
 
