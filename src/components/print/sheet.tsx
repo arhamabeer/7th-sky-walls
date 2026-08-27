@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { SHEET_INSET_MM, type Paper, type SheetOrientation } from "@/lib/print/sheets";
+import {
+  RULER_CM,
+  RULER_MM,
+  SHEET_INSET_MM,
+  type Paper,
+  type SheetOrientation,
+} from "@/lib/print/sheets";
 import { copy } from "@/content/copy";
 
 /**
@@ -90,7 +96,7 @@ export function sheetCss(m: SheetMetrics): string {
 }
 /* The ruler is the only element on the page that has to be a specific physical
    length, because its whole purpose is to be measured. */
-.tpl-ruler { width: ${acrossTile(100, m)}; }
+.tpl-ruler { width: ${acrossTile(RULER_MM, m)}; }
 
 /* On a phone, preview the first sheet only. Twenty-five A4 thumbnails at 393px
    wide are unreadable and unhelpful, and rendering them all put enough
@@ -146,7 +152,7 @@ export function Sheet({
 }
 
 /**
- * A bar that is exactly 100mm on paper.
+ * A bar that is exactly RULER_MM long on paper.
  *
  * Every sheet carries one, not just the first: sheets get reprinted singly, and
  * a template whose scale cannot be checked is worse than no template, because it
@@ -162,12 +168,17 @@ export function CalibrationRuler() {
     // against a width that was itself derived from the content.
     <div className="tpl-ruler shrink-0">
       <div className="relative h-[1.5em] border-x border-b border-black/70">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((cm) => (
+        {/* One tick per centimetre, derived so the bar and its ticks cannot
+            disagree about how long it is. */}
+        {Array.from({ length: RULER_CM - 1 }, (_, i) => i + 1).map((cm) => (
           <span
             key={cm}
             aria-hidden
             className="absolute bottom-0 w-px bg-black/70"
-            style={{ left: `${cm * 10}%`, height: cm === 5 ? "70%" : "38%" }}
+            style={{
+              left: `${(cm / RULER_CM) * 100}%`,
+              height: cm === RULER_CM / 2 ? "70%" : "38%",
+            }}
           />
         ))}
       </div>

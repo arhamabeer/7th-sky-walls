@@ -46,6 +46,26 @@ export function isPaperId(value: unknown): value is PaperId {
  */
 export const SHEET_INSET_MM = 10;
 
+/**
+ * Length of the calibration bar printed on every sheet.
+ *
+ * Declared here because it was previously a bare `100` in the stylesheet and the
+ * words "10 cm" in three separate pieces of copy, a docstring and a gate — six
+ * copies of the one number the whole template depends on. This bar is the only
+ * mechanism for catching a printer that quietly scaled the page, so a label
+ * disagreeing with the bar is worse than having no bar: somebody measures 10cm
+ * against a bar drawn at 90mm and concludes the print is correct.
+ *
+ * 100mm rather than something longer because it has to fit across the printable
+ * width of a portrait sheet alongside the sheet label, and rather than something
+ * shorter because a 1mm reading error against 100mm is 1%, which is the accuracy
+ * the piece needs.
+ */
+export const RULER_MM = 100;
+
+/** The same bar in centimetres, for copy that speaks to people. */
+export const RULER_CM = RULER_MM / 10;
+
 export type SheetOrientation = "portrait" | "landscape";
 
 export interface TileLayout {
