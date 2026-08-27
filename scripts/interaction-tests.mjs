@@ -12,9 +12,15 @@
  * Usage: node scripts/interaction-tests.mjs [baseUrl]
  */
 import { chromium } from "playwright";
+import { readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { assertServing } from "./lib/server.mjs";
+
+/** The catalogue, for checks that need to know what a rendered title belongs to. */
+const ARTWORKS = JSON.parse(
+  readFileSync(path.join(import.meta.dirname, "..", "src", "content", "artworks.json"), "utf8"),
+);
 
 const BASE = (process.argv[2] || "http://localhost:4010").replace(/\/$/, "");
 
@@ -835,9 +841,40 @@ async function testWallPlanner(page, vp) {
   await page.fill('main input[type="number"]', "320");
   await page.waitForTimeout(400);
 
-  // Adding and removing pieces.
+  /**
+   * Adding and removing pieces, using whichever shortcut is offered first.
+   *
+   * This clicked "Collective" by name. When the shortcuts changed from the first
+   * twelve pieces in the catalogue to two from each series, that name was no
+   * longer among them — and a test that had been passing became a 30-second
+   * locator timeout reported as a broken wall planner, three times over. What is
+   * being checked is that adding a piece puts one on the wall, not which piece,
+   * so it takes the list as rendered.
+   */
   const before = await pieceCount();
-  await page.locator("main button", { hasText: "Collective" }).first().click();
+  const shortcuts = page.locator(String.raw`main h2:text-is("Add a piece") + ul`).locator("button");
+  const offered = await shortcuts.count();
+  record(vp.name, "the planner offers pieces to add", offered > 0, `${offered} shortcut(s)`);
+
+  /**
+   * And offers every series, not the first few pieces in catalogue order.
+   *
+   * A prefix left out mirror acrylic, which is sold as sets of six to twenty-two
+   * components the buyer arranges — the clearest single reason this planner
+   * exists. Checked by mapping the rendered titles back through artworks.json
+   * rather than by adding an attribute to the markup for the test's benefit.
+   */
+  const titles = await shortcuts.allTextContents();
+  const seriesOf = new Map(ARTWORKS.map((a) => [a.title, a.collection]));
+  const covered = new Set(titles.map((t) => seriesOf.get(t.trim())).filter(Boolean));
+  const allSeries = new Set(ARTWORKS.map((a) => a.collection));
+  record(
+    vp.name,
+    "every series is reachable from the planner",
+    covered.size === allSeries.size,
+    `${covered.size} of ${allSeries.size} series`,
+  );
+  await shortcuts.first().click();
   await page.waitForTimeout(350);
   const afterAdd = await pieceCount();
   record(vp.name, "adding a piece places it on the wall", afterAdd === before + 1, `${before} → ${afterAdd}`);

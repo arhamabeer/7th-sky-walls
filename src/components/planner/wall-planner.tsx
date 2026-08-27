@@ -92,6 +92,45 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
     [artworks],
   );
 
+  /**
+   * Whether the preview can be pinned without hiding its own bottom edge.
+   *
+   * Sticky positioning pins the top and lets the rest run off the screen, so a
+   * preview taller than the viewport becomes a preview whose lower half can
+   * never be reached — worse than not pinning it at all. The preview's width is
+   * a fraction of the layout and its height follows the wall's ratio, and both
+   * the layout width and the viewport height scale together across laptop and
+   * desktop sizes, so the ratio is what decides it: about 1.3 of width fits under
+   * a 96px offset at every size in the matrix.
+   *
+   * 1.2 leaves a margin. Walls are usually wider than they are tall, so this
+   * holds for almost every wall anybody enters; a narrow pier between two
+   * windows is the case it exists for, and there the preview simply scrolls.
+   */
+  const stickPreview = wall.heightCm / wall.widthCm <= 1.2;
+
+  /**
+   * Two pieces from every series, rather than the first twelve in the catalogue.
+   *
+   * Taking a prefix meant the shortcuts came from the first three series only,
+   * and the ones it left out were the worst possible ones to leave out: mirror
+   * acrylic is sold as sets of six to twenty-two components the buyer arranges,
+   * which is the single clearest reason this planner exists, and it was not
+   * offered here at all. Sacred Lines, Brand Walls and the values boards were
+   * missing too.
+   *
+   * Two each keeps the row about the same size as before while covering every
+   * series, and the full portfolio is one link away for anything else.
+   */
+  const addable = useMemo(() => {
+    const perSeries = new Map<string, typeof artworks>();
+    for (const a of artworks) {
+      const list = perSeries.get(a.collection) ?? [];
+      if (list.length < 2) perSeries.set(a.collection, [...list, a]);
+    }
+    return [...perSeries.values()].flat();
+  }, [artworks]);
+
   /** The tone most of the chosen pieces are specified for, as a suggestion. */
   const suggestedTone = useMemo<WallToneId | null>(() => {
     const counts = new Map<WallToneId, number>();
@@ -174,8 +213,20 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-14">
-      {/* The wall */}
-      <div>
+      {/*
+        The wall, held in view while the controls beside it are worked through.
+
+        The controls column is roughly twice the height of the preview — a wall
+        is wider than it is tall, and there is a size chooser per piece plus a
+        shortcut for every series — so on a wide screen the preview scrolled out
+        of sight exactly as somebody started changing sizes. Watching the
+        arrangement change is the entire feature.
+
+        `lg:` only: stacked on a phone the preview is directly above the control
+        it belongs to, and pinning it there would cost the screen space the
+        arrangement needs. `top-24` clears the header.
+      */}
+      <div className={stickPreview ? "lg:sticky lg:top-24 lg:self-start" : undefined}>
         <div
           className="relative w-full overflow-hidden rounded-xl border border-line transition-colors duration-300 motion-reduce:transition-none"
           style={{
@@ -431,7 +482,7 @@ export function WallPlanner({ artworks }: { artworks: PlannerArtwork[] }) {
             Add a piece
           </h2>
           <ul className="mt-3 flex flex-wrap gap-2">
-            {artworks.slice(0, 12).map((artwork) => (
+            {addable.map((artwork) => (
               <li key={artwork.slug}>
                 <button
                   type="button"
