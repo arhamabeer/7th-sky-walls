@@ -518,7 +518,14 @@ async function testArPanel(page, vp) {
   const assets = await page.evaluate(async () => {
     const check = async (url) => {
       const res = await fetch(url, { method: "GET" });
-      return { status: res.status, type: res.headers.get("content-type") };
+      return {
+        status: res.status,
+        type: res.headers.get("content-type"),
+        // USDZ is already a zip. Serving it gzipped makes Quick Look refuse it, and
+        // this is the one platform nobody here can test — so the config line that
+        // sets identity is the only defence, and nothing was checking it.
+        encoding: res.headers.get("content-encoding"),
+      };
     };
     return {
       glb: await check("/ar/sabr/l.glb"),
@@ -536,6 +543,30 @@ async function testArPanel(page, vp) {
     "USDZ is served as model/vnd.usdz+zip",
     assets.usdz.status === 200 && /model\/vnd\.usdz\+zip/.test(assets.usdz.type ?? ""),
     `${assets.usdz.status} ${assets.usdz.type}`,
+  );
+  /**
+   * And declares itself uncompressed, which is the subtler half.
+   *
+   * A USDZ is already a zip, and Quick Look refuses one that arrives gzipped.
+   * `next.config.ts` sets `Content-Encoding: identity` for exactly that reason,
+   * and nothing checked it — on the one platform nobody working on this can test,
+   * where the failure is a visitor tapping the AR button and getting an error
+   * from iOS rather than from us.
+   *
+   * The header must be *present*, not merely non-gzip. The first version of this
+   * check read `encoding ?? "identity"`, which cannot fail locally: `next start`
+   * does not compress this response, so the header is simply absent and the
+   * default called that a pass. Removing the config line left the check green —
+   * it was agreeing with the defect. Presence is stricter than the underlying
+   * requirement, deliberately: an absent header in production means the config
+   * block was dropped, and that is the thing worth catching, since a CDN
+   * compressing it is exactly what the line prevents.
+   */
+  record(
+    vp.name,
+    "USDZ declares Content-Encoding: identity, as Quick Look requires",
+    (assets.usdz.encoding ?? "").toLowerCase() === "identity",
+    `content-encoding: ${assets.usdz.encoding ?? "(absent — the config header is gone)"}`,
   );
 
   // The promise is that an AR affordance never dead-ends. Where AR cannot run,
