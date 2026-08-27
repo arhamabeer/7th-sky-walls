@@ -10,9 +10,11 @@
  * Usage: node scripts/ar/check-all.mjs
  */
 import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
 import { unzipSync } from "fflate";
+import { buildArTexture, wallToneFor } from "./build-texture.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..", "..");
 const TOLERANCE_CM = 0.2;
@@ -71,12 +73,15 @@ function numberedRows(source, name) {
   return rows.length ? rows : null;
 }
 
+const catalogSource = await readFile(path.join(ROOT, "src", "content", "catalog.ts"), "utf8");
+const generatorSource = await readFile(
+  path.join(ROOT, "scripts", "generate-ar-assets.mjs"),
+  "utf8",
+);
+
 {
-  const catalog = await readFile(path.join(ROOT, "src", "content", "catalog.ts"), "utf8");
-  const generator = await readFile(
-    path.join(ROOT, "scripts", "generate-ar-assets.mjs"),
-    "utf8",
-  );
+  const catalog = catalogSource;
+  const generator = generatorSource;
 
   const pairs = [
     ["ORIENTATION_ASPECT", numericMap(catalog, "ORIENTATION_ASPECT"), numericMap(generator, "ORIENTATION_ASPECT")],
@@ -106,6 +111,66 @@ function numberedRows(source, name) {
     }
   }
 }
+
+/**
+ * The texture each artwork produces, rebuilt so the models can be compared to it
+ * rather than to a record of themselves.
+ *
+ * The existing staleness check compares the manifest's `source` to the artwork's
+ * URL, which catches "the artwork changed and nobody regenerated" — the real
+ * failure that hit four pieces at once. What it cannot catch is the generator
+ * writing the wrong bytes: the manifest is written from `art.image.src` in the
+ * same loop, so a model carrying another piece's texture would be recorded
+ * correctly and pass everything. That is the same shape as the bug the source
+ * field was added for — a check comparing the generator's record to the
+ * generator's own output.
+ *
+ * Comparable exactly, because `buildArTexture` is deterministic: two runs over
+ * the same artwork produce byte-identical output, verified across a portrait, a
+ * landscape and a mirror set. So this is a hash comparison rather than an image
+ * one. The GLB carries the alpha texture and the USDZ the opaque one, which is
+ * what the generator puts in each.
+ *
+ * Built lazily and cached: one build per artwork, shared across its four sizes,
+ * exactly as the generator shares it.
+ */
+/**
+ * The two inputs the rebuild needs, read from the generator rather than copied.
+ *
+ * A second copy of either here would be the defect this whole file now guards
+ * against, one layer up: the check would agree with whatever it had remembered.
+ * `ORIENTATION_ASPECT` is already asserted equal to the catalogue above, so
+ * reading the generator's copy is reading the catalogue's.
+ */
+const TEXTURE_MAX_EDGE = Number(
+  generatorSource.match(/const TEXTURE_MAX_EDGE = (\d+);/)?.[1] ?? NaN,
+);
+const ORIENTATION_ASPECT_FOR_AR = numericMap(generatorSource, "ORIENTATION_ASPECT");
+if (!Number.isFinite(TEXTURE_MAX_EDGE) || !ORIENTATION_ASPECT_FOR_AR) {
+  console.error(
+    "Could not read TEXTURE_MAX_EDGE or ORIENTATION_ASPECT from generate-ar-assets.mjs, " +
+      "so the texture comparison would rebuild against guessed inputs and pass on nothing.",
+  );
+  process.exit(2);
+}
+
+const textureCache = new Map();
+async function textureFor(art) {
+  if (!textureCache.has(art.slug)) {
+    textureCache.set(
+      art.slug,
+      await buildArTexture({
+        sourcePath: path.join(ROOT, "public", art.image.src.replace(/^\//, "")),
+        maxEdge: TEXTURE_MAX_EDGE,
+        wall: wallToneFor(art.wallTone),
+        aspect: ORIENTATION_ASPECT_FOR_AR[art.orientation],
+      }),
+    );
+  }
+  return textureCache.get(art.slug);
+}
+
+const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 const io = new NodeIO();
 
@@ -176,6 +241,12 @@ function usdzInfo(bytes) {
     textureResolves: (() => {
       const m = model.match(/asset inputs:file\s*=\s*@([^@]+)@/);
       return Boolean(m && Object.keys(entries).includes(m[1]));
+    })(),
+    // The bytes, not just the name, so the texture can be compared to the one
+    // this artwork actually produces — see the note above `textureFor`.
+    textureBytes: (() => {
+      const m = model.match(/asset inputs:file\s*=\s*@([^@]+)@/);
+      return m && entries[m[1]] ? Buffer.from(entries[m[1]]) : null;
     })(),
   };
 }
@@ -262,6 +333,34 @@ for (const art of artworks) {
     if (!usdz.verticalAnchoring) fail(label, "USDZ is missing vertical plane anchoring");
     if (!usdz.metersPerUnit) fail(label, "USDZ does not declare metersPerUnit = 1");
     if (!usdz.textureResolves) fail(label, "USDZ texture reference does not resolve");
+
+    /**
+     * The texture inside each model must be the one this artwork produces.
+     *
+     * Everything above would still pass if the generator wrote another piece's
+     * image: the sizes are right, the archive is shaped right, the reference
+     * resolves, and the manifest's `source` was written from this artwork in the
+     * same loop. Somebody would see the wrong artwork on their wall at exactly
+     * the right size.
+     */
+    const expected = await textureFor(art);
+    try {
+      const doc = await io.readBinary(new Uint8Array(await readFile(glbPath)));
+      const embedded = doc.getRoot().listTextures().map((t) => t.getImage());
+      if (embedded.length !== 1) {
+        fail(label, `GLB carries ${embedded.length} textures, expected exactly 1`);
+      } else if (digest(embedded[0]) !== digest(expected.alpha)) {
+        fail(label, "the texture inside the GLB is not the one this artwork produces");
+      }
+    } catch (err) {
+      fail(label, `GLB texture could not be read — ${String(err).slice(0, 80)}`);
+    }
+
+    if (!usdz.textureBytes) {
+      fail(label, "USDZ texture bytes could not be read");
+    } else if (digest(usdz.textureBytes) !== digest(expected.opaque)) {
+      fail(label, "the texture inside the USDZ is not the one this artwork produces");
+    }
 
     checked++;
   }
