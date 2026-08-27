@@ -293,11 +293,41 @@ for (const body of sceneBodies) {
   badCounts.set(key, new Set(["src/components/artwork/room-scenes.ts"]));
 }
 
+/**
+ * Each material's spec line must state the depth the table prints for it.
+ *
+ * The materials page shows `depthMm` in its DEPTH column and `spec` as the card's
+ * subheading — a number and a sentence about the same number, on the same page,
+ * one above the other. Editing either alone makes the specification contradict
+ * itself in adjacent places, on the document a facilities manager reads before
+ * asking about a fire rating. All six agree today and nothing was making them.
+ *
+ * The depth has to appear *somewhere* in the spec rather than be its only figure:
+ * brushed aluminium is correctly "a 3 mm face on 15 mm returns", where 15 is the
+ * depth and 3 is the sheet.
+ */
+const materials = JSON.parse(
+  await readFile(path.join(ROOT, "src", "content", "materials.json"), "utf8"),
+);
+if (materials.length === 0) throw new Error("No materials read — nothing to check.");
+for (const material of materials) {
+  if (typeof material.depthMm !== "number" || !material.spec) continue;
+  const stated = [...String(material.spec).matchAll(/(\d+(?:\.\d+)?)\s*mm/g)].map((m) =>
+    Number(m[1]),
+  );
+  if (stated.includes(material.depthMm)) continue;
+  const key =
+    `material "${material.name}" is ${material.depthMm}mm deep but its spec says ` +
+    `${stated.length ? `${stated.join(", ")}mm` : "no millimetre figure"}`;
+  badCounts.set(key, new Set(["src/content/materials.json"]));
+}
+
 console.log(
   `Checked ${files.length} files against ${validArtworks.size} artworks and ${validCollections.size} collections,\n` +
     `${docFiles.length} docs against ${validTitles.size} titles, the formats on disk and ` +
     `${CLAIMS.length} counted claims,\n` +
-    `and ${sceneBodies.length} room-scale captions against the furniture they describe.`,
+    `${sceneBodies.length} room-scale captions against the furniture they describe, and ` +
+    `${materials.length} material specs against their own depths.`,
 );
 
 if (stale.size === 0 && staleTitles.size === 0 && badPaths.size === 0 && badCounts.size === 0) {
