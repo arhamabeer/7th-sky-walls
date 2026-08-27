@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * True-scale room preview.
  *
  * Renders the artwork on a reference wall beside furniture of known height and
- * a 170cm person, in a scene matching the kind of space the buyer is fitting
+ * a person of known height, in a scene matching the kind of space the buyer is fitting
  * out. Scale anxiety is the biggest blocker on large-format art, so this is
  * deliberately literal: the numbers on screen are the numbers that get
  * produced.
@@ -162,7 +162,13 @@ export function RoomScalePreview({
         className="relative w-full overflow-hidden rounded-xl border border-line bg-[color-mix(in_srgb,var(--brand-line)_40%,white)]"
         style={{ aspectRatio: `${ROOM_WIDTH_CM} / ${CANVAS_HEIGHT_CM}` }}
         role="img"
-        aria-label={`${imageAlt}, shown at ${widthCm} by ${heightCm} centimetres in ${scene.label.toLowerCase()}, beside ${scene.reference} and a 170 centimetre tall person for scale`}
+        /*
+          The person's height comes from PERSON, not from a number typed here.
+          This is the sentence a screen reader user is given the scale in, and
+          they have no way to notice it disagreeing with the drawing — so it
+          cannot be a second copy of the figure.
+        */
+        aria-label={`${imageAlt}, shown at ${widthCm} by ${heightCm} centimetres in ${scene.label.toLowerCase()}, beside ${scene.reference} and a ${PERSON.heightCm} centimetre tall person for scale`}
       >
         {/* Floor plane and skirting */}
         <div
@@ -176,7 +182,7 @@ export function RoomScalePreview({
           style={{ bottom: `${py(FLOOR_DEPTH_CM)}%`, height: "1.4%" }}
         />
 
-        {/* Person silhouette — 170cm reference */}
+        {/* Person silhouette — the scale reference; height comes from PERSON */}
         <div
           aria-hidden
           className="absolute flex flex-col items-center text-muted/45"
@@ -222,7 +228,7 @@ export function RoomScalePreview({
       </div>
       <figcaption className="mt-2 text-xs leading-5 text-muted">
         Shown to scale at {widthCm} × {heightCm} cm in {scene.label.toLowerCase()},
-        beside {scene.reference} and a 170 cm person.
+        beside {scene.reference} and a {PERSON.heightCm} cm person.
       </figcaption>
     </figure>
   );

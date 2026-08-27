@@ -257,10 +257,47 @@ for (const claim of CLAIMS) {
   }
 }
 
+/**
+ * Each room scene's caption must name a height its own furniture actually has.
+ *
+ * The true-scale preview works by anchoring the piece against something the
+ * viewer knows, and it says so in words: "beside a 110 cm reception desk". That
+ * sentence sits three lines from `heightCm: 110` in the same object, which is the
+ * shape every stale fact in this repo has had. All six agree today; nothing was
+ * making them.
+ */
+const sceneSource = await readFile(
+  path.join(ROOT, "src", "components", "artwork", "room-scenes.ts"),
+  "utf8",
+);
+const sceneBodies = sceneSource
+  .slice(sceneSource.indexOf("export const ROOM_SCENES"))
+  .split(/\n {2}\{\n/)
+  .slice(1);
+if (sceneBodies.length === 0) {
+  throw new Error(
+    "Could not read any room scenes — ROOM_SCENES was renamed or reshaped, so this " +
+      "check would pass without checking anything.",
+  );
+}
+for (const body of sceneBodies) {
+  const label = body.match(/label: "([^"]+)"/)?.[1] ?? "?";
+  const reference = body.match(/reference: "([^"]+)"/)?.[1];
+  if (!reference) continue;
+  const stated = Number(reference.match(/(\d+)\s*cm/)?.[1]);
+  if (!stated) continue;
+  const heights = [...body.matchAll(/(?:seatH|h)eightCm: (\d+)/g)].map((m) => Number(m[1]));
+  if (heights.includes(stated)) continue;
+  const key =
+    `room scene "${label}" says "${reference}" but its furniture is ${heights.join(", ")}cm`;
+  badCounts.set(key, new Set(["src/components/artwork/room-scenes.ts"]));
+}
+
 console.log(
   `Checked ${files.length} files against ${validArtworks.size} artworks and ${validCollections.size} collections,\n` +
-    `and ${docFiles.length} docs against ${validTitles.size} titles, the formats on disk and ` +
-    `${CLAIMS.length} counted claims.`,
+    `${docFiles.length} docs against ${validTitles.size} titles, the formats on disk and ` +
+    `${CLAIMS.length} counted claims,\n` +
+    `and ${sceneBodies.length} room-scale captions against the furniture they describe.`,
 );
 
 if (stale.size === 0 && staleTitles.size === 0 && badPaths.size === 0 && badCounts.size === 0) {
