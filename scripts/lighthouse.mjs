@@ -14,11 +14,19 @@ import { chromium } from "playwright";
 import lighthouse from "lighthouse";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { assertServing } from "./lib/server.mjs";
 
 const args = process.argv.slice(2);
 const BASE = (args.find((a) => a.startsWith("http")) || "http://localhost:4010").replace(/\/$/, "");
 const DESKTOP = args.includes("--desktop");
 const OUT = path.resolve(import.meta.dirname, "..", ".lighthouse");
+
+/**
+ * Scoring a deployment is a legitimate use, so a build mismatch is reported
+ * rather than fatal — but a score attributed to this build that came from
+ * another one is worse than no score, and scoring nothing at all is worse still.
+ */
+await assertServing(BASE, { requireBuild: false });
 
 const ROUTES = [
   { path: "/", name: "home" },

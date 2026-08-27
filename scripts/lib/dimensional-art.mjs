@@ -460,16 +460,78 @@ export function lineArtBulbs(r, w, h, p, { words }) {
     });
 
     const word = words[i % words.length].toUpperCase();
-    const size = Math.min((bulbR * 1.7) / textWidth(word, 1, face), bulbR * 0.5);
+
+    /**
+     * Fit the word to the clear space inside the ring, not to the ring.
+     *
+     * Two things were left out of the old arithmetic and both are ink. The
+     * target width was 85% of the ring's *outer* diameter, so the stroke's own
+     * half-width was already eating the margin — and then the word grew by its
+     * bevel and its contact shadow on top of that. Every word of seven letters
+     * or more ended up sitting across the ring: INNOVATION, TEAMWORK, GROWTH,
+     * TARGETS, WHERE. On a studio that sells cut lettering, letters colliding
+     * with the piece they are mounted in read as a fabrication error.
+     *
+     * The word's shadow also falls on the wall inside the ring rather than
+     * across the room, so it is drawn shorter than the ring's — a shallower
+     * letter casts a shorter shadow, which is both true and worth 1/4 of the
+     * budget back.
+     */
+    const wordDepth = 3;
+    const wordShadow = step * 3;
+    const clearR = bulbR - stroke / 2 - Math.max(wordDepth * step, wordShadow);
+    const cap = capOf(face);
+    const MAX_CAP = 0.55;
+
+    /**
+     * A circle narrows away from its centre line, so the width available to a
+     * word depends on how tall the word is — which depends on the width it is
+     * given. Fitted to the chord at its own cap height, refined twice: the size
+     * moves a few percent on the first pass and less than one on the second.
+     */
+    let size = Math.min((clearR * 1.7) / textWidth(word, 1, face), clearR * MAX_CAP);
+    for (let pass = 0; pass < 2; pass += 1) {
+      const halfCap = (size * cap) / 2;
+      const chord = 2 * Math.sqrt(Math.max(1, clearR * clearR - halfCap * halfCap));
+      size = Math.min((chord * 0.94) / textWidth(word, 1, face), clearR * MAX_CAP);
+    }
+
+    /**
+     * Assert the result rather than trusting the arithmetic.
+     *
+     * This was judged by eye twice and read wrong both times — once seeing a
+     * collision that was 13px of clearance, once missing one that was 13px of
+     * overlap. Checked against a raster of the text layers alone, this
+     * expression reproduces the measured furthest-ink distance exactly, so it
+     * is the measurement, cheaply.
+     *
+     * The furthest ink is the corner of the word's box in the direction the
+     * bevel and shadow travel, and the ring's clear boundary is its inner edge.
+     */
+    const innerR = bulbR - stroke / 2;
+    const overhang = Math.max(wordDepth * step, wordShadow);
+    const furthest = Math.hypot(
+      textWidth(word, size, face) / 2 + overhang,
+      (size * cap) / 2 + overhang,
+    );
+    if (furthest > innerR) {
+      throw new Error(
+        `"${word}" reaches ${furthest.toFixed(1)}px from the centre of a ring whose inner edge ` +
+          `is at ${innerR.toFixed(1)}px, so the letters would sit across the ring. ` +
+          `The levers are the clear radius, the chord factor and MAX_CAP, in that order — ` +
+          `MAX_CAP only binds on the short words.`,
+      );
+    }
+
     s += raised(
-      textLayer({ x: cx, y: bulbCy + size * capOf(face) * 0.5, size, face, str: word }),
+      textLayer({ x: cx, y: bulbCy + size * cap * 0.5, size, face, str: word }),
       {
-        depth: 3,
+        depth: wordDepth,
         stepX: step,
         stepY: step,
         side,
         face: colour,
-        shadow: { x: step * 4, y: step * 4, colour: p.shadow, opacity: 0.22 },
+        shadow: { x: wordShadow, y: wordShadow, colour: p.shadow, opacity: 0.22 },
       },
     );
   }

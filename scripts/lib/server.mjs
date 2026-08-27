@@ -75,11 +75,93 @@ export async function diskBuildId() {
   return (await readFile(path.join(ROOT, ".next", "BUILD_ID"), "utf8")).trim();
 }
 
-/** Build id the running server actually serves, read from its HTML payload. */
-export async function servedBuildId(port) {
-  const html = await fetch(`http://localhost:${port}/`).then((r) => r.text());
-  const m = html.match(/\/_next\/static\/([^/]+)\/_(?:buildManifest|ssgManifest)/);
-  return m ? m[1] : null;
+/**
+ * Whether the server at `base` is serving the given build.
+ *
+ * A substring test, because it is the one that works. This used to extract the
+ * id by matching `/_next/static/<id>/_buildManifest` — a pattern this version of
+ * Next never emits: the only segments under `/_next/static/` are `media` and
+ * `chunks`. So the extraction returned null on every call, every comparison
+ * against it was dead code, and `startProductionServer` printed "Verified server
+ * is serving build X" — the id from disk, having verified nothing at all. The
+ * one helper whose entire job is to refuse a stale build had not checked for one
+ * in its whole existence.
+ *
+ * Next does put the build id in the HTML, so asking whether it is there answers
+ * the only question that matters and cannot come back vacuously true.
+ */
+export async function servesBuild(base, buildId) {
+  const html = await fetch(`${base.replace(/\/$/, "")}/`).then((r) => r.text());
+  return html.includes(buildId);
+}
+
+/** As above, for a local port. */
+export async function portServesBuild(port, buildId) {
+  return servesBuild(`http://localhost:${port}`, buildId);
+}
+
+/**
+ * Refuse to measure a server that is not the build on disk.
+ *
+ * Every check here reports its verdict as the absence of a finding, so pointing
+ * one at the wrong server produces a confident answer about something else. Both
+ * halves of that happened in one session: the analytics check passed three times
+ * against a server started the previous day, because its default port was held
+ * by a leftover process and nothing looked at what it was talking to; and the
+ * responsive audit, handed its base URL positionally when it wanted a flag,
+ * silently measured a month-old process on the default port and reported 589
+ * status errors and 620 missing `h1` elements — a site catastrophe that was an
+ * unread argument.
+ *
+ * Three near-identical copies of this assertion had grown across the scripts and
+ * four other gates had none, which is the same defect this codebase keeps
+ * producing: one fact written down in several places, and missing from the rest.
+ *
+ * `requireBuild: false` reports a mismatch instead of failing, for the checks
+ * that are legitimately pointed at a dev server or a deployment.
+ */
+export async function assertServing(base, { requireBuild = true, label = "" } = {}) {
+  const url = base.replace(/\/$/, "");
+  let res;
+  try {
+    res = await fetch(`${url}/`);
+  } catch (err) {
+    console.error(
+      `Nothing answered at ${url} — ${String(err).slice(0, 100)}\n` +
+        `Start one with: node scripts/serve.mjs --skip-build --port ${new URL(url).port || 80}`,
+    );
+    process.exit(2);
+  }
+  if (!res.ok) {
+    console.error(
+      `${url}/ returned ${res.status}, so this is not serving the site.\n` +
+        `Something else is on that port — check it, or pass the right base URL.`,
+    );
+    process.exit(2);
+  }
+
+  let expected = null;
+  try {
+    expected = await diskBuildId();
+  } catch {
+    console.log(`${label ? `${label}: ` : ""}${url} answered; nothing built on disk to compare it to.`);
+    return null;
+  }
+
+  const prefix = label ? `${label}: ` : "";
+  const html = await res.text();
+  if (html.includes(expected)) {
+    console.log(`${prefix}Serving build ${expected}.`);
+    return expected;
+  }
+
+  const message = `${prefix}${url} is not serving the build on disk (${expected}).`;
+  if (requireBuild) {
+    console.error(`${message}\nSomething older is holding the port — restart the server.`);
+    process.exit(2);
+  }
+  console.log(`${message} Treating it as a dev server or a deployment.`);
+  return null;
 }
 
 /**
@@ -134,19 +216,26 @@ export async function startProductionServer(port, { verbose = true } = {}) {
     throw new Error(`Server did not start on :${port} in time.\n${log}`);
   }
 
-  const served = await servedBuildId(port).catch(() => null);
-  if (served && served !== expected) {
+  /**
+   * Confirmed, rather than assumed. The previous version compared an id that
+   * was always null against the one on disk and then announced the disk id as
+   * verified — see the note on `servesBuild`.
+   */
+  const correct = await portServesBuild(port, expected).catch(() => null);
+  if (correct !== true) {
     stop();
     throw new Error(
-      `Served build (${served}) does not match the build on disk (${expected}).\n` +
-        `Another server is answering on :${port}. Refusing to test a stale build.`,
+      correct === null
+        ? `Could not read a page from :${port} to confirm which build it serves.`
+        : `The server on :${port} is not serving the build on disk (${expected}).\n` +
+          `Another server is answering. Refusing to test a stale build.`,
     );
   }
-  if (verbose) console.log(`→ Verified server is serving build ${served ?? expected}\n`);
+  if (verbose) console.log(`→ Verified server is serving build ${expected}\n`);
 
   return {
     url: `http://localhost:${port}`,
-    buildId: served ?? expected,
+    buildId: expected,
     stop,
     get log() {
       return log;

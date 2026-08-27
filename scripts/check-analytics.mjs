@@ -7,8 +7,20 @@
  * Usage: node scripts/check-analytics.mjs [baseUrl]
  */
 import { chromium } from "playwright";
+import { assertServing } from "./lib/server.mjs";
 
 const BASE = (process.argv[2] || "http://localhost:4020").replace(/\/$/, "");
+
+/**
+ * This check reported PASS three times in one session against a server started
+ * the previous day: its default port was held by a leftover process and nothing
+ * here looked at what it was talking to. A green result about yesterday's bundle
+ * is worse than a red one, because the property being checked — that no
+ * third-party script loads without a measurement id — belongs to the bundle
+ * being served.
+ */
+await assertServing(BASE);
+
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 

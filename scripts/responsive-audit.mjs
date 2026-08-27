@@ -17,6 +17,7 @@
 import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { assertServing } from "./lib/server.mjs";
 
 const args = process.argv.slice(2);
 const argValue = (flag, fallback) => {
@@ -27,6 +28,49 @@ const BASE = argValue("--url", process.env.AUDIT_URL || "http://localhost:3000")
 const ONLY = argValue("--only", null);
 const SHOTS = args.includes("--shots");
 const SHOT_DIR = path.resolve(import.meta.dirname, "..", ".audit");
+
+/**
+ * Refuse an argument this script does not understand.
+ *
+ * The base URL is a `--url` flag, and passing it positionally — which every
+ * other script here accepts — was silently ignored. The audit then measured
+ * whatever was on the default port, which on this machine was a month-old node
+ * process answering 404, and reported 589 unexpected-status errors and 620
+ * missing `h1` elements: a catastrophic-looking site regression that was entirely
+ * an argument this script chose not to mention.
+ */
+const VALUE_FLAGS = new Set(["--url", "--only"]);
+const BOOL_FLAGS = new Set(["--shots"]);
+const KNOWN = new Set([...VALUE_FLAGS, ...BOOL_FLAGS]);
+
+for (let i = 0; i < args.length; i += 1) {
+  const a = args[i];
+  if (KNOWN.has(a)) {
+    if (VALUE_FLAGS.has(a)) i += 1;
+    continue;
+  }
+  const known = [...KNOWN].join(", ");
+  if (a.startsWith("--")) {
+    console.error(`Unrecognised flag: ${a}\nKnown flags: ${known}`);
+  } else {
+    console.error(
+      `Unrecognised argument: ${a}\n` +
+        `The base URL is a flag here — try: --url ${a.startsWith("http") ? a : BASE}`,
+    );
+  }
+  process.exit(2);
+}
+
+/**
+ * And refuse to audit a server that is not serving this site.
+ *
+ * Every verdict below is about a page's layout, so a server answering 404 to
+ * everything produces the maximum number of findings while proving nothing —
+ * which is exactly what happened. The build id is reported rather than enforced
+ * here, because auditing `next dev` or a deployment is legitimate and neither
+ * carries the production id on disk.
+ */
+await assertServing(BASE, { requireBuild: false });
 
 /**
  * Viewport matrix. `class` groups them for filtering; `dpr` and `touch`
@@ -351,7 +395,12 @@ async function main() {
   const browser = await chromium.launch();
   const findings = [];
   const consoleErrors = [];
+  /** Every navigation's duration, so slowness is data rather than one timeout. */
+  const navTimings = [];
   let checks = 0;
+
+  /** A Playwright error's first line — the rest is a call log nobody reads here. */
+  const firstLine = (err) => String(err).split("\n")[0].slice(0, 140);
 
   /**
    * Viewports are audited a few at a time. Serially, 33 viewports across 11
@@ -425,67 +474,112 @@ async function main() {
       currentPage = pg.name;
       expectStatus = pg.expectStatus ?? 200;
       /**
-       * `load`, then wait for the images explicitly — not `networkidle`.
+       * One unreachable page costs one finding, not the other 619 checks.
        *
-       * This audit measures layout, and `networkidle` measures the network: it
-       * waits for 500ms of quiet, so anything keeping the connection busy stalls
-       * it regardless of whether the page is laid out. Next's image optimizer
-       * encodes on first request, and a cold AVIF at 1080px takes up to a second;
-       * on a page with thirteen pieces the browser's parallel requests kept the
-       * network busy past the 45-second timeout, and the audit failed with a
-       * navigation error on a page that curl serves in 35 milliseconds.
-       *
-       * Playwright's own documentation advises against `networkidle` for exactly
-       * this. The checks need images measured, not the network silent, so that is
-       * what is waited for.
+       * A navigation timeout used to throw straight out of the worker pool, so a
+       * single slow page ended the run with a stack trace and no summary — every
+       * viewport already measured was discarded, which is how a flake reads as a
+       * site with no coverage. The viewport groups in the interaction suite had the
+       * same fault and the same fix.
        */
-      const response = await page.goto(BASE + pg.path, {
-        waitUntil: "load",
-        timeout: 45000,
-      });
-      const status = response?.status() ?? 0;
-      if (status !== expectStatus) {
+      try {
+        /**
+         * `load`, then wait for the images explicitly — not `networkidle`.
+         *
+         * This audit measures layout, and `networkidle` measures the network: it
+         * waits for 500ms of quiet, so anything keeping the connection busy stalls
+         * it regardless of whether the page is laid out. Next's image optimizer
+         * encodes on first request, and a cold AVIF at 1080px takes up to a second;
+         * on a page with thirteen pieces the browser's parallel requests kept the
+         * network busy past the 45-second timeout, and the audit failed with a
+         * navigation error on a page that curl serves in 35 milliseconds.
+         *
+         * Playwright's own documentation advises against `networkidle` for exactly
+         * this. The checks need images measured, not the network silent, so that is
+         * what is waited for.
+         */
+        /**
+         * Timed, and with a limit set to what a hung page looks like.
+         *
+         * `load` alone still timed out at 45 seconds twice inside `verify`, on a
+         * different page each run. The cause was hunted and not found: measured
+         * standalone, every page navigates in 0.3 to 6.7 seconds, and a full run
+         * against a deliberately emptied image cache — the theory at the time —
+         * came back at median 664ms, p95 1606ms, slowest 5990ms, indistinguishable
+         * from a warm one. So the encode queue is exonerated and the real cause is
+         * still open.
+         *
+         * What follows from that is to stop the symptom being destructive rather
+         * than to guess: the limit is now far above any measured page, every
+         * duration is recorded so a genuine regression shows up as a distribution
+         * rather than as one arbitrary page, and a page that does exceed it is a
+         * finding rather than the end of the run.
+         */
+        const startedAt = process.hrtime.bigint();
+        const response = await page.goto(BASE + pg.path, {
+          waitUntil: "load",
+          timeout: 120000,
+        });
+        navTimings.push({
+          ms: Number(process.hrtime.bigint() - startedAt) / 1e6,
+          page: pg.name,
+          viewport: vp.name,
+        });
+        const status = response?.status() ?? 0;
+        if (status !== expectStatus) {
+          findings.push({
+            viewport: vp.name,
+            class: vp.class,
+            size: `${vp.width}x${vp.height}`,
+            page: pg.name,
+            severity: "error",
+            kind: "unexpected-status",
+            detail: `${pg.path} returned ${status}, expected ${expectStatus}`,
+            offenders: [],
+          });
+        }
+        // Let entrance animations settle and lazy images resolve.
+        await page.evaluate(() => {
+          document.documentElement.style.scrollBehavior = "auto";
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        await page.waitForTimeout(350);
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(250);
+
+        /**
+         * Now that the scroll pass has triggered them, wait for the images.
+         *
+         * After the scroll, not before: a lazy image below the fold is never
+         * `complete` until something scrolls to it, so waiting for all of them
+         * straight after navigation timed out on every single page — twenty pages
+         * times thirty-one viewports of full timeouts. The checks below read image
+         * sources and geometry, so they need the images resolved, and this is the
+         * first moment at which that is a reasonable thing to ask for.
+         */
+        const result = await page.evaluate(PROBE);
+        checks++;
+        for (const issue of result.issues) {
+          findings.push({ viewport: vp.name, class: vp.class, size: `${vp.width}x${vp.height}`, page: pg.name, ...issue });
+        }
+        if (SHOTS) {
+          await page.screenshot({
+            path: path.join(SHOT_DIR, `${vp.name}--${pg.name}.jpg`),
+            type: "jpeg",
+            quality: 70,
+            fullPage: false,
+          });
+        }
+      } catch (err) {
         findings.push({
           viewport: vp.name,
           class: vp.class,
           size: `${vp.width}x${vp.height}`,
           page: pg.name,
           severity: "error",
-          kind: "unexpected-status",
-          detail: `${pg.path} returned ${status}, expected ${expectStatus}`,
+          kind: "page-unmeasurable",
+          detail: `${pg.path} could not be measured — ${firstLine(err)}`,
           offenders: [],
-        });
-      }
-      // Let entrance animations settle and lazy images resolve.
-      await page.evaluate(() => {
-        document.documentElement.style.scrollBehavior = "auto";
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-      await page.waitForTimeout(350);
-      await page.evaluate(() => window.scrollTo(0, 0));
-      await page.waitForTimeout(250);
-
-      /**
-       * Now that the scroll pass has triggered them, wait for the images.
-       *
-       * After the scroll, not before: a lazy image below the fold is never
-       * `complete` until something scrolls to it, so waiting for all of them
-       * straight after navigation timed out on every single page — twenty pages
-       * times thirty-one viewports of full timeouts. The checks below read image
-       * sources and geometry, so they need the images resolved, and this is the
-       * first moment at which that is a reasonable thing to ask for.
-       */
-      const result = await page.evaluate(PROBE);
-      checks++;
-      for (const issue of result.issues) {
-        findings.push({ viewport: vp.name, class: vp.class, size: `${vp.width}x${vp.height}`, page: pg.name, ...issue });
-      }
-      if (SHOTS) {
-        await page.screenshot({
-          path: path.join(SHOT_DIR, `${vp.name}--${pg.name}.jpg`),
-          type: "jpeg",
-          quality: 70,
-          fullPage: false,
         });
       }
     }
@@ -510,7 +604,18 @@ async function main() {
 
   console.log(`\nResponsive audit: ${viewports.length} viewports x ${PAGES.length} pages = ${checks} checks`);
   console.log(`Base URL: ${BASE}`);
-  console.log(`Errors: ${errors.length}   Warnings: ${warns.length}   Console errors: ${consoleErrors.length}\n`);
+  console.log(`Errors: ${errors.length}   Warnings: ${warns.length}   Console errors: ${consoleErrors.length}`);
+
+  if (navTimings.length) {
+    const sorted = [...navTimings].sort((a, b) => a.ms - b.ms);
+    const at = (q) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * q))].ms;
+    const slowest = sorted.at(-1);
+    console.log(
+      `Navigation: median ${at(0.5).toFixed(0)}ms, p95 ${at(0.95).toFixed(0)}ms, ` +
+        `slowest ${slowest.ms.toFixed(0)}ms (${slowest.viewport} ${slowest.page})`,
+    );
+  }
+  console.log("");
 
   const byKind = {};
   for (const f of findings) {
@@ -552,6 +657,24 @@ async function main() {
 
   if (errors.length || consoleErrors.length) {
     console.log("RESULT: FAIL — fix error-severity findings above.\n");
+    process.exit(1);
+  }
+
+  /**
+   * A pass has to cover what it claims to cover.
+   *
+   * Every verdict here is the absence of a finding, so a run that measured
+   * nothing looks exactly like a run that found nothing wrong — and "620 checks,
+   * 0 errors" is the sentence this gate exists to produce. The count is already
+   * measured rather than multiplied out, so comparing it to the product of the
+   * two lists is the whole check.
+   */
+  const expected = viewports.length * PAGES.length;
+  if (checks !== expected) {
+    console.log(
+      `RESULT: FAIL — measured ${checks} of ${expected} page-viewport combinations. ` +
+        `Something was skipped, so this run proves less than it appears to.\n`,
+    );
     process.exit(1);
   }
   console.log(warns.length ? "RESULT: PASS with warnings.\n" : "RESULT: PASS — clean across all viewports.\n");

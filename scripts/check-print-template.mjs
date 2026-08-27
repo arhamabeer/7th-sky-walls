@@ -1,32 +1,21 @@
 import { chromium } from "playwright";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { assertServing } from "./lib/server.mjs";
 
 const BASE = process.argv[2] || "http://localhost:4010";
 
 /**
  * Refuse to run against a server that is not serving the build on disk.
  *
- * Learned twice now, both times expensively: a background server left over from
- * an earlier run answers the readiness poll instantly, the checks run against
+ * Learned twice, both times expensively: a background server left over from an
+ * earlier run answers the readiness poll instantly, the checks run against
  * yesterday's markup, and the failures they report are for code that no longer
- * exists. Next embeds the build id in every page, so one fetch settles it.
+ * exists. Next embeds the build id in every page, so one fetch settles it — see
+ * `assertServing`, which every gate here now shares.
  */
-async function assertFreshBuild() {
-  if (!existsSync(".next/BUILD_ID")) return;
-  const expected = readFileSync(".next/BUILD_ID", "utf8").trim();
-  const html = await fetch(`${BASE}/`).then((r) => r.text());
-  if (!html.includes(expected)) {
-    console.error(
-      `The server at ${BASE} is not serving build ${expected}.\n` +
-        `Something older is holding the port — stop it and start the server again.`,
-    );
-    process.exit(2);
-  }
-  console.log(`Serving build ${expected}.`);
-}
-await assertFreshBuild();
+await assertServing(BASE);
 /**
  * Where the PDFs and screenshots land.
  *

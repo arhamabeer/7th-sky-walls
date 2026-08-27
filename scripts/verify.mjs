@@ -71,10 +71,12 @@ const heroCode = run("node", ["scripts/check-hero-layout.mjs", `http://localhost
 // count of a generated PDF. A template that is silently 6% small is worse than no
 // template, because it is confidently wrong.
 console.log("→ Checking the printable templates...");
+// No output directory: the check's own default is `.print/`, and passing
+// `.audit` here put the PDFs somewhere different depending on how the check was
+// started, which is the kind of thing that has you hunting for a file twice.
 const printCode = run("node", [
   "scripts/check-print-template.mjs",
   `http://localhost:${PORT}`,
-  ".audit",
 ]);
 
 // --- 6. Image sizing. ----------------------------------------------------

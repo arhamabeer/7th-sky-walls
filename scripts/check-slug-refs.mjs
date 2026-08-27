@@ -108,14 +108,86 @@ for (const file of docFiles) {
   }
 }
 
+/**
+ * File paths named in the docs, checked by extension rather than by existence.
+ *
+ * The plan told anyone ingesting real work to "drop `<slug>.jpg`", and
+ * `readMaster` looks for `<slug>.png` only — so following the instruction did
+ * nothing at all, silently, and the site went on serving placeholders. Two
+ * paragraphs still said `.jpg` from before the catalogue moved to PNG for alpha.
+ *
+ * Existence is the wrong test: `public/artworks/<slug>.png` is deliberately a
+ * file that does not exist yet, because it is the file the author is being told
+ * to create. What is testable is the extension. Every directory here holds one
+ * or two formats and that is a deliberate pipeline decision — artworks are PNG
+ * because they carry alpha, AR assets are GLB and USDZ because those are what
+ * the two platforms accept — so a path naming a format its own directory does
+ * not contain is naming something the pipeline cannot read.
+ */
+const PUBLIC_ROOTS = new Set(["artworks", "ar", "og", "brand"]);
+
+async function extensionsUnder(dir, out = new Set(), depth = 0) {
+  if (depth > 3) return out;
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return out;
+  }
+  for (const entry of entries) {
+    if (entry.isDirectory()) await extensionsUnder(path.join(dir, entry.name), out, depth + 1);
+    else {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (ext) out.add(ext);
+    }
+  }
+  return out;
+}
+
+/** The leading portion of a path with no `<placeholder>` or `*` in it. */
+const staticPrefix = (p) => {
+  const parts = p.split("/");
+  const stop = parts.findIndex((s) => s.includes("<") || s.includes("*"));
+  return (stop === -1 ? parts.slice(0, -1) : parts.slice(0, stop)).join("/");
+};
+
+const badPaths = new Map();
+for (const file of docFiles) {
+  const text = await readFile(file, "utf8");
+  for (const match of text.matchAll(/`([^`\s]*\/[^`\s]*\.[a-z0-9]{2,5})`/gi)) {
+    let ref = match[1];
+    const ext = path.extname(ref).toLowerCase();
+    // A leading-slash path is a URL the site serves out of public/.
+    if (ref.startsWith("/")) {
+      const root = ref.split("/")[1];
+      if (!PUBLIC_ROOTS.has(root)) continue;
+      ref = `public${ref}`;
+    }
+    if (!/^(public|src|scripts|docs)\//.test(ref)) continue;
+
+    const prefix = staticPrefix(ref);
+    const found = await extensionsUnder(path.join(ROOT, prefix));
+    if (found.size === 0) continue; // nothing to compare against
+    if (found.has(ext)) continue;
+
+    const key = `\`${match[1]}\` — ${prefix}/ holds ${[...found].sort().join(", ")}`;
+    if (!badPaths.has(key)) badPaths.set(key, new Set());
+    badPaths.get(key).add(path.relative(ROOT, file).replace(/\\/g, "/"));
+  }
+}
+
 console.log(
   `Checked ${files.length} files against ${validArtworks.size} artworks and ${validCollections.size} collections,\n` +
-    `and ${docFiles.length} docs against ${validTitles.size} titles.`,
+    `and ${docFiles.length} docs against ${validTitles.size} titles and the formats on disk.`,
 );
 
-if (stale.size === 0 && staleTitles.size === 0) {
-  console.log("RESULT: PASS — every referenced slug and title exists.");
+if (stale.size === 0 && staleTitles.size === 0 && badPaths.size === 0) {
+  console.log("RESULT: PASS — every referenced slug, title and file format exists.");
   process.exit(0);
+}
+
+for (const [key, where] of badPaths) {
+  console.error(`  ${key} — named in ${[...where].join(", ")}`);
 }
 
 for (const [key, where] of staleTitles) {
@@ -125,5 +197,7 @@ for (const [key, where] of staleTitles) {
 for (const [key, where] of stale) {
   console.error(`  ${key} — referenced by ${[...where].join(", ")}`);
 }
-console.error("\nRESULT: FAIL — these no longer exist in the catalogue.");
+console.error(
+  "\nRESULT: FAIL — these are missing from the catalogue, or name a format the pipeline does not read.",
+);
 process.exit(1);
