@@ -694,6 +694,7 @@ async function testTextConfigurator(page, vp) {
         colour: s.color,
         style: s.fontStyle,
         fontSize: parseFloat(s.fontSize),
+        shadow: s.textShadow,
         ground,
       };
     });
@@ -704,6 +705,29 @@ async function testTextConfigurator(page, vp) {
     "preview starts from the piece's own words",
     initial?.text.trim() === "Sabr",
     initial?.text.trim(),
+  );
+
+  /**
+   * The mounting has to change the picture, not only the caption under it.
+   *
+   * It changed only the caption: measured, the pixels differing between flush
+   * mounted and a 25mm standoff were confined to a twelve-pixel band at the
+   * bottom of a 640px preview, which is that sentence. Four options describing
+   * four depths and one picture — on a site whose premise is showing the buyer
+   * what arrives. The shadow *is* the mounting; the materials page says so.
+   */
+  const shadowFor = async (label) => {
+    await page.locator("[role=tabpanel] button", { hasText: label }).first().click();
+    await page.waitForTimeout(300);
+    return (await preview())?.shadow ?? "";
+  };
+  const flush = await shadowFor("Flush mounted");
+  const deep = await shadowFor("25 mm standoff");
+  record(
+    vp.name,
+    "the mounting changes the preview, not just its caption",
+    Boolean(flush) && Boolean(deep) && flush !== deep,
+    `flush "${flush}" vs 25mm "${deep}"`,
   );
 
   // Typing must drive the preview, and longer text must be set smaller so it

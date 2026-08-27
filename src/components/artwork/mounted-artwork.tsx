@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getMount, wallColour, type WallToneId } from "@/content/finishes";
+import { mountShadow, wallColour, type WallToneId } from "@/content/finishes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -38,12 +38,12 @@ export function MountedArtwork({
   blurDataURL?: string;
   className?: string;
 }) {
-  const mount = getMount(mountId);
-  const shortEdge = Math.min(width, height);
-  // Shadow in the same units the mount is specified in: a fraction of the short
-  // edge, so a small piece is not given a shadow sized for a large one.
-  const offset = (mount.shadowRatio * shortEdge).toFixed(1);
-  const blur = (mount.blurRatio * shortEdge).toFixed(1);
+  // A fraction of the short edge, so a small piece is not given a shadow sized
+  // for a large one. Shared with the text configurator's preview — see
+  // `mountShadow`.
+  const shadow = mountShadow(mountId, Math.min(width, height));
+  const offset = shadow.offset.toFixed(1);
+  const blur = shadow.blur.toFixed(1);
 
   return (
     <div
@@ -63,7 +63,7 @@ export function MountedArtwork({
         sizes={sizes}
         className="object-contain transition-[filter] duration-300 motion-reduce:transition-none"
         style={{
-          filter: `drop-shadow(${offset}px ${offset}px ${blur}px rgba(0,0,0,${mount.shadowOpacity}))`,
+          filter: `drop-shadow(${offset}px ${offset}px ${blur}px rgba(0,0,0,${shadow.opacity}))`,
         }}
         {...(priority
           ? { fetchPriority: "high" as const, loading: "eager" as const }

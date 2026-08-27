@@ -106,6 +106,32 @@ export function getMount(id: string): MountStyle {
 }
 
 /**
+ * The shadow a mounting casts, in whatever unit the short edge is given in.
+ *
+ * The shadow *is* the mounting: the materials page says so in as many words —
+ * depth is how far the letter stands off the wall, which is what casts the
+ * shadow. So a preview that does not draw it cannot tell a flush piece from a
+ * 25mm float, and the configurator's mounting chooser did exactly that: it
+ * changed the caption underneath and nothing else. Measured before believing it,
+ * because the preview looked flat and looking has been wrong all day — the pixels
+ * that differed between flush and 25mm were confined to a twelve-pixel band at
+ * the bottom of a 640px preview, which is the caption.
+ *
+ * Ratios of the short edge rather than fixed lengths, so a small piece is not
+ * given a shadow sized for a large one — and one definition, because the artwork
+ * tile and the configurator drawing the same mounting differently is the defect
+ * this codebase produces most.
+ */
+export function mountShadow(id: string, shortEdge: number) {
+  const mount = getMount(id);
+  return {
+    offset: mount.shadowRatio * shortEdge,
+    blur: mount.blurRatio * shortEdge,
+    opacity: mount.shadowOpacity,
+  };
+}
+
+/**
  * The wall a piece is specified for.
  *
  * Dimensional lettering is specified with its wall, not independently of it: a
