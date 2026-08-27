@@ -136,6 +136,24 @@ export const materialSchema = z.object({
    */
   depthMm: z.number().int().positive(),
   bestFor: z.string(),
+  /**
+   * The venues this material is usually quoted for, as ids.
+   *
+   * `bestFor` already says this in prose — "Schools, universities, corridors,
+   * leased offices, cafés" — but prose cannot be filtered, and the consequence
+   * was that all six venue pages rendered the identical six-material block. Six
+   * pages carrying the same section is thin content for search and unhelpful in
+   * person: a school specifier read about gold mirror acrylic for salons.
+   *
+   * Used to lead with the right materials rather than to hide the others. Every
+   * material stays available on every venue page, because `bestFor` is a
+   * recommendation and not an exclusion — filtering on it left restaurants with
+   * exactly one material, which is worse than showing all six.
+   *
+   * `check:slug-refs` asserts every id is a real venue and that this list does
+   * not contradict the prose beside it.
+   */
+  venues: z.array(z.string()).min(1),
 });
 export type Material = z.infer<typeof materialSchema>;
 

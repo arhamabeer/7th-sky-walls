@@ -322,12 +322,60 @@ for (const material of materials) {
   badCounts.set(key, new Set(["src/content/materials.json"]));
 }
 
+/**
+ * A material's venue list and the prose beside it must not contradict.
+ *
+ * `venues` exists so the venue pages can lead with the right materials — before
+ * it, all six pages rendered the identical six-material block. `bestFor` says the
+ * same thing in prose one line away, which is the shape every stale fact here has
+ * had, so the two are compared: every id has to be a real venue, and a venue the
+ * prose names by its own noun has to appear in the list.
+ *
+ * Only the venue's own noun is matched. The prose also names rooms — reception
+ * walls, corridors, atriums, salons — which are not venues and must not be read
+ * as claims about one.
+ */
+const venueNouns = {
+  office: /\boffice/i,
+  cafe: /\bcaf[eé]/i,
+  restaurant: /\brestaurant/i,
+  hotel: /\bhotel/i,
+  school: /\bschool/i,
+  university: /\bunivers/i,
+};
+const venueList = JSON.parse(
+  await readFile(path.join(ROOT, "src", "content", "venues.json"), "utf8"),
+);
+const venueIds = new Set(venueList.map((v) => v.id));
+for (const material of materials) {
+  if (!Array.isArray(material.venues)) {
+    badCounts.set(`material "${material.name}" has no venues list`, new Set(["src/content/materials.json"]));
+    continue;
+  }
+  for (const id of material.venues) {
+    if (!venueIds.has(id)) {
+      badCounts.set(
+        `material "${material.name}" lists venue "${id}", which is not a venue`,
+        new Set(["src/content/materials.json"]),
+      );
+    }
+  }
+  for (const [id, noun] of Object.entries(venueNouns)) {
+    if (noun.test(material.bestFor) && !material.venues.includes(id)) {
+      badCounts.set(
+        `material "${material.name}" says "${material.bestFor}" but its venues list omits "${id}"`,
+        new Set(["src/content/materials.json"]),
+      );
+    }
+  }
+}
+
 console.log(
   `Checked ${files.length} files against ${validArtworks.size} artworks and ${validCollections.size} collections,\n` +
     `${docFiles.length} docs against ${validTitles.size} titles, the formats on disk and ` +
     `${CLAIMS.length} counted claims,\n` +
     `${sceneBodies.length} room-scale captions against the furniture they describe, and ` +
-    `${materials.length} material specs against their own depths.`,
+    `${materials.length} material specs against their own depths and venue lists.`,
 );
 
 if (stale.size === 0 && staleTitles.size === 0 && badPaths.size === 0 && badCounts.size === 0) {

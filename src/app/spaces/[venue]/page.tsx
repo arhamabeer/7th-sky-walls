@@ -62,6 +62,9 @@ export default async function SpacePage({ params }: PageProps<"/spaces/[venue]">
   const services = getServices().filter((s) => s.idealFor.includes(venueId));
   const caseStudy = getCaseStudies().find((c) => c.venue === venueId);
   const materials = getMaterials();
+  // Named for this space first; the rest stay listed. See the note at the render.
+  const led = materials.filter((m) => m.venues.includes(venue.id));
+  const rest = materials.filter((m) => !m.venues.includes(venue.id));
   const showcase = pieces[0];
   const showcaseSize = showcase
     ? getSizeDimensions(showcase.defaultSize, showcase.orientation)
@@ -220,8 +223,22 @@ export default async function SpacePage({ params }: PageProps<"/spaces/[venue]">
           <p className="mt-2 max-w-2xl text-base leading-7 text-muted">
             {copy.spaces.materialsSubtitle}
           </p>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {materials.map((material, i) => (
+          {/*
+            Led by the materials named for this space, not filtered to them.
+
+            All six used to be listed identically on all six venue pages — the
+            same cards in the same order — which is thin content for search and
+            unhelpful in person. `bestFor` says which belong where, so the ones
+            that do come first and carry their fire behaviour, which is the first
+            thing a facilities manager asks. The rest stay, because `bestFor` is a
+            recommendation and not an exclusion: filtering on it leaves a
+            restaurant with one material.
+          */}
+          <h3 className="mt-8 text-xs font-semibold uppercase tracking-widest text-muted">
+            {copy.spaces.materialsLed}
+          </h3>
+          <ul className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {led.map((material, i) => (
               <Reveal as="li" key={material.id} delay={staggerDelay(i)} className="h-full">
                 <div className="h-full rounded-xl border border-line bg-background p-5">
                   <h3 className="font-display text-lg font-medium">{material.name}</h3>
@@ -237,6 +254,27 @@ export default async function SpacePage({ params }: PageProps<"/spaces/[venue]">
               </Reveal>
             ))}
           </ul>
+
+          {rest.length > 0 && (
+            <>
+              <h3 className="mt-10 text-xs font-semibold uppercase tracking-widest text-muted">
+                {copy.spaces.materialsRest}
+              </h3>
+              <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {rest.map((material) => (
+                  <li
+                    key={material.id}
+                    className="rounded-lg border border-line bg-background/60 p-4"
+                  >
+                    <p className="font-display text-base font-medium">{material.name}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted">
+                      {material.spec} · {material.fireShort}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
           <p className="mt-6 text-sm text-muted">
             <Link
               href="/materials"

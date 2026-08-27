@@ -1481,6 +1481,70 @@ after the first is not reliably the second. The condition is now two consecutive
 samples at the same scroll position; a broken anchor never satisfies it and still
 fails. Five consecutive clean runs since.
 
+### Six venue pages carried the same materials section — 2026-08-27
+
+Taken from the post-launch backlog as "long-form venue and style guides for
+search". The venue half turned out to have a real defect underneath it, and the
+style half turned out to be a thing not to build.
+
+**The defect.** `getMaterials()` returns all six materials, so every one of the six
+venue pages rendered an identical block: the same six cards, the same specs, the
+same fire lines, in the same order. Six pages carrying one section is thin
+duplicated content for search — the opposite of what a venue guide is for — and
+unhelpful in person, since somebody specifying a school corridor read about gold
+mirror acrylic for salons.
+
+**Led, not filtered.** `bestFor` already says which materials belong where, but in
+prose, which cannot be filtered. It is also a recommendation rather than an
+exclusion: filtering on it leaves cafés, restaurants and universities with exactly
+one material each, which is worse than showing all six. So each page now leads
+with the materials named for that space, carrying their fire behaviour — the first
+thing a facilities manager asks — and keeps the rest in a lighter list. Offices
+lead with all six, so their "also available" list correctly disappears.
+
+A structured `venues` array was added beside `bestFor` for this, which is the
+usual two-places-one-fact risk, so `check:slug-refs` compares them: every id must
+be a real venue, and a venue the prose names by its own noun must appear in the
+list. Only the venue's own noun is matched — the prose also names reception walls,
+corridors, atriums and salons, which are rooms and not venues.
+
+No prose was added. Padding six pages to look long is how filler gets written; the
+difference here comes from data the site already held.
+
+### The style guides are a thing not to build — 2026-08-27
+
+The other half of the same backlog item, closed by measurement rather than built.
+
+`styles` carries nine values across the catalogue and is read by nothing but the
+`genre` field in structured data. Before building landing pages for it, what each
+style actually spans:
+
+| Style | Pieces | Collections spanned |
+| --- | --- | --- |
+| typography | 25 | all seven |
+| branding | 8 | values boards, brand walls |
+| calligraphy | 5 | sacred lines, mirror acrylic |
+| word cloud | 4 | word clouds only |
+| line art | 4 | line & wire only |
+| mirror | 4 | mirror acrylic only |
+| monumental | 4 | words at work only |
+| geometric | 3 | mirror acrylic only |
+| modular | 3 | mirror acrylic only |
+
+Six of the nine are a rename of a single collection, so a page for each would
+duplicate a collection page and compete with it for the same search intent —
+which is the mistake this plan already records avoiding twice, with About and with
+the materials page. `typography` returns 25 of 28 pieces, which is not a filter.
+Only `branding` and `calligraphy` genuinely cut across collections, and both
+already have a section on `/services` with more to say than a filtered grid.
+
+So: not built, and recorded here so nobody builds six thin pages later.
+
+The data itself is right and stays as it is. `typography` is absent from exactly
+three pieces — the hexagon, ring and facet mirror sets — which are shapes rather
+than letters, so the tag means "this piece is lettering", which is a real
+distinction worth keeping in `genre` even though it is useless for browsing.
+
 ## Post-launch backlog
 
 Out of scope now; the architecture leaves room for each.
@@ -1490,6 +1554,5 @@ Out of scope now; the architecture leaves room for each.
   from Phase 9, which puts Urdu into the artwork rather than the interface
 - Paid iOS in-page AR via an App Clip-injected WebXR provider, if drag-on-wall
   AR on iPhone becomes a hard requirement
-- Long-form venue and style guides for search
 - In-AR size switching via a custom WebXR session, if device testing shows
   model-viewer's own path is not enough

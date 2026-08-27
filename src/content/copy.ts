@@ -120,6 +120,18 @@ export const copy = {
     materialsTitle: "Materials that suit this space",
     materialsSubtitle:
       "The material matters as much as the words. These are the ones we cut, and where each belongs.",
+    /**
+     * Two headings, because all six materials used to be listed identically on
+     * all six venue pages — the same cards, the same specs, the same fire lines,
+     * six times over. Thin for search and unhelpful in person: somebody
+     * specifying a school corridor read about gold mirror acrylic for salons.
+     *
+     * Led rather than filtered. `bestFor` is a recommendation, not an exclusion,
+     * and filtering on it left cafés, restaurants and universities with exactly
+     * one material each — worse than showing all six.
+     */
+    materialsLed: "What we usually quote here",
+    materialsRest: "Also available, if the wall calls for it",
     materialsLink: "Read why we use each one",
     ctaTitle: "Tell us about the space",
     ctaSubtitle:
